@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="..\..\Project_P.uproject" />
+    <Filter Include="Source">
+      <UniqueIdentifier>{F31BBDD1-B3E8-3BCC-9652-680E16935819}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\Project_P.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\Source\Project_PEditor.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\.vsconfig" />
+    <Filter Include="Config">
+      <UniqueIdentifier>{FA535FFB-25E1-3D20-B416-52F9BE21E06E}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Config\DefaultEditor.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEngine.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultGame.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultInput.ini">
+      <Filter>Config</Filter>
+    </None>
+    <Filter Include="Source\Project_P">
+      <UniqueIdentifier>{1A66DB0D-407E-3A96-8395-F95CF2D6F366}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\Project_P\Project_P.Build.cs">
+      <Filter>Source\Project_P</Filter>
+    </None>
+    <ClCompile Include="..\..\Source\Project_P\Project_P.cpp">
+      <Filter>Source\Project_P</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project_P\Project_P.h">
+      <Filter>Source\Project_P</Filter>
+    </ClInclude>
+    <Filter Include="Source\Project_P\Game">
+      <UniqueIdentifier>{1E49723B-49BD-398B-80CF-2A38C87A6C5E}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\Project_P\Game\PPGameModeBase.cpp">
+      <Filter>Source\Project_P\Game</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project_P\Game\PPGameModeBase.h">
+      <Filter>Source\Project_P\Game</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
