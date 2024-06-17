@@ -1,8 +1,8 @@
 {
 	"SourceFiles": [
-		"C:\\Project_P\\Project_P\\Source\\Project_P\\Project_P.Build.cs",
-		"C:\\Project_P\\Project_P\\Source\\Project_P.Target.cs",
-		"C:\\Project_P\\Project_P\\Source\\Project_PEditor.Target.cs"
+		"D:\\UE5\\Project_P\\Project_P\\Source\\Project_P\\Project_P.Build.cs",
+		"D:\\UE5\\Project_P\\Project_P\\Source\\Project_P.Target.cs",
+		"D:\\UE5\\Project_P\\Project_P\\Source\\Project_PEditor.Target.cs"
 	],
 	"EngineVersion": "5.3.2"
 }
