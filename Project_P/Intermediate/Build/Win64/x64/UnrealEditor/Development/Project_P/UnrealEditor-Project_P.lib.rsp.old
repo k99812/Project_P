@@ -7,6 +7,9 @@
 /IGNORE:4221
 /NODEFAULTLIB
 "C:\Project_P\Project_P\Intermediate\Build\Win64\x64\Project_PEditor\Development\Engine\SharedPCH.Engine.Cpp20.h.obj"
+"C:\Project_P\Project_P\Intermediate\Build\Win64\x64\UnrealEditor\Development\Project_P\PPGameModeBase.gen.cpp.obj"
+"C:\Project_P\Project_P\Intermediate\Build\Win64\x64\UnrealEditor\Development\Project_P\Project_P.init.gen.cpp.obj"
 "C:\Project_P\Project_P\Intermediate\Build\Win64\x64\UnrealEditor\Development\Project_P\Project_P.cpp.obj"
+"C:\Project_P\Project_P\Intermediate\Build\Win64\x64\UnrealEditor\Development\Project_P\PPGameModeBase.cpp.obj"
 "C:\Project_P\Project_P\Intermediate\Build\Win64\x64\UnrealEditor\Development\Project_P\Default.rc2.res"
 /OUT:"C:\Project_P\Project_P\Intermediate\Build\Win64\x64\UnrealEditor\Development\Project_P\UnrealEditor-Project_P.lib"
