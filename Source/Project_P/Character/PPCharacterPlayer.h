@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameModeBase.h"
-#include "PPGameModeBase.generated.h"
+#include "Character/PPCharacterBase.h"
+#include "PPCharacterPlayer.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECT_P_API APPGameModeBase : public AGameModeBase
+class PROJECT_P_API APPCharacterPlayer : public APPCharacterBase
 {
 	GENERATED_BODY()
 	
