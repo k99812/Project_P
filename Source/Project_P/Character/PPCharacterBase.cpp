@@ -3,21 +3,63 @@
 
 #include "Character/PPCharacterBase.h"
 #include "Components/CapsuleComponent.h"
-#include "GameFramework/MovementComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 APPCharacterBase::APPCharacterBase()
 {
 	//폰 설정
-	//컨트롤러의 회전(Pitch, Roll, Yaw) 값을 적용할지
+	//컨트롤러의 회전(Pitch, Roll, Yaw) 값을 캐릭터에 적용할지
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
 
+	//#include "Components/CapsuleComponent.h"추가
 	//캡슐 콜라이더 설정
 	//추후 사이즈 조정해야됨
 	GetCapsuleComponent()->InitCapsuleSize(42.0f, 96.0f);
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Pawn"));
+
+	//무브먼트 설정
+	//#include "GameFramework/CharacterMovementComponent.h" 추가
+	//움직이는 방향으로 캐릭터를 회전시킬지
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	//회전 속도
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
+	//점프 속도
+	GetCharacterMovement()->JumpZVelocity = 700.0f;
+	//공중 조작 자유도(숫자가 클수록 공중에서 조작이 자유로움(ex) 방향전환))
+	GetCharacterMovement()->AirControl = 0.35f;
+	//최대 이동 속도
+	GetCharacterMovement()->MaxWalkSpeed = 500.0f;
+	//조이스틱을 사용할때 캐릭터가 움직이는 시작하는 속도
+	GetCharacterMovement()->MinAnalogWalkSpeed = 20.0f;
+	//제동 감속 보행(마찰력)
+	GetCharacterMovement()->BrakingDecelerationWalking = 2000.0f;
+
+	//메쉬 설정
+	//캐릭터 모델링 초기 위치, 회전값 설정
+	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -100.0f), FRotator(0.0f, -90.0f, 0.0f));
+	//애니메이션 모드 지정
+	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+	//스켈레탈 메쉬 콜리전 설정
+	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
+
+	//스켈레텔메쉬 설정
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef(TEXT("/Script/Engine.SkeletalMesh'/Game/ParagonCountess/Characters/Heroes/Countess/Meshes/SM_Countess.SM_Countess'"));
+	if (CharacterMeshRef.Object)
+	{
+		//(SkeletalMesh = 변수)가 아닌 SetSkeletalMesh(변수)로 해야함
+		GetMesh()->SetSkeletalMesh(CharacterMeshRef.Object);
+	}
+
+	//애니메이션인스턴스클래스 설정
+	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimInstanceClassRef(TEXT(""));
+	if (AnimInstanceClassRef.Class)
+	{
+		//Set함수 사용
+		GetMesh()->SetAnimInstanceClass(AnimInstanceClassRef.Class);
+	}
 }
 
 
