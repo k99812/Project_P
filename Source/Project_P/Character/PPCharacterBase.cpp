@@ -17,7 +17,7 @@ APPCharacterBase::APPCharacterBase()
 	//#include "Components/CapsuleComponent.h"추가
 	//캡슐 콜라이더 설정
 	//추후 사이즈 조정해야됨
-	GetCapsuleComponent()->InitCapsuleSize(42.0f, 96.0f);
+	GetCapsuleComponent()->InitCapsuleSize(25.0f, 92.0f);
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Pawn"));
 
 	//무브먼트 설정
@@ -39,27 +39,12 @@ APPCharacterBase::APPCharacterBase()
 
 	//메쉬 설정
 	//캐릭터 모델링 초기 위치, 회전값 설정
-	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -100.0f), FRotator(0.0f, -90.0f, 0.0f));
+	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -95.0f), FRotator(0.0f, -90.0f, 0.0f));
 	//애니메이션 모드 지정
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 	//스켈레탈 메쉬 콜리전 설정
 	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
 
-	//스켈레텔메쉬 설정
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef(TEXT("/Script/Engine.SkeletalMesh'/Game/ParagonCountess/Characters/Heroes/Countess/Meshes/SM_Countess.SM_Countess'"));
-	if (CharacterMeshRef.Object)
-	{
-		//(SkeletalMesh = 변수)가 아닌 SetSkeletalMesh(변수)로 해야함
-		GetMesh()->SetSkeletalMesh(CharacterMeshRef.Object);
-	}
-
-	//애니메이션인스턴스클래스 설정
-	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimInstanceClassRef(TEXT(""));
-	if (AnimInstanceClassRef.Class)
-	{
-		//Set함수 사용
-		GetMesh()->SetAnimInstanceClass(AnimInstanceClassRef.Class);
-	}
 }
 
 
