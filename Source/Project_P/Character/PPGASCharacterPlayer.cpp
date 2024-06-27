@@ -2,6 +2,9 @@
 
 
 #include "Character/PPGASCharacterPlayer.h"
+#include "AbilitySystemComponent.h"
+#include "Player/PPGASPlayerState.h"
+#include "Project_P.h"
 
 APPGASCharacterPlayer::APPGASCharacterPlayer()
 {
@@ -24,5 +27,22 @@ APPGASCharacterPlayer::APPGASCharacterPlayer()
 
 UAbilitySystemComponent* APPGASCharacterPlayer::GetAbilitySystemComponent() const
 {
-	return nullptr;
+	return ASC;
+}
+
+void APPGASCharacterPlayer::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	APPGASPlayerState* GASPlayerState = GetPlayerState<APPGASPlayerState>();
+	if (GASPlayerState)
+	{
+		ASC = GASPlayerState->GetAbilitySystemComponent();
+		if (ASC)
+		{
+			PPGAS_LOG(LogPPGAS, Log, TEXT("ASC is successed"));
+			
+			ASC->InitAbilityActorInfo(GASPlayerState, this);
+		}
+	}
 }

@@ -3,26 +3,24 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Character/PPCharacterBase.h"
+#include "GameFramework/PlayerState.h"
 #include "AbilitySystemInterface.h"
-#include "PPGASCharacterPlayer.generated.h"
+#include "PPGASPlayerState.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECT_P_API APPGASCharacterPlayer : public APPCharacterBase, public IAbilitySystemInterface
+class PROJECT_P_API APPGASPlayerState : public APlayerState, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
-
+	
 public:
-	APPGASCharacterPlayer();
+	APPGASPlayerState();
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-	
-	virtual void PossessedBy(AController* NewController) override;
 
 protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
-	TObjectPtr<UAbilitySystemComponent> ASC;
+	TObjectPtr<class UAbilitySystemComponent> ASC;
 };

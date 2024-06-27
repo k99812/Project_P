@@ -19,4 +19,9 @@ APPGameMode::APPGameMode()
 		PlayerControllerClass = PlayerControllerClassRef.Class;
 	}
 	
+	static ConstructorHelpers::FClassFinder<APlayerState> PlayerStateClassRef(TEXT("/Script/CoreUObject.Class'/Script/Project_P.PPGASPlayerState'"));
+	if (PlayerStateClassRef.Class)
+	{
+		PlayerStateClass = PlayerStateClassRef.Class;
+	}
 }
