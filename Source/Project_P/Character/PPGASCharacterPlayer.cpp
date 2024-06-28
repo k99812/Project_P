@@ -2,9 +2,11 @@
 
 
 #include "Character/PPGASCharacterPlayer.h"
+#include "Project_P.h"
 #include "AbilitySystemComponent.h"
 #include "Player/PPGASPlayerState.h"
-#include "Project_P.h"
+#include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 
 APPGASCharacterPlayer::APPGASCharacterPlayer()
 {
@@ -23,6 +25,21 @@ APPGASCharacterPlayer::APPGASCharacterPlayer()
 		//Set함수 사용
 		GetMesh()->SetAnimInstanceClass(AnimInstanceClassRef.Class);
 	}
+
+	//카메라 암(USpringArmComponent) 설정
+	CameraArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraArm"));
+	CameraArm->SetupAttachment(RootComponent);
+	//캐릭터와 카메라의 거리
+	CameraArm->TargetArmLength = 400.0f;
+	//로테이션을 컨트롤러의 로테이션과 동기화 할지
+	CameraArm->bUsePawnControlRotation = true;
+
+	//카메라 설정()
+	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
+	//카메라를 카메라암에 자식으로 붙임
+	FollowCamera->SetupAttachment(CameraArm, USpringArmComponent::SocketName);
+	//로테이션을 컨트롤러의 로테이션과 동기화 할지
+	FollowCamera->bUsePawnControlRotation = false;
 }
 
 UAbilitySystemComponent* APPGASCharacterPlayer::GetAbilitySystemComponent() const
