@@ -45,25 +45,25 @@ APPGASCharacterPlayer::APPGASCharacterPlayer()
 	FollowCamera->bUsePawnControlRotation = false;
 
 	//인풋 설정
-	static ConstructorHelpers::FObjectFinder<UInputMappingContext> InputMappingContextRef(TEXT(""));
+	static ConstructorHelpers::FObjectFinder<UInputMappingContext> InputMappingContextRef(TEXT("/Script/EnhancedInput.InputMappingContext'/Game/Project_P/Input/IMC_Third.IMC_Third'"));
 	if (InputMappingContextRef.Object)
 	{
 		DefaultMappingContext = InputMappingContextRef.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UInputAction> MoveInputActionRef(TEXT(""));
+	static ConstructorHelpers::FObjectFinder<UInputAction> MoveInputActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Project_P/Input/Actions/IA_Move.IA_Move'"));
 	if (MoveInputActionRef.Object)
 	{
 		MoveAction = MoveInputActionRef.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UInputAction> JumpInputActionRef(TEXT(""));
+	static ConstructorHelpers::FObjectFinder<UInputAction> JumpInputActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Project_P/Input/Actions/IA_Jump.IA_Jump'"));
 	if (JumpInputActionRef.Object)
 	{
 		JumpAction = JumpInputActionRef.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UInputAction> LookInputActionRef(TEXT(""));
+	static ConstructorHelpers::FObjectFinder<UInputAction> LookInputActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Project_P/Input/Actions/IA_Look.IA_Look'"));
 	if (LookInputActionRef.Object)
 	{
 		LookAction = LookInputActionRef.Object;
@@ -95,6 +95,21 @@ void APPGASCharacterPlayer::PossessedBy(AController* NewController)
 void APPGASCharacterPlayer::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(ULocalPlayer*)
+	//서브시스템을 가져오기 위해 GetSubsystem 함수를 사용
+	//ULocalPlayer* 는 APlayerController*에서 GetLocalPlayer()로 가져옴
+	APlayerController* PlayerController = CastChecked<APlayerController>(GetController());
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+	{
+		//서브시스템에서 인풋맵핑컨텍스트를 관리함
+		// 같은 입력이 있을시 우선순위가 높은게 실행 됨
+		// 언제든지 추가 제거가 가능함
+		//AddMappingContext(인풋맵핑컨택스트, 우선순위)
+		//Subsystem->RemoveMappingContext(DefaultMappingContext);
+		Subsystem->AddMappingContext(DefaultMappingContext, 0);
+		
+	}
 }
 
 void APPGASCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -114,8 +129,26 @@ void APPGASCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 void APPGASCharacterPlayer::Move(const FInputActionValue& Value)
 {
+	//X는 좌우 Y는 상하 입력
+	FVector2D MovementVector = Value.Get<FVector2D>();
+
+	//CameraArm->bUsePawnControlRotation = true; 설정을 통해
+	//카메라 암과 컨트롤러의 로테이션은 동기화 됨
+	const FRotator Rotation = Controller->GetControlRotation();
+	const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	
+	AddMovementInput(ForwardDirection, MovementVector.Y);
+	AddMovementInput(RightDirection, MovementVector.X);
 }
 
 void APPGASCharacterPlayer::Look(const FInputActionValue& Value)
 {
+	//X는 좌우 Y는 상하 입력
+	FVector2D LookAxisVector = Value.Get<FVector2D>();
+
+	AddControllerYawInput(LookAxisVector.X);
+	AddControllerPitchInput(LookAxisVector.Y);
 }
