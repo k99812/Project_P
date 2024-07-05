@@ -8,19 +8,18 @@
 // Sets default values
 APPCharacterBase::APPCharacterBase()
 {
-	//폰 설정
+//폰 설정
 	//컨트롤러의 회전(Pitch, Roll, Yaw) 값을 캐릭터에 적용할지
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
 
+//캡슐 콜라이더 설정
 	//#include "Components/CapsuleComponent.h"추가
-	//캡슐 콜라이더 설정
-	//추후 사이즈 조정해야됨
 	GetCapsuleComponent()->InitCapsuleSize(25.0f, 92.0f);
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Pawn"));
 
-	//무브먼트 설정
+//무브먼트 설정
 	//#include "GameFramework/CharacterMovementComponent.h" 추가
 	//움직이는 방향으로 캐릭터를 회전시킬지
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -37,8 +36,8 @@ APPCharacterBase::APPCharacterBase()
 	//제동 감속 보행(마찰력)
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.0f;
 
-	//메쉬 설정
-	//캐릭터 모델링 초기 위치, 회전값 설정
+//메쉬 설정
+	//캐릭터 메쉬의 초기 위치, 로테이션값 설정
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -95.0f), FRotator(0.0f, -90.0f, 0.0f));
 	//애니메이션 모드 지정
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
