@@ -33,9 +33,10 @@ APPGASCharacterPlayer::APPGASCharacterPlayer()
 	CameraArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraArm"));
 	CameraArm->SetupAttachment(RootComponent);
 	//캐릭터와 카메라의 거리
-	CameraArm->TargetArmLength = 270.0f;
+	CameraArm->TargetArmLength = 250.0f;
 	//로테이션을 컨트롤러의 로테이션과 동기화 할지
 	CameraArm->bUsePawnControlRotation = true;
+	CameraArm->SetRelativeLocation(FVector(0.0f, 0.0f, 50.0f));
 
 //카메라 설정()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
