@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 APPGASCharacterPlayer::APPGASCharacterPlayer()
 {
@@ -29,11 +30,15 @@ APPGASCharacterPlayer::APPGASCharacterPlayer()
 		GetMesh()->SetAnimInstanceClass(AnimInstanceClassRef.Class);
 	}
 
+//캐랙터 무브먼트 설정
+	GetCharacterMovement()->bOrientRotationToMovement = false;
+	GetCharacterMovement()->bUseControllerDesiredRotation = true;
+
 //카메라 암(USpringArmComponent) 설정
 	CameraArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraArm"));
 	CameraArm->SetupAttachment(RootComponent);
 	//캐릭터와 카메라의 거리
-	CameraArm->TargetArmLength = 250.0f;
+	CameraArm->TargetArmLength = 300.0f;
 	//로테이션을 컨트롤러의 로테이션과 동기화 할지
 	CameraArm->bUsePawnControlRotation = true;
 	CameraArm->SetRelativeLocation(FVector(0.0f, 0.0f, 50.0f));
