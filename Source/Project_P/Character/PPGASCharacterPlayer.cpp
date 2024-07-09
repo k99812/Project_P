@@ -37,13 +37,13 @@ APPGASCharacterPlayer::APPGASCharacterPlayer()
 //카메라 암(USpringArmComponent) 설정
 	CameraArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraArm"));
 	CameraArm->SetupAttachment(RootComponent);
-	//캐릭터와 카메라의 거리
+	//캐릭터와 카메라 암의 거리
 	CameraArm->TargetArmLength = 300.0f;
 	//로테이션을 컨트롤러의 로테이션과 동기화 할지
 	CameraArm->bUsePawnControlRotation = true;
 	CameraArm->SetRelativeLocation(FVector(0.0f, 0.0f, 50.0f));
 
-//카메라 설정()
+//카메라 설정(UCameraComponent)
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	//카메라를 카메라암에 자식으로 붙임
 	FollowCamera->SetupAttachment(CameraArm, USpringArmComponent::SocketName);
@@ -102,15 +102,14 @@ void APPGASCharacterPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(ULocalPlayer*)
 	//서브시스템을 가져오기 위해 GetSubsystem 함수를 사용
 	//ULocalPlayer* 는 APlayerController*에서 GetLocalPlayer()로 가져옴
 	APlayerController* PlayerController = CastChecked<APlayerController>(GetController());
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 	{
 		//서브시스템에서 인풋맵핑컨텍스트를 관리함
-		// 같은 입력이 있을시 우선순위가 높은게 실행 됨
-		// 언제든지 추가 제거가 가능함
+		// 같은 입력맵핑컨택스트가 있을시 우선순위가 높은게 실행 됨
+		// 언제든지(인게임 라이브 중에도) 맵핑컨택스트를 추가, 제거가 가능함
 		//AddMappingContext(인풋맵핑컨택스트, 우선순위)
 		//Subsystem->RemoveMappingContext(DefaultMappingContext);
 		Subsystem->AddMappingContext(DefaultMappingContext, 0);
