@@ -45,5 +45,3 @@ APPCharacterBase::APPCharacterBase()
 	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
 
 }
-
-

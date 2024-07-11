@@ -33,6 +33,7 @@ APPGASCharacterPlayer::APPGASCharacterPlayer()
 //캐랙터 무브먼트 설정
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 2000.0f, 0.0f);
 
 //카메라 암(USpringArmComponent) 설정
 	CameraArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraArm"));
