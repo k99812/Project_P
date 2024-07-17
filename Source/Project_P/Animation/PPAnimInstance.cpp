@@ -9,6 +9,7 @@ UPPAnimInstance::UPPAnimInstance()
 {
 	MovingThreshould = 3.0f;
 	JumpingThreshould = 100.0f;
+	SprintThreshould = 505.0f;
 }
 
 void UPPAnimInstance::NativeInitializeAnimation()
@@ -36,5 +37,6 @@ void UPPAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		bIsIdle = GroundSpeed < MovingThreshould;
 		bIsFalling = Movement->IsFalling();
 		bIsJumping = bIsFalling & (Velocity.Z > JumpingThreshould);
+		bIsSprint = !bIsIdle & (GroundSpeed > SprintThreshould);
 	}
 }
