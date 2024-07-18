@@ -38,5 +38,7 @@ void UPPAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		bIsFalling = Movement->IsFalling();
 		bIsJumping = bIsFalling & (Velocity.Z > JumpingThreshould);
 		bIsSprint = !bIsIdle & (GroundSpeed > SprintThreshould);
+		Yaw = Owner->GetActorRotation().Yaw;
+		Pitch = Owner->GetActorRotation().Pitch;
 	}
 }
