@@ -23,7 +23,7 @@ APPGASCharacterPlayer::APPGASCharacterPlayer()
 	}
 
 //애니메이션인스턴스클래스 설정
-	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimInstanceClassRef(TEXT("/Script/Engine.AnimBlueprint'/Game/Project_P/Blueprint/BP_PPABCountess.BP_PPABCountess'"));
+	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimInstanceClassRef(TEXT("/Game/Project_P/Blueprint/BP_PPABCountess.BP_PPABCountess_C"));
 	if (AnimInstanceClassRef.Class)
 	{
 		//Set함수 사용
@@ -140,7 +140,8 @@ void APPGASCharacterPlayer::Move(const FInputActionValue& Value)
 
 	//CameraArm->bUsePawnControlRotation = true; 설정을 통해
 	//카메라 암과 컨트롤러의 로테이션은 동기화 됨
-	const FRotator Rotation = Controller->GetControlRotation();
+	//const FRotator Rotation = Controller->GetControlRotation();
+	const FRotator Rotation = CameraArm->GetDesiredRotation();
 	const FRotator YawRotation(0, Rotation.Yaw, 0);
 
 	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);

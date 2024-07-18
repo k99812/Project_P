@@ -61,4 +61,12 @@ protected:
 	//점프하는지 검삭하기 위한 변수
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
 	float JumpingThreshould;
+
+	//Z축
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
+	float Yaw;
+
+	//Y축
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
+	float Pitch;
 };
