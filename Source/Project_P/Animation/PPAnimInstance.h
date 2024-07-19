@@ -24,6 +24,11 @@ protected:
 	//Tick마다 호출
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
+	virtual void NativeBeginPlay() override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Animation)
+	TObjectPtr<class UAnimMontage> LevelStartMontage;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Character)
 	TObjectPtr<class ACharacter> Owner;
 
@@ -69,4 +74,8 @@ protected:
 	//Y축
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
 	float Pitch;
+
+	//X축
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
+	float Roll;
 };

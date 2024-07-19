@@ -4,9 +4,17 @@
 #include "Animation/PPAnimInstance.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Animation/AnimMontage.h"
 
 UPPAnimInstance::UPPAnimInstance()
 {
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> LevelStartMontageRef(TEXT("/Script/Engine.AnimMontage'/Game/Project_P/Animation/Montage/Start_Montage.Start_Montage'"));
+	if (LevelStartMontageRef.Object)
+	{
+		LevelStartMontage = LevelStartMontageRef.Object;
+	}
+
 	MovingThreshould = 3.0f;
 	JumpingThreshould = 100.0f;
 	SprintThreshould = 505.0f;
@@ -38,7 +46,23 @@ void UPPAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		bIsFalling = Movement->IsFalling();
 		bIsJumping = bIsFalling & (Velocity.Z > JumpingThreshould);
 		bIsSprint = !bIsIdle & (GroundSpeed > SprintThreshould);
-		Yaw = Owner->GetActorRotation().Yaw;
-		Pitch = Owner->GetActorRotation().Pitch;
+
+		FRotator AimRotation = Owner->GetBaseAimRotation();
+		FRotator ActorRotation = Owner->GetActorRotation();
+		FRotator DeltaRotation = UKismetMathLibrary::NormalizedDeltaRotator(AimRotation, ActorRotation);
+		Roll = DeltaRotation.Roll;
+		Yaw = DeltaRotation.Yaw;
+		Pitch = DeltaRotation.Pitch;
+	}
+}
+
+void UPPAnimInstance::NativeBeginPlay()
+{
+	Super::NativeBeginPlay();
+
+	if (!Montage_IsPlaying(LevelStartMontage))
+	{
+		UE_LOG(LogTemp, Log, TEXT("Animation Start"));
+		Montage_Play(LevelStartMontage, 1.0f);
 	}
 }
