@@ -26,7 +26,7 @@ protected:
 
 	virtual void NativeBeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Animation)
+	UPROPERTY(VisibleAnywhere, Category = Animation)
 	TObjectPtr<class UAnimMontage> LevelStartMontage;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Character)
