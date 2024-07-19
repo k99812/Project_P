@@ -62,7 +62,6 @@ void UPPAnimInstance::NativeBeginPlay()
 
 	if (!Montage_IsPlaying(LevelStartMontage))
 	{
-		UE_LOG(LogTemp, Log, TEXT("Animation Start"));
 		Montage_Play(LevelStartMontage, 1.0f);
 	}
 }
