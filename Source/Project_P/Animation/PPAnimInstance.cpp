@@ -2,7 +2,7 @@
 
 
 #include "Animation/PPAnimInstance.h"
-#include "GameFramework/Character.h"
+#include "Character/PPGASCharacterPlayer.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Animation/AnimMontage.h"
@@ -30,6 +30,12 @@ void UPPAnimInstance::NativeInitializeAnimation()
 	{
 		Movement = Owner->GetCharacterMovement();
 	}
+
+	APPGASCharacterPlayer* GASPlayer = Cast<APPGASCharacterPlayer>(Owner);
+	if (GASPlayer)
+	{
+		GASPlayer->InputReleasedDelegate.BindUObject(this, &UPPAnimInstance::SaveLastDirection);
+	}
 }
 
 void UPPAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -53,6 +59,7 @@ void UPPAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		Roll = DeltaRotation.Roll;
 		Yaw = DeltaRotation.Yaw;
 		Pitch = DeltaRotation.Pitch;
+		//UE_LOG(LogTemp, Log, TEXT("Direction : %f, LastDirection : %f"), Direction, LastDirection);
 	}
 }
 
@@ -64,4 +71,11 @@ void UPPAnimInstance::NativeBeginPlay()
 	{
 		Montage_Play(LevelStartMontage, 1.0f);
 	}
+}
+
+void UPPAnimInstance::SaveLastDirection()
+{
+	UE_LOG(LogTemp, Log, TEXT("Delegate Callback Funtion Excute"));
+
+	LastDirection = CalculateDirection(Velocity , Movement->GetLastUpdateRotation());
 }

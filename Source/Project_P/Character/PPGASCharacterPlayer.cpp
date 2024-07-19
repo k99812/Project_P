@@ -129,6 +129,7 @@ void APPGASCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	//EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
 	//EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::Move);
+	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::InputReleased);
 	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::Look);
 }
 
@@ -158,3 +159,10 @@ void APPGASCharacterPlayer::Look(const FInputActionValue& Value)
 	AddControllerYawInput(LookAxisVector.X);
 	AddControllerPitchInput(LookAxisVector.Y);
 }
+
+void APPGASCharacterPlayer::InputReleased()
+{
+	InputReleasedDelegate.Execute();
+}
+
+
