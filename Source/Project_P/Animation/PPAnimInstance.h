@@ -42,6 +42,9 @@ protected:
 	float Direction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
+	float LastDirection;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
 	float GroundSpeed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
@@ -78,4 +81,7 @@ protected:
 	//Xรเ
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
 	float Roll;
+
+public:
+	void SaveLastDirection();
 };

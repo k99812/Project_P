@@ -8,6 +8,8 @@
 #include "InputActionValue.h"
 #include "PPGASCharacterPlayer.generated.h"
 
+DECLARE_DELEGATE(FInputReleasedDelegate);
+
 /**
  * 
  */
@@ -26,6 +28,9 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+public:
+	FInputReleasedDelegate InputReleasedDelegate;
 
 // Ability System Section
 protected:
@@ -60,4 +65,5 @@ protected:
 	//이때 FInputActionValue를 매개 변수로 받음
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
+	void InputReleased();
 };
