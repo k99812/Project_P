@@ -114,7 +114,6 @@ void APPGASCharacterPlayer::BeginPlay()
 		//AddMappingContext(인풋맵핑컨택스트, 우선순위)
 		//Subsystem->RemoveMappingContext(DefaultMappingContext);
 		Subsystem->AddMappingContext(DefaultMappingContext, 0);
-		
 	}
 }
 
