@@ -75,7 +75,5 @@ void UPPAnimInstance::NativeBeginPlay()
 
 void UPPAnimInstance::SaveLastDirection()
 {
-	UE_LOG(LogTemp, Log, TEXT("Delegate Callback Funtion Excute"));
-
 	LastDirection = CalculateDirection(Velocity , Movement->GetLastUpdateRotation());
 }

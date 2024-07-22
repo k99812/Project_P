@@ -61,9 +61,18 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPriaveteAccess = "true"))
 	TObjectPtr<class UInputAction> LookAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPriaveteAccess = "true"))
+	TObjectPtr<class UInputAction> SprintAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPriaveteAccess = "true"))
+	TObjectPtr<class UInputAction> ComboSprintAction;
+
 	//입력 이벤트 콜백함수
 	//이때 FInputActionValue를 매개 변수로 받음
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
-	void InputReleased();
+	void MoveInputReleased();
+	void Sprint(const FInputActionValue& Value);
+	void ComboSprint(const FInputActionValue& Value);
+	void ComboSprintReleased();
 };
