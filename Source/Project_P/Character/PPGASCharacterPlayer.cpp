@@ -75,6 +75,18 @@ APPGASCharacterPlayer::APPGASCharacterPlayer()
 	{
 		LookAction = LookInputActionRef.Object;
 	}
+
+	static ConstructorHelpers::FObjectFinder<UInputAction> SprintActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Project_P/Input/Actions/IA_Sprint.IA_Sprint'"));
+	if (SprintActionRef.Object)
+	{
+		SprintAction = SprintActionRef.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UInputAction> ComboSprintActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Project_P/Input/Actions/IA_ComboSprint.IA_ComboSprint'"));
+	if (ComboSprintActionRef.Object)
+	{
+		ComboSprintAction = ComboSprintActionRef.Object;
+	}
 }
 
 UAbilitySystemComponent* APPGASCharacterPlayer::GetAbilitySystemComponent() const
@@ -126,11 +138,18 @@ void APPGASCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
 
-	//EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
-	//EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
+	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::Move);
-	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::InputReleased);
+	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::MoveInputReleased);
+
 	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::Look);
+
+	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::Sprint);
+
+	EnhancedInputComponent->BindAction(ComboSprintAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::ComboSprint);
+	EnhancedInputComponent->BindAction(ComboSprintAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::ComboSprintReleased);
 }
 
 void APPGASCharacterPlayer::Move(const FInputActionValue& Value)
@@ -144,8 +163,11 @@ void APPGASCharacterPlayer::Move(const FInputActionValue& Value)
 	const FRotator Rotation = CameraArm->GetDesiredRotation();
 	const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	FMatrix RotMatrix = FRotationMatrix(YawRotation);
+	FVector ForwardDirection = RotMatrix.GetScaledAxis(EAxis::X);
+	FVector RightDirection = RotMatrix.GetScaledAxis(EAxis::Y);
+	//const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	//const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 	
 	AddMovementInput(ForwardDirection, MovementVector.Y);
 	AddMovementInput(RightDirection, MovementVector.X);
@@ -160,9 +182,26 @@ void APPGASCharacterPlayer::Look(const FInputActionValue& Value)
 	AddControllerPitchInput(LookAxisVector.Y);
 }
 
-void APPGASCharacterPlayer::InputReleased()
+void APPGASCharacterPlayer::MoveInputReleased()
 {
 	InputReleasedDelegate.Execute();
+}
+
+void APPGASCharacterPlayer::Sprint(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Log, TEXT("Sprint"));
+}
+
+void APPGASCharacterPlayer::ComboSprint(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Log, TEXT("ComboSprint"));
+	GetCharacterMovement()->MaxWalkSpeed = 750.0f;
+}
+
+void APPGASCharacterPlayer::ComboSprintReleased()
+{
+	UE_LOG(LogTemp, Log, TEXT("ComboSprintReleased"));
+	GetCharacterMovement()->MaxWalkSpeed = 500.0f;
 }
 
 
