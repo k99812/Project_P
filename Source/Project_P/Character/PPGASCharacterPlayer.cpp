@@ -81,12 +81,6 @@ APPGASCharacterPlayer::APPGASCharacterPlayer()
 	{
 		SprintAction = SprintActionRef.Object;
 	}
-
-	static ConstructorHelpers::FObjectFinder<UInputAction> ComboSprintActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Project_P/Input/Actions/IA_ComboSprint.IA_ComboSprint'"));
-	if (ComboSprintActionRef.Object)
-	{
-		ComboSprintAction = ComboSprintActionRef.Object;
-	}
 }
 
 UAbilitySystemComponent* APPGASCharacterPlayer::GetAbilitySystemComponent() const
@@ -147,9 +141,7 @@ void APPGASCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::Look);
 
 	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::Sprint);
-
-	EnhancedInputComponent->BindAction(ComboSprintAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::ComboSprint);
-	EnhancedInputComponent->BindAction(ComboSprintAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::ComboSprintReleased);
+	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::SprintReleased);
 }
 
 void APPGASCharacterPlayer::Move(const FInputActionValue& Value)
@@ -189,19 +181,12 @@ void APPGASCharacterPlayer::MoveInputReleased()
 
 void APPGASCharacterPlayer::Sprint(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Log, TEXT("Sprint"));
-}
-
-void APPGASCharacterPlayer::ComboSprint(const FInputActionValue& Value)
-{
-	UE_LOG(LogTemp, Log, TEXT("ComboSprint"));
 	GetCharacterMovement()->MaxWalkSpeed = 750.0f;
 }
 
-void APPGASCharacterPlayer::ComboSprintReleased()
+void APPGASCharacterPlayer::SprintReleased()
 {
-	UE_LOG(LogTemp, Log, TEXT("ComboSprintReleased"));
+	UE_LOG(LogTemp, Log, TEXT("Sprint"));
+
 	GetCharacterMovement()->MaxWalkSpeed = 500.0f;
 }
-
-
