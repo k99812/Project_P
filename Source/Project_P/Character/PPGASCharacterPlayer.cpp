@@ -155,11 +155,8 @@ void APPGASCharacterPlayer::Move(const FInputActionValue& Value)
 	const FRotator Rotation = CameraArm->GetDesiredRotation();
 	const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-	FMatrix RotMatrix = FRotationMatrix(YawRotation);
-	FVector ForwardDirection = RotMatrix.GetScaledAxis(EAxis::X);
-	FVector RightDirection = RotMatrix.GetScaledAxis(EAxis::Y);
-	//const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	//const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 	
 	AddMovementInput(ForwardDirection, MovementVector.Y);
 	AddMovementInput(RightDirection, MovementVector.X);
