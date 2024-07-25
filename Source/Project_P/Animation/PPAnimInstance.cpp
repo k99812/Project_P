@@ -42,13 +42,14 @@ void UPPAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	if (Movement)
 	{
 		Velocity = Movement->Velocity;
+		//CalculateDirection(FVector, FRotator)
 		Direction = CalculateDirection(Velocity, Owner->GetActorRotation());
 		//Z축(하늘 방향)을 제외한 X, Y축의 크기를 반환함
 		GroundSpeed = Velocity.Size2D();
 		bIsIdle = GroundSpeed < MovingThreshould;
 		bIsFalling = Movement->IsFalling();
 		bIsJumping = bIsFalling & (Velocity.Z > JumpingThreshould);
-		bIsSprint = !bIsIdle & (GroundSpeed > SprintThreshould);
+		bIsSprint = GroundSpeed > SprintThreshould;
 
 		FRotator AimRotation = Owner->GetBaseAimRotation();
 		FRotator ActorRotation = Owner->GetActorRotation();
@@ -57,7 +58,6 @@ void UPPAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		Roll = DeltaRotation.Roll;
 		Yaw = DeltaRotation.Yaw;
 		Pitch = DeltaRotation.Pitch;
-		//UE_LOG(LogTemp, Log, TEXT("Direction : %f, LastDirection : %f"), Direction, LastDirection);
 	}
 }
 
