@@ -30,7 +30,7 @@ protected:
 	TObjectPtr<class UAnimMontage> LevelStartMontage;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Character)
-	TObjectPtr<class ACharacter> Owner;
+	TObjectPtr<class APPGASCharacterPlayer> Owner;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Character)
 	TObjectPtr<class UCharacterMovementComponent> Movement;
@@ -82,6 +82,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
 	float Roll;
 
-public:
+protected:
 	void SaveLastDirection();
 };

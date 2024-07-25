@@ -25,16 +25,13 @@ void UPPAnimInstance::NativeInitializeAnimation()
 	Super::NativeInitializeAnimation();
 
 	//AnimInstance가 생성될때 한번만 호출되어 포인터 변수들을 초기화할때 사용
-	Owner = Cast<ACharacter>(GetOwningActor());
+	//#include "Character/PPGASCharacterPlayer.h" 추가
+	Owner = Cast<APPGASCharacterPlayer>(GetOwningActor());
 	if (Owner)
 	{
+		//#include "GameFramework/CharacterMovementComponent.h" 추가
 		Movement = Owner->GetCharacterMovement();
-	}
-
-	APPGASCharacterPlayer* GASPlayer = Cast<APPGASCharacterPlayer>(Owner);
-	if (GASPlayer)
-	{
-		GASPlayer->InputReleasedDelegate.BindUObject(this, &UPPAnimInstance::SaveLastDirection);
+		Owner->InputReleasedDelegate.BindUObject(this, &UPPAnimInstance::SaveLastDirection);
 	}
 }
 
@@ -55,6 +52,7 @@ void UPPAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 		FRotator AimRotation = Owner->GetBaseAimRotation();
 		FRotator ActorRotation = Owner->GetActorRotation();
+		//#include "Kismet/KismetMathLibrary.h" 추가
 		FRotator DeltaRotation = UKismetMathLibrary::NormalizedDeltaRotator(AimRotation, ActorRotation);
 		Roll = DeltaRotation.Roll;
 		Yaw = DeltaRotation.Yaw;
@@ -67,6 +65,7 @@ void UPPAnimInstance::NativeBeginPlay()
 {
 	Super::NativeBeginPlay();
 
+	//#include "Animation/AnimMontage.h" 추가
 	if (!Montage_IsPlaying(LevelStartMontage))
 	{
 		Montage_Play(LevelStartMontage, 1.0f);
