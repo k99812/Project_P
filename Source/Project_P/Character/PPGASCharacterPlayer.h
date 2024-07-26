@@ -29,6 +29,7 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+// InputRelease Delegate
 public:
 	FInputReleasedDelegate InputReleasedDelegate;
 
