@@ -10,6 +10,17 @@
 
 DECLARE_DELEGATE(FInputReleasedDelegate);
 
+UENUM(BlueprintType)
+enum class EInputAbility : uint8
+{
+	None UMETA(DisplayName = "None"),
+	Jump = 10 UMETA(DisplayName = "Jump"),
+	Sprint UMETA(DisplayName = "Sprint"),
+	LAttack UMETA(DisplayName = "LAttack"),
+	RAttack UMETA(DisplayName = "RAttack"),
+	Skill UMETA(DisplayName = "Skill")
+};
+
 /**
  * 
  */
@@ -28,6 +39,18 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+// GAS Section
+protected:
+	virtual void SetupGASPlayerInputComponent();
+	void GASInputPressed(int InputID);
+	void GASInputReleased(int InputID);
+
+	UPROPERTY(EditAnywhere, Category = "GAS")
+	TArray<TSubclassOf<class UGameplayAbility>> StartAbilites;
+
+	UPROPERTY(EditAnywhere, Category = "GAS")
+	TMap<EInputAbility, TSubclassOf<class UGameplayAbility>> StartInputAbilites;
 
 // InputRelease Delegate
 public:
@@ -70,6 +93,4 @@ protected:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void MoveInputReleased();
-	void Sprint(const FInputActionValue& Value);
-	void SprintReleased();
 };
