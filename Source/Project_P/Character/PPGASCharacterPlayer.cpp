@@ -11,6 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Abilities/GameplayAbility.h"
 
 APPGASCharacterPlayer::APPGASCharacterPlayer()
 {
@@ -98,11 +99,33 @@ void APPGASCharacterPlayer::PossessedBy(AController* NewController)
 		ASC = GASPlayerState->GetAbilitySystemComponent();
 		if (ASC)
 		{
-			//PPGAS_LOG(LogPPGAS, Log, TEXT("ASC is successed"));
-			
 			ASC->InitAbilityActorInfo(GASPlayerState, this);
+
+			for (const TSubclassOf<UGameplayAbility>& StartAbility : StartAbilites)
+			{
+				FGameplayAbilitySpec Spec(StartAbility);
+
+				ASC->GiveAbility(Spec);
+			}
+
+			for (const TPair<EInputAbility, TSubclassOf<class UGameplayAbility>>& StartInputAbility : StartInputAbilites)
+			{
+				FGameplayAbilitySpec Spec(StartInputAbility.Value);
+
+				Spec.InputID = (int32)StartInputAbility.Key;
+
+				ASC->GiveAbility(Spec);
+			}
+
+			//서버에서도 GA바인드 함수가 실행되도록 실행
+			SetupGASPlayerInputComponent();
 		}
 	}
+
+	//콘솔 커멘드 코드로 입력하는 법
+	//ASC 디버그
+	APlayerController* PlayerController = CastChecked<APlayerController>(NewController);
+	PlayerController->ConsoleCommand(TEXT("showdebug abilitysystem"));
 }
 
 void APPGASCharacterPlayer::BeginPlay()
@@ -131,17 +154,68 @@ void APPGASCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	//#include "EnhancedInputSubsystems.h" 추가
 
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
-//Jump
-	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
-	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+
 //Move
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::Move);
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::MoveInputReleased);
 //Look
 	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::Look);
-//Sprint
-	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::Sprint);
-	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::SprintReleased);
+
+	SetupGASPlayerInputComponent();
+}
+
+void APPGASCharacterPlayer::SetupGASPlayerInputComponent()
+{
+	if (IsValid(ASC) && IsValid(InputComponent))
+	{
+		UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
+
+	//Jump
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::GASInputPressed, (int)EInputAbility::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::GASInputReleased, (int)EInputAbility::Jump);
+
+	//Sprint
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::GASInputPressed, (int)EInputAbility::Sprint);
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::GASInputReleased, (int)EInputAbility::Sprint);
+	}
+
+}
+
+void APPGASCharacterPlayer::GASInputPressed(int InputID)
+{
+	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(InputID);
+
+	if (Spec)
+	{
+		Spec->InputPressed = true;
+
+		if (Spec->IsActive())
+		{
+			//어빌리티가 실행중이면 GA의 InputPressed 함수 실행
+			ASC->AbilitySpecInputPressed(*Spec);
+		}
+		else
+		{
+			//어빌리티 Activate 실행
+			ASC->TryActivateAbility(Spec->Handle);
+		}
+	}
+}
+
+void APPGASCharacterPlayer::GASInputReleased(int InputID)
+{
+	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(InputID);
+
+	if (Spec)
+	{
+		Spec->InputPressed = false;
+
+		if (Spec->IsActive())
+		{
+			//어빌리티가 실행중이면 GA의 InputReleased 실행
+			ASC->AbilitySpecInputReleased(*Spec);
+		}
+	}
 }
 
 void APPGASCharacterPlayer::Move(const FInputActionValue& Value)
@@ -174,16 +248,4 @@ void APPGASCharacterPlayer::Look(const FInputActionValue& Value)
 void APPGASCharacterPlayer::MoveInputReleased()
 {
 	InputReleasedDelegate.Execute();
-}
-
-void APPGASCharacterPlayer::Sprint(const FInputActionValue& Value)
-{
-	GetCharacterMovement()->MaxWalkSpeed = 750.0f;
-}
-
-void APPGASCharacterPlayer::SprintReleased()
-{
-	UE_LOG(LogTemp, Log, TEXT("Sprint"));
-
-	GetCharacterMovement()->MaxWalkSpeed = 500.0f;
 }
