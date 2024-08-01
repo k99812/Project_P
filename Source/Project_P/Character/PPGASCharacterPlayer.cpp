@@ -103,6 +103,8 @@ void APPGASCharacterPlayer::PossessedBy(AController* NewController)
 
 			for (const TSubclassOf<UGameplayAbility>& StartAbility : StartAbilites)
 			{
+				//ASC는 직접적으로 GA를 접근, 관리하는게 아닌
+				//FGameplayAbilitySpec 구조체를 통해 간접적으로 관리함
 				FGameplayAbilitySpec Spec(StartAbility);
 
 				ASC->GiveAbility(Spec);
@@ -171,17 +173,17 @@ void APPGASCharacterPlayer::SetupGASPlayerInputComponent()
 		UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
 
 	//Jump
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::GASInputPressed, (int)EInputAbility::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::GASInputReleased, (int)EInputAbility::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::GASInputPressed, (int32)EInputAbility::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::GASInputReleased, (int32)EInputAbility::Jump);
 
 	//Sprint
-		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::GASInputPressed, (int)EInputAbility::Sprint);
-		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::GASInputReleased, (int)EInputAbility::Sprint);
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::GASInputPressed, (int32)EInputAbility::Sprint);
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::GASInputReleased, (int32)EInputAbility::Sprint);
 	}
 
 }
 
-void APPGASCharacterPlayer::GASInputPressed(int InputID)
+void APPGASCharacterPlayer::GASInputPressed(int32 InputID)
 {
 	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(InputID);
 
@@ -197,12 +199,13 @@ void APPGASCharacterPlayer::GASInputPressed(int InputID)
 		else
 		{
 			//어빌리티 Activate 실행
+			//어빌리티의 실행 등 ASC로부터 GA를 다루는건 Handle을 통해 컨트롤
 			ASC->TryActivateAbility(Spec->Handle);
 		}
 	}
 }
 
-void APPGASCharacterPlayer::GASInputReleased(int InputID)
+void APPGASCharacterPlayer::GASInputReleased(int32 InputID)
 {
 	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(InputID);
 

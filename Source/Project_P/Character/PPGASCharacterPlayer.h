@@ -43,8 +43,10 @@ public:
 // GAS Section
 protected:
 	virtual void SetupGASPlayerInputComponent();
-	void GASInputPressed(int InputID);
-	void GASInputReleased(int InputID);
+
+	void GASInputPressed(int32 InputID);
+
+	void GASInputReleased(int32 InputID);
 
 	UPROPERTY(EditAnywhere, Category = "GAS")
 	TArray<TSubclassOf<class UGameplayAbility>> StartAbilites;
