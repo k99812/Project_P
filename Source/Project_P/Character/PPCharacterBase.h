@@ -14,4 +14,10 @@ class PROJECT_P_API APPCharacterBase : public ACharacter
 public:
 	// Sets default values for this character's properties
 	APPCharacterBase();
+
+	FORCEINLINE TArray<TSubclassOf<UAnimMontage>> GetComboAttackMontage() { return ComboAttackMontage; }
+
+protected:
+	UPROPERTY(EditAnywhere, Category = "Animation")
+	TArray<TSubclassOf<UAnimMontage>> ComboAttackMontage;
 };
