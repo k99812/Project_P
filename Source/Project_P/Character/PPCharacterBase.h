@@ -18,6 +18,6 @@ public:
 	FORCEINLINE TArray<TSubclassOf<UAnimMontage>> GetComboAttackMontage() { return ComboAttackMontage; }
 
 protected:
-	UPROPERTY(EditAnywhere, Category = "Animation")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation")
 	TArray<TSubclassOf<UAnimMontage>> ComboAttackMontage;
 };
