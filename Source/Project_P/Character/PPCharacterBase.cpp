@@ -43,5 +43,4 @@ APPCharacterBase::APPCharacterBase()
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 	//스켈레탈 메쉬 콜리전 설정
 	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
-
 }

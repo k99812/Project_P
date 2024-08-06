@@ -16,8 +16,14 @@ void UPPGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, cons
 
 	APPCharacterBase* PPCharacter = CastChecked<APPCharacterBase>(ActorInfo->AvatarActor.Get());
 	ComboAttackMontage = PPCharacter->GetComboAttackMontage();
-	
-	UAbilityTask_PlayMontageAndWait* PlayAttackTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayAttack"), CastChecked<UAnimMontage>(ComboAttackMontage[0]->GetDefaultObject()));
+
+	if (IsValid(ComboAttackMontage[0]))
+	{
+		UAbilityTask_PlayMontageAndWait* PlayAttackTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayAttack"), ComboAttackMontage[0]);
+		PlayAttackTask->OnCompleted.AddDynamic(this, &UPPGA_Attack::OnCompletedCallback);
+		PlayAttackTask->OnInterrupted.AddDynamic(this, &UPPGA_Attack::OnInterruptedCallback);
+		PlayAttackTask->ReadyForActivation();
+	}
 }
 
 void UPPGA_Attack::CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility)
@@ -36,4 +42,19 @@ void UPPGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGa
 
 void UPPGA_Attack::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
+	UE_LOG(LogTemp, Log, TEXT("attack input pressed"));
+}
+
+void UPPGA_Attack::OnCompletedCallback()
+{
+	bool bReplicateEndAbility = true;
+	bool bWasCancelled = false;
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicateEndAbility, bWasCancelled);
+}
+
+void UPPGA_Attack::OnInterruptedCallback()
+{
+	bool bReplicateEndAbility = true;
+	bool bWasCancelled = true;
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicateEndAbility, bWasCancelled);
 }

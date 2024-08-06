@@ -26,5 +26,12 @@ public:
 	virtual void InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
 
 protected:
-	TArray<TSubclassOf<UAnimMontage>> ComboAttackMontage;
+	UFUNCTION()
+	void OnCompletedCallback();
+
+	UFUNCTION()
+	void OnInterruptedCallback();
+
+protected:
+	TArray<TObjectPtr<UAnimMontage>> ComboAttackMontage;
 };
