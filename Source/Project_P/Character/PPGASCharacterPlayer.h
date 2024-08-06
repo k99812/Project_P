@@ -16,8 +16,8 @@ enum class EInputAbility : uint8
 	None UMETA(DisplayName = "None"),
 	Jump = 10 UMETA(DisplayName = "Jump"),
 	Sprint UMETA(DisplayName = "Sprint"),
-	LAttack UMETA(DisplayName = "LAttack"),
-	RAttack UMETA(DisplayName = "RAttack"),
+	LeftAttack UMETA(DisplayName = "LAttack"),
+	RightAttack UMETA(DisplayName = "RAttack"),
 	Skill UMETA(DisplayName = "Skill")
 };
 
@@ -89,6 +89,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPriaveteAccess = "true"))
 	TObjectPtr<class UInputAction> SprintAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPriaveteAccess = "true"))
+	TObjectPtr<class UInputAction> LeftAttackAction;
 
 	//입력 이벤트 콜백함수
 	//이때 FInputActionValue를 매개 변수로 받음

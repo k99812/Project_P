@@ -82,6 +82,12 @@ APPGASCharacterPlayer::APPGASCharacterPlayer()
 	{
 		SprintAction = SprintActionRef.Object;
 	}
+
+	static ConstructorHelpers::FObjectFinder<UInputAction> LeftAttackActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Project_P/Input/Actions/IA_LeftAttack.IA_LeftAttack'"));
+	if (LeftAttackActionRef.Object)
+	{
+		LeftAttackAction = LeftAttackActionRef.Object;
+	}
 }
 
 UAbilitySystemComponent* APPGASCharacterPlayer::GetAbilitySystemComponent() const
@@ -179,6 +185,10 @@ void APPGASCharacterPlayer::SetupGASPlayerInputComponent()
 	//Sprint
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::GASInputPressed, (int32)EInputAbility::Sprint);
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::GASInputReleased, (int32)EInputAbility::Sprint);
+	
+	//Attack
+		EnhancedInputComponent->BindAction(LeftAttackAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::GASInputPressed, (int32)EInputAbility::LeftAttack);
+		EnhancedInputComponent->BindAction(LeftAttackAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::GASInputReleased, (int32)EInputAbility::LeftAttack);
 	}
 
 }

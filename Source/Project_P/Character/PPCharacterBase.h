@@ -15,9 +15,9 @@ public:
 	// Sets default values for this character's properties
 	APPCharacterBase();
 
-	FORCEINLINE TArray<TSubclassOf<UAnimMontage>> GetComboAttackMontage() { return ComboAttackMontage; }
+	FORCEINLINE TArray<TObjectPtr<UAnimMontage>> GetComboAttackMontage() { return ComboAttackMontage; }
 
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation")
-	TArray<TSubclassOf<UAnimMontage>> ComboAttackMontage;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
+	TArray<TObjectPtr<UAnimMontage>> ComboAttackMontage;
 };
