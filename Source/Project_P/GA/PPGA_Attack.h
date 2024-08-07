@@ -32,6 +32,14 @@ protected:
 	UFUNCTION()
 	void OnInterruptedCallback();
 
+//ÄÞº¸ ¼½¼Ç
 protected:
+	UPROPERTY(VisibleAnywhere, Category = "Animation")
 	TArray<TObjectPtr<UAnimMontage>> ComboAttackMontage;
+
+	uint8 CurrentCombo = 0;
+	bool HasNextAttackInput = false;
+
+public:
+	void CheckComboInput();
 };
