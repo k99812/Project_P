@@ -16,8 +16,12 @@ public:
 	APPCharacterBase();
 
 	FORCEINLINE TArray<TObjectPtr<UAnimMontage>> GetComboAttackMontage() { return ComboAttackMontage; }
+	FORCEINLINE TObjectPtr<class UPPComboActionData> GetComboActionData() { return ComboActionData; }
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
 	TArray<TObjectPtr<UAnimMontage>> ComboAttackMontage;
+
+	UPROPERTY()
+	TObjectPtr<class UPPComboActionData> ComboActionData;
 };

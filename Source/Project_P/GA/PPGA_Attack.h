@@ -37,9 +37,14 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Animation")
 	TArray<TObjectPtr<UAnimMontage>> ComboAttackMontage;
 
+	UPROPERTY(VisibleAnywhere, Category = "Data")
+	TObjectPtr<class UPPComboActionData> ComboActionData;
+
 	uint8 CurrentCombo = 0;
 	bool HasNextAttackInput = false;
+	FTimerHandle ComboTimerHandle;
 
-public:
+protected:
+	void StartTimer();
 	void CheckComboInput();
 };
