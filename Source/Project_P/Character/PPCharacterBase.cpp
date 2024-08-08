@@ -4,6 +4,7 @@
 #include "Character/PPCharacterBase.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Data/PPComboActionData.h"
 
 // Sets default values
 APPCharacterBase::APPCharacterBase()
@@ -43,4 +44,11 @@ APPCharacterBase::APPCharacterBase()
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 	//스켈레탈 메쉬 콜리전 설정
 	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
+
+//콤보데이터
+	static ConstructorHelpers::FObjectFinder<UPPComboActionData> ComboActionDataRef(TEXT("/Script/Project_P.PPComboActionData'/Game/Project_P/Data/ComboActionData.ComboActionData'"));
+	if (ComboActionDataRef.Object)
+	{
+		ComboActionData = ComboActionDataRef.Object;
+	}
 }
