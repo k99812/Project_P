@@ -35,7 +35,7 @@ protected:
 //ÄÞº¸ ¼½¼Ç
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Animation")
-	TArray<TObjectPtr<UAnimMontage>> ComboAttackMontage;
+	TObjectPtr<UAnimMontage> ComboAttackMontage;
 
 	UPROPERTY(VisibleAnywhere, Category = "Data")
 	TObjectPtr<class UPPComboActionData> ComboActionData;
@@ -45,6 +45,7 @@ protected:
 	FTimerHandle ComboTimerHandle;
 
 protected:
+	FName GetNextSection();
 	void StartTimer();
 	void CheckComboInput();
 };

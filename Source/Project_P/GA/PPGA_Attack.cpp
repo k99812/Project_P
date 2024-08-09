@@ -21,9 +21,9 @@ void UPPGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, cons
 	ComboActionData = PPCharacter->GetComboActionData();
 	PPCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
 
-	if (IsValid(ComboAttackMontage[CurrentCombo]))
+	if (IsValid(ComboAttackMontage))
 	{
-		UAbilityTask_PlayMontageAndWait* PlayAttackTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayAttack"), ComboAttackMontage[CurrentCombo]);
+		UAbilityTask_PlayMontageAndWait* PlayAttackTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayAttack"), ComboAttackMontage, 1.0f, GetNextSection());
 		PlayAttackTask->OnCompleted.AddDynamic(this, &UPPGA_Attack::OnCompletedCallback);
 		PlayAttackTask->OnInterrupted.AddDynamic(this, &UPPGA_Attack::OnInterruptedCallback);
 		PlayAttackTask->ReadyForActivation();
@@ -78,6 +78,11 @@ void UPPGA_Attack::OnInterruptedCallback()
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
+FName UPPGA_Attack::GetNextSection()
+{
+	return FName();
+}
+
 void UPPGA_Attack::StartTimer()
 {
 	ensure(ComboActionData->EffectiveFrameCount.IsValidIndex(CurrentCombo));
@@ -96,14 +101,7 @@ void UPPGA_Attack::CheckComboInput()
 	if (HasNextAttackInput)
 	{
 		CurrentCombo = FMath::Clamp(CurrentCombo + 1, 0, ComboActionData->MaxComboCount);
-		if (IsValid(ComboAttackMontage[CurrentCombo]))
-		{
-			UE_LOG(LogTemp, Log, TEXT("IsValid"));
-			UAbilityTask_PlayMontageAndWait* PlayAttackTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayAttack"), ComboAttackMontage[CurrentCombo]);
-			PlayAttackTask->OnCompleted.AddDynamic(this, &UPPGA_Attack::OnCompletedCallback);
-			PlayAttackTask->OnInterrupted.AddDynamic(this, &UPPGA_Attack::OnInterruptedCallback);
-			PlayAttackTask->ReadyForActivation();
-		}
+		MontageJumpToSection(GetNextSection());
 		StartTimer();
 		HasNextAttackInput = false;
 	}
