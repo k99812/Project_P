@@ -15,13 +15,13 @@ public:
 	// Sets default values for this character's properties
 	APPCharacterBase();
 
-	FORCEINLINE TArray<TObjectPtr<UAnimMontage>> GetComboAttackMontage() { return ComboAttackMontage; }
+	FORCEINLINE TObjectPtr<UAnimMontage> GetComboAttackMontage() { return ComboAttackMontage; }
 	FORCEINLINE TObjectPtr<class UPPComboActionData> GetComboActionData() { return ComboActionData; }
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
-	TArray<TObjectPtr<UAnimMontage>> ComboAttackMontage;
+	UPROPERTY(VisibleAnywhere, Category = "Animation")
+	TObjectPtr<UAnimMontage> ComboAttackMontage;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, Category = "Animation")
 	TObjectPtr<class UPPComboActionData> ComboActionData;
 };
