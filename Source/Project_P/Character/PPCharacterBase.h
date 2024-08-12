@@ -19,7 +19,7 @@ public:
 	FORCEINLINE TObjectPtr<class UPPComboActionData> GetComboActionData() { return ComboActionData; }
 
 protected:
-	UPROPERTY(VisibleAnywhere, Category = "Animation")
+	UPROPERTY(EditAnywhere, Category = "Animation")
 	TObjectPtr<UAnimMontage> ComboAttackMontage;
 
 	UPROPERTY(VisibleAnywhere, Category = "Animation")
