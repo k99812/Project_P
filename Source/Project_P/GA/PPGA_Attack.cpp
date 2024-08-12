@@ -27,9 +27,9 @@ void UPPGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, cons
 		PlayAttackTask->OnCompleted.AddDynamic(this, &UPPGA_Attack::OnCompletedCallback);
 		PlayAttackTask->OnInterrupted.AddDynamic(this, &UPPGA_Attack::OnInterruptedCallback);
 		PlayAttackTask->ReadyForActivation();
-	}
 
-	StartTimer();
+		StartTimer();
+	}
 }
 
 void UPPGA_Attack::CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility)
@@ -46,6 +46,7 @@ void UPPGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGa
 	APPCharacterBase* PPCharacter = CastChecked<APPCharacterBase>(ActorInfo->AvatarActor.Get());
 	PPCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 
+	ComboActionData = nullptr;
 	CurrentCombo = 0;
 	HasNextAttackInput = false;
 }
@@ -80,14 +81,17 @@ void UPPGA_Attack::OnInterruptedCallback()
 
 FName UPPGA_Attack::GetNextSection()
 {
-	return FName();
+	CurrentCombo = FMath::Clamp(CurrentCombo + 1, 1, ComboActionData->MaxComboCount);
+	FName NextSection = *FString::Printf(TEXT("%s%d"), *ComboActionData->MontageSectionNamePrefix, CurrentCombo);
+	return NextSection;
 }
 
 void UPPGA_Attack::StartTimer()
 {
+	int32 ComboIndex = CurrentCombo - 1;
 	ensure(ComboActionData->EffectiveFrameCount.IsValidIndex(CurrentCombo));
 
-	const float ComboEffectiveTime = ComboActionData->EffectiveFrameCount[CurrentCombo] / ComboActionData->FrameRate;
+	const float ComboEffectiveTime = ComboActionData->EffectiveFrameCount[ComboIndex] / ComboActionData->FrameRate;
 	if (ComboEffectiveTime > 0.0f)
 	{
 		GetWorld()->GetTimerManager().SetTimer(ComboTimerHandle, this, &UPPGA_Attack::CheckComboInput, ComboEffectiveTime, false);
@@ -100,7 +104,6 @@ void UPPGA_Attack::CheckComboInput()
 	ComboTimerHandle.Invalidate();
 	if (HasNextAttackInput)
 	{
-		CurrentCombo = FMath::Clamp(CurrentCombo + 1, 0, ComboActionData->MaxComboCount);
 		MontageJumpToSection(GetNextSection());
 		StartTimer();
 		HasNextAttackInput = false;

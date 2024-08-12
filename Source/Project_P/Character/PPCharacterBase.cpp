@@ -46,7 +46,7 @@ APPCharacterBase::APPCharacterBase()
 	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
 
 //ÄÞº¸ 
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> ComboAttackMontageRef(TEXT("/Script/Project_P.PPComboActionData'/Game/Project_P/Data/ComboActionData.ComboActionData'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ComboAttackMontageRef(TEXT("/Script/Engine.AnimMontage'/Game/Project_P/Animation/Montage/ComboAttack_Montage.ComboAttack_Montage'"));
 	if (ComboAttackMontageRef.Object)
 	{
 		ComboAttackMontage = ComboAttackMontageRef.Object;
