@@ -19,7 +19,9 @@ void UPPGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, cons
 	APPCharacterBase* PPCharacter = CastChecked<APPCharacterBase>(ActorInfo->AvatarActor.Get());
 	ComboAttackMontage = PPCharacter->GetComboAttackMontage();
 	ComboActionData = PPCharacter->GetComboActionData();
-	PPCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+
+//Movement Mode 설정
+	//PPCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
 
 	if (IsValid(ComboAttackMontage))
 	{
@@ -36,7 +38,7 @@ void UPPGA_Attack::CancelAbility(const FGameplayAbilitySpecHandle Handle, const 
 {
 	Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
 
-
+	UE_LOG(LogTemp, Log, TEXT("CancelAbility : Attack"));
 }
 
 void UPPGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
@@ -44,7 +46,9 @@ void UPPGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGa
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
 	APPCharacterBase* PPCharacter = CastChecked<APPCharacterBase>(ActorInfo->AvatarActor.Get());
-	PPCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+
+//Movement Mode 설정
+	//PPCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 
 	ComboActionData = nullptr;
 	CurrentCombo = 0;

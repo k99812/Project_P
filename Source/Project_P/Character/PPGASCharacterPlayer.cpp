@@ -12,6 +12,9 @@
 #include "InputMappingContext.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Abilities/GameplayAbility.h"
+#include "AbilitySystemGlobals.h"
+#include "GameplayTagContainer.h"
+#include "Tag/PPGameplayTag.h"
 
 APPGASCharacterPlayer::APPGASCharacterPlayer()
 {
@@ -233,6 +236,25 @@ void APPGASCharacterPlayer::GASInputReleased(int32 InputID)
 
 void APPGASCharacterPlayer::Move(const FInputActionValue& Value)
 {
+	//ASC에 태그 달기
+	FGameplayTagContainer WalkingTagContainer;
+	WalkingTagContainer.AddTag(PPTAG_CHARACTER_ISWALKING);
+
+	if (!ASC->HasAnyMatchingGameplayTags(WalkingTagContainer))
+	{
+		ASC->AddLooseGameplayTags(WalkingTagContainer);
+
+		if (UAbilitySystemGlobals::Get().ShouldReplicateActivationOwnedTags())
+		{
+			ASC->AddReplicatedLooseGameplayTags(WalkingTagContainer);
+		}
+	}
+
+	const FGameplayTagContainer* CancelAbilityTags = new FGameplayTagContainer(PPTAG_CHARACTER_ISATTACKING);
+	//CancelAbilityTags.AddTag(PPTAG_CHARACTER_ISATTACKING);
+
+	ASC->CancelAbilities(CancelAbilityTags);
+
 	//X는 좌우 Y는 상하 입력
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
@@ -261,4 +283,18 @@ void APPGASCharacterPlayer::Look(const FInputActionValue& Value)
 void APPGASCharacterPlayer::MoveInputReleased()
 {
 	InputReleasedDelegate.Execute();
+
+	FGameplayTagContainer WalkingTagContainer;
+	WalkingTagContainer.AddTag(PPTAG_CHARACTER_ISWALKING);
+
+	// ASC에 태그 제거
+	if (ASC->HasAnyMatchingGameplayTags(WalkingTagContainer))
+	{
+		ASC->RemoveLooseGameplayTags(WalkingTagContainer);
+
+		if (UAbilitySystemGlobals::Get().ShouldReplicateActivationOwnedTags())
+		{
+			ASC->RemoveReplicatedLooseGameplayTags(WalkingTagContainer);
+		}
+	}
 }
