@@ -143,6 +143,9 @@ void APPGASCharacterPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//ASC에 특정태그가 생기거나 제거되면 호출하는 델리게이트에 콜백함수 연결
+	//ASC->RegisterGameplayTagEvent(PPTAG_CHARACTER_ISCC, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &APPGASCharacterPlayer::OnCCTagChanged);
+	
 	//서브시스템을 가져오기 위해 GetSubsystem 함수를 사용
 	//ULocalPlayer* 는 APlayerController*에서 GetLocalPlayer()로 가져옴
 	APlayerController* PlayerController = CastChecked<APlayerController>(GetController());
@@ -250,9 +253,8 @@ void APPGASCharacterPlayer::Move(const FInputActionValue& Value)
 		}
 	}
 
-	const FGameplayTagContainer* CancelAbilityTags = new FGameplayTagContainer(PPTAG_CHARACTER_ISATTACKING);
-	//CancelAbilityTags.AddTag(PPTAG_CHARACTER_ISATTACKING);
-
+	//이동시 공격 어빌리티 캔슬
+	const FGameplayTagContainer* CancelAbilityTags = new FGameplayTagContainer(PPTAG_ABILITY_ATTACK);
 	ASC->CancelAbilities(CancelAbilityTags);
 
 	//X는 좌우 Y는 상하 입력
@@ -283,11 +285,15 @@ void APPGASCharacterPlayer::Look(const FInputActionValue& Value)
 void APPGASCharacterPlayer::MoveInputReleased()
 {
 	InputReleasedDelegate.Execute();
+	RemoveWalkingTag();
+}
 
+void APPGASCharacterPlayer::RemoveWalkingTag()
+{
+	// ASC에 태그 제거
 	FGameplayTagContainer WalkingTagContainer;
 	WalkingTagContainer.AddTag(PPTAG_CHARACTER_ISWALKING);
 
-	// ASC에 태그 제거
 	if (ASC->HasAnyMatchingGameplayTags(WalkingTagContainer))
 	{
 		ASC->RemoveLooseGameplayTags(WalkingTagContainer);
@@ -298,3 +304,11 @@ void APPGASCharacterPlayer::MoveInputReleased()
 		}
 	}
 }
+
+/*
+void APPGASCharacterPlayer::OnCCTagChanged(const FGameplayTag CallBackTag, int32 NewCount)
+{
+
+}
+*/
+

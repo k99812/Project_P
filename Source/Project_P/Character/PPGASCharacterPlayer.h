@@ -98,4 +98,10 @@ protected:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void MoveInputReleased();
+
+//Gameplay Tag Event
+protected:
+	void RemoveWalkingTag();
+	//void OnCCTagChanged(const FGameplayTag CallBackTag, int32 NewCount);
+
 };

@@ -48,7 +48,7 @@ void UPPGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGa
 	APPCharacterBase* PPCharacter = CastChecked<APPCharacterBase>(ActorInfo->AvatarActor.Get());
 
 //Movement Mode ¼³Á¤
-	//PPCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+	PPCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 
 	ComboActionData = nullptr;
 	CurrentCombo = 0;
