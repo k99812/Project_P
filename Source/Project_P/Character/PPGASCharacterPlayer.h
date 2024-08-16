@@ -6,6 +6,7 @@
 #include "Character/PPCharacterBase.h"
 #include "AbilitySystemInterface.h"
 #include "InputActionValue.h"
+#include "GameplayEffectTypes.h"
 #include "PPGASCharacterPlayer.generated.h"
 
 DECLARE_DELEGATE(FInputReleasedDelegate);
@@ -102,6 +103,8 @@ protected:
 //Gameplay Tag Event
 protected:
 	void RemoveWalkingTag();
-	//void OnCCTagChanged(const FGameplayTag CallBackTag, int32 NewCount);
+
+	//#include "GameplayEffectTypes.h" Ãß°¡
+	virtual void OnCCTagChanged(const FGameplayTag CallBackTag, int32 NewCount);
 
 };
