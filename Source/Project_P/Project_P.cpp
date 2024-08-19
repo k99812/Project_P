@@ -3,5 +3,5 @@
 #include "Project_P.h"
 #include "Modules/ModuleManager.h"
 
-DEFINE_LOG_CATEGORY(LogPPGAS);
+DEFINE_LOG_CATEGORY(LogGAS);
 IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, Project_P, "Project_P" );
