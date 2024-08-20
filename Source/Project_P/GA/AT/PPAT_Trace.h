@@ -31,5 +31,6 @@ public:
 	FTraceResultDelegate OnComplete;
 
 protected:
+	UFUNCTION()
 	void TargetDataReadyCallback(const FGameplayAbilityTargetDataHandle& DataHandle);
 };
