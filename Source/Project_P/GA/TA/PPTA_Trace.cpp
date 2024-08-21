@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Components/CapsuleComponent.h"
 #include "Physics/PPCollision.h"
+#include "DrawDebugHelpers.h"
 
 APPTA_Trace::APPTA_Trace()
 {
@@ -20,7 +21,7 @@ void APPTA_Trace::StartTargeting(UGameplayAbility* Ability)
 
 void APPTA_Trace::ConfirmTargetingAndContinue()
 {
-	Super::ConfirmTargetingAndContinue();
+	//Super::ConfirmTargetingAndContinue();
 
 	if (SourceActor)
 	{
