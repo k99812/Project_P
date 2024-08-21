@@ -37,6 +37,8 @@ FGameplayAbilityTargetDataHandle APPTA_Trace::MakeTargetData() const
 	const float AttackRadius = 50.0f;
 	const float AttackRange = 100.0f;
 
+	//Params(SCENE_QUERY_STAT(태그이름), 복잡한 트레이스 할지, 충돌 검출 안할 액터)
+	//SCENE_QUERY_STAT(태그이름) 들어간 인자로 태그를 생성
 	FCollisionQueryParams Params(SCENE_QUERY_STAT(PPTA_Trace), false, Character);
 	const FVector FowardVector = Character->GetActorForwardVector();
 	const FVector Start = Character->GetActorLocation() + FowardVector * Character->GetCapsuleComponent()->GetScaledCapsuleRadius();
@@ -49,18 +51,18 @@ FGameplayAbilityTargetDataHandle APPTA_Trace::MakeTargetData() const
 	if (HitDetected)
 	{
 		FGameplayAbilityTargetData_SingleTargetHit* TargetData = new FGameplayAbilityTargetData_SingleTargetHit(OutHitResult);
-		TargetDataHandle.Append(TargetData);
+		TargetDataHandle.Add(TargetData);
 	}
 
 #if ENABLE_DRAW_DEBUG
 
-	if (bSHowDebug)
+	if (bShowDebug)
 	{
 		FVector CapsuleOrigine = Start + (End - Start) * 0.5;
 		float CapsuleHalfHeight = AttackRange * 0.5;
 		FColor DrawColor = HitDetected ? FColor::Green : FColor::Red;
 
-		DrawDebugCapsule(GetWorld(), CapsuleOrigine, CapsuleHalfHeight, AttackRadius, FRotationMatrix::MakeFromZ(FowardVector).ToQuat(), DrawColor, false, 5.0f);
+		DrawDebugCapsule(GetWorld(), CapsuleOrigine, CapsuleHalfHeight, AttackRadius, FRotationMatrix::MakeFromZ(FowardVector).ToQuat(), DrawColor, false, 3.0f);
 	}
 
 #endif

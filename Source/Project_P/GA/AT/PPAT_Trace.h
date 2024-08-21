@@ -21,16 +21,25 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks", meta = (DisplayName = "JumpAndWaitForLanding",
 		HidePin = "OwningAbility", DefaultToSelf = "OwningAbility", BlueprintInternalUseOnly = "TRUE"))
-	static UPPAT_Trace* CreateTask(UGameplayAbility* OwnerAbility);
+	static UPPAT_Trace* CreateTask(UGameplayAbility* OwnerAbility, TSubclassOf<class APPTA_Trace> TargetActorClass);
 
 	virtual void Activate() override;
 
 	virtual void OnDestroy(bool bInOwnerFinished) override;
 
+	void SpawnAndInitializeTargetActor();
+
+	void FinalizeTargetActor();
+
 	UPROPERTY(BlueprintAssignable)
 	FTraceResultDelegate OnComplete;
 
 protected:
-	UFUNCTION()
 	void TargetDataReadyCallback(const FGameplayAbilityTargetDataHandle& DataHandle);
+
+	UPROPERTY()
+	TSubclassOf<class APPTA_Trace> TargetActorClass;
+
+	UPROPERTY()
+	TObjectPtr<class APPTA_Trace> SpawnedTargetActor;
 };

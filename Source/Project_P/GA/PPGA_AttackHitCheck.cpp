@@ -2,6 +2,9 @@
 
 
 #include "GA/PPGA_AttackHitCheck.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "GA/AT/PPAT_Trace.h"
+#include "GA/TA/PPTA_Trace.h"
 #include "Project_P.h"
 
 UPPGA_AttackHitCheck::UPPGA_AttackHitCheck()
@@ -13,9 +16,23 @@ void UPPGA_AttackHitCheck::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	PPGAS_LOG(LogGAS, Log, TEXT("Activate Attack Hit Check Ability"));
+	UPPAT_Trace* AttackTraceTask = UPPAT_Trace::CreateTask(this, APPTA_Trace::StaticClass());
+
+	AttackTraceTask->OnComplete.AddDynamic(this, &UPPGA_AttackHitCheck::TraceResultCallback);
+
+	AttackTraceTask->ReadyForActivation();
+}
+
+void UPPGA_AttackHitCheck::TraceResultCallback(const FGameplayAbilityTargetDataHandle& DataHandle)
+{
+	if (UAbilitySystemBlueprintLibrary::TargetDataHasHitResult(DataHandle, 0))
+	{
+		FHitResult HitResult = UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(DataHandle, 0);
+
+		PPGAS_LOG(LogGAS, Log, TEXT("Target %s Detected"), *(HitResult.GetActor()->GetName()));
+	}
 
 	bool bReplicateEndAbility = true;
 	bool bWasCancelled = false;
-	EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
