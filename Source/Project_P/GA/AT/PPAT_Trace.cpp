@@ -30,17 +30,17 @@ void UPPAT_Trace::Activate()
 
 void UPPAT_Trace::OnDestroy(bool bInOwnerFinished)
 {
-	Super::OnDestroy(bInOwnerFinished);
-
 	if (SpawnedTargetActor)
 	{
 		SpawnedTargetActor->Destroy();
 	}
+
+	Super::OnDestroy(bInOwnerFinished);
 }
 
 void UPPAT_Trace::SpawnAndInitializeTargetActor()
 {
-	SpawnedTargetActor = Cast<APPTA_Trace>(GetWorld()->SpawnActorDeferred<AGameplayAbilityTargetActor>(TargetActorClass, FTransform::Identity,
+	SpawnedTargetActor = Cast<APPTA_Trace>(Ability->GetWorld()->SpawnActorDeferred<AGameplayAbilityTargetActor>(TargetActorClass, FTransform::Identity,
 		nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn));
 
 	if (SpawnedTargetActor)
