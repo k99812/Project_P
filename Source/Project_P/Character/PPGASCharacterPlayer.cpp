@@ -68,6 +68,7 @@ APPGASCharacterPlayer::APPGASCharacterPlayer()
 		MoveAction = MoveInputActionRef.Object;
 	}
 
+//GAS 인풋 설정
 	static ConstructorHelpers::FObjectFinder<UInputAction> JumpInputActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Project_P/Input/Actions/IA_Jump.IA_Jump'"));
 	if (JumpInputActionRef.Object)
 	{
@@ -240,6 +241,8 @@ void APPGASCharacterPlayer::GASInputReleased(int32 InputID)
 void APPGASCharacterPlayer::Move(const FInputActionValue& Value)
 {
 	//ASC에 태그 달기
+	//#include "GameplayTagContainer.h" 추가
+
 	FGameplayTagContainer WalkingTagContainer;
 	WalkingTagContainer.AddTag(PPTAG_CHARACTER_ISWALKING);
 
@@ -247,6 +250,7 @@ void APPGASCharacterPlayer::Move(const FInputActionValue& Value)
 	{
 		ASC->AddLooseGameplayTags(WalkingTagContainer);
 
+		//#include "AbilitySystemGlobals.h" 추가
 		if (UAbilitySystemGlobals::Get().ShouldReplicateActivationOwnedTags())
 		{
 			ASC->AddReplicatedLooseGameplayTags(WalkingTagContainer);
