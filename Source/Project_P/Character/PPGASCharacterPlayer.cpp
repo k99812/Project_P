@@ -246,35 +246,52 @@ void APPGASCharacterPlayer::Move(const FInputActionValue& Value)
 	FGameplayTagContainer WalkingTagContainer;
 	WalkingTagContainer.AddTag(PPTAG_CHARACTER_ISWALKING);
 
-	if (!ASC->HasAnyMatchingGameplayTags(WalkingTagContainer))
+	if (GetCharacterMovement()->GetMovementName() == TEXT("Walking"))
 	{
-		ASC->AddLooseGameplayTags(WalkingTagContainer);
-
-		//#include "AbilitySystemGlobals.h" 추가
-		if (UAbilitySystemGlobals::Get().ShouldReplicateActivationOwnedTags())
+		if (!ASC->HasAnyMatchingGameplayTags(WalkingTagContainer))
 		{
-			ASC->AddReplicatedLooseGameplayTags(WalkingTagContainer);
+			ASC->AddLooseGameplayTags(WalkingTagContainer);
+
+			//#include "AbilitySystemGlobals.h" 추가
+			if (UAbilitySystemGlobals::Get().ShouldReplicateActivationOwnedTags())
+			{
+				ASC->AddReplicatedLooseGameplayTags(WalkingTagContainer);
+			}
 		}
+
+		//이동시 공격 어빌리티 캔슬
+		const FGameplayTagContainer* CancelAbilityTags = new FGameplayTagContainer(PPTAG_ABILITY_ATTACK);
+		ASC->CancelAbilities(CancelAbilityTags);
+
+		//X는 좌우 Y는 상하 입력
+		FVector2D MovementVector = Value.Get<FVector2D>();
+
+		//CameraArm->bUsePawnControlRotation = true; 설정을 통해
+		//카메라 암과 컨트롤러의 로테이션은 동기화 됨
+		//const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator Rotation = CameraArm->GetDesiredRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+		AddMovementInput(ForwardDirection, MovementVector.Y);
+		AddMovementInput(RightDirection, MovementVector.X);
 	}
 
-	//이동시 공격 어빌리티 캔슬
-	const FGameplayTagContainer* CancelAbilityTags = new FGameplayTagContainer(PPTAG_ABILITY_ATTACK);
-	ASC->CancelAbilities(CancelAbilityTags);
+	if (GetCharacterMovement()->GetMovementName() != TEXT("Walking"))
+	{
+		if (ASC->HasAnyMatchingGameplayTags(WalkingTagContainer))
+		{
+			ASC->RemoveLooseGameplayTags(WalkingTagContainer);
 
-	//X는 좌우 Y는 상하 입력
-	FVector2D MovementVector = Value.Get<FVector2D>();
-
-	//CameraArm->bUsePawnControlRotation = true; 설정을 통해
-	//카메라 암과 컨트롤러의 로테이션은 동기화 됨
-	//const FRotator Rotation = Controller->GetControlRotation();
-	const FRotator Rotation = CameraArm->GetDesiredRotation();
-	const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+			if (UAbilitySystemGlobals::Get().ShouldReplicateActivationOwnedTags())
+			{
+				ASC->RemoveReplicatedLooseGameplayTags(WalkingTagContainer);
+			}
+		}
+	}
 	
-	AddMovementInput(ForwardDirection, MovementVector.Y);
-	AddMovementInput(RightDirection, MovementVector.X);
 }
 
 void APPGASCharacterPlayer::Look(const FInputActionValue& Value)
