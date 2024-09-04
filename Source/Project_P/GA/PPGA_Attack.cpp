@@ -93,7 +93,7 @@ FName UPPGA_Attack::GetNextSection()
 void UPPGA_Attack::StartTimer()
 {
 	int32 ComboIndex = CurrentCombo - 1;
-	ensure(ComboActionData->EffectiveFrameCount.IsValidIndex(CurrentCombo));
+	ensure(ComboActionData->EffectiveFrameCount.IsValidIndex(ComboIndex));
 
 	const float ComboEffectiveTime = ComboActionData->EffectiveFrameCount[ComboIndex] / ComboActionData->FrameRate;
 	if (ComboEffectiveTime > 0.0f)
