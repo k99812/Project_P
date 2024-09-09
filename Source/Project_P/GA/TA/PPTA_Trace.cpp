@@ -7,6 +7,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Physics/PPCollision.h"
 #include "DrawDebugHelpers.h"
+#include "Project_P.h"
 
 APPTA_Trace::APPTA_Trace()
 {
@@ -23,7 +24,7 @@ void APPTA_Trace::ConfirmTargetingAndContinue()
 {
 	//Super::ConfirmTargetingAndContinue();
 
-	if (SourceActor)
+	if (SourceActor && IsConfirmTargetingAllowed())
 	{
 		FGameplayAbilityTargetDataHandle DataHandle = MakeTargetData();
 		TargetDataReadyDelegate.Broadcast(DataHandle);
