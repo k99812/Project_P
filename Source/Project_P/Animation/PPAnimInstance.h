@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "GameplayTagContainer.h"
 #include "PPAnimInstance.generated.h"
 
 /**
@@ -58,9 +59,6 @@ protected:
 	uint8 bIsSprint : 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
-	float SprintThreshould;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
 	uint8 bIsFalling : 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
@@ -81,6 +79,11 @@ protected:
 	//X√‡
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
 	float Roll;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = ASC)
+	TObjectPtr<class UAbilitySystemComponent> ASC;
+
+	FGameplayTagContainer SprintTagContainer;
 
 protected:
 	void SaveLastDirection();
