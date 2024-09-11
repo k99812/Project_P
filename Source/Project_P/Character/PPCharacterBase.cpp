@@ -5,6 +5,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Data/PPComboActionData.h"
+#include "Physics/PPCollision.h"
 
 // Sets default values
 APPCharacterBase::APPCharacterBase()
@@ -18,7 +19,7 @@ APPCharacterBase::APPCharacterBase()
 //캡슐 콜라이더 설정
 	//#include "Components/CapsuleComponent.h"추가
 	GetCapsuleComponent()->InitCapsuleSize(25.0f, 92.0f);
-	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Pawn"));
+	GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_PPCAPSULE);
 
 //무브먼트 설정
 	//#include "GameFramework/CharacterMovementComponent.h" 추가
