@@ -306,6 +306,12 @@ void APPGASCharacterPlayer::MoveInputReleased()
 {
 	InputReleasedDelegate.Execute();
 	RemoveWalkingTag();
+
+	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID((int32)EInputAbility::Sprint);
+	if (Spec->IsActive())
+	{
+		ASC->CancelAbilityHandle(Spec->Handle);
+	}
 }
 
 void APPGASCharacterPlayer::RemoveWalkingTag()
