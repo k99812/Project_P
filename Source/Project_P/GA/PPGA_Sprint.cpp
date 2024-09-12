@@ -2,9 +2,11 @@
 
 
 #include "GA/PPGA_Sprint.h"
-#include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Tag/PPGameplayTag.h"
+#include "AbilitySystemComponent.h"
+#include "GameplayTagContainer.h"
+#include "Character/PPGASCharacterPlayer.h"
 
 UPPGA_Sprint::UPPGA_Sprint() : SprintSpeed(1000.0f), WalkSpeed(500.0f)
 {
@@ -43,3 +45,27 @@ void UPPGA_Sprint::InputReleased(const FGameplayAbilitySpecHandle Handle, const 
 	bool bWasCancelled = false;
 	EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
+
+bool UPPGA_Sprint::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
+{
+	bool bCanActivate = Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
+	if (!bCanActivate)
+	{
+		return false;
+	}
+	
+	APPGASCharacterPlayer* Owner = CastChecked<APPGASCharacterPlayer>(ActorInfo->AvatarActor.Get());
+	UAbilitySystemComponent* ASC = Owner->GetAbilitySystemComponent();
+
+	if (ASC)
+	{
+		FGameplayTagContainer TagContainer;
+		TagContainer.AddTag(PPTAG_CHARACTER_ISWALKING);
+
+		bCanActivate = ASC->HasAnyMatchingGameplayTags(TagContainer);
+	}
+	
+	return bCanActivate;
+}
+
+

@@ -38,7 +38,7 @@ void UPPGA_Attack::CancelAbility(const FGameplayAbilitySpecHandle Handle, const 
 {
 	Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
 
-	UE_LOG(LogTemp, Log, TEXT("CancelAbility : Attack"));
+	//UE_LOG(LogTemp, Log, TEXT("CancelAbility : Attack"));
 }
 
 void UPPGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
@@ -57,7 +57,7 @@ void UPPGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGa
 
 void UPPGA_Attack::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
-	UE_LOG(LogTemp, Log, TEXT("attack input pressed"));
+	//UE_LOG(LogTemp, Log, TEXT("attack input pressed"));
 	
 	if (!ComboTimerHandle.IsValid())
 	{
