@@ -3,10 +3,12 @@
 
 #include "Character/PPGASCharacterNonPlayer.h"
 #include "AbilitySystemComponent.h"
+#include "Attribute/PPCharacterAttributeSet.h"
 
 APPGASCharacterNonPlayer::APPGASCharacterNonPlayer()
 {
 	ASC = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("ASC"));
+	AttributeSet = CreateDefaultSubobject<UPPCharacterAttributeSet>(TEXT("AttributeSet"));
 }
 
 UAbilitySystemComponent* APPGASCharacterNonPlayer::GetAbilitySystemComponent() const
