@@ -27,7 +27,7 @@ APPGASCharacterPlayer::APPGASCharacterPlayer()
 	}
 
 //애니메이션인스턴스클래스 설정
-	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimInstanceClassRef(TEXT("/Game/Project_P/Blueprint/BP_PPABCountess.BP_PPABCountess_C"));
+	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimInstanceClassRef(TEXT("/Game/Project_P/Blueprint/Player/BP_PPABCountess.BP_PPABCountess_C"));
 	if (AnimInstanceClassRef.Class)
 	{
 		//Set함수 사용

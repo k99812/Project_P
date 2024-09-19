@@ -8,6 +8,9 @@
 #include "Physics/PPCollision.h"
 #include "DrawDebugHelpers.h"
 #include "Project_P.h"
+#include "AbilitySystemComponent.h"
+#include "Attribute/PPCharacterAttributeSet.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 APPTA_Trace::APPTA_Trace()
 {
@@ -35,9 +38,23 @@ FGameplayAbilityTargetDataHandle APPTA_Trace::MakeTargetData() const
 {
 	ACharacter* Character = CastChecked<ACharacter>(SourceActor);
 
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Character);
+	if (!ASC)
+	{
+		PPGAS_LOG(LogGAS, Log, TEXT("ASC Not Found"));
+		return FGameplayAbilityTargetDataHandle();
+	}
+
+	const UPPCharacterAttributeSet* AttributeSet = ASC->GetSet<UPPCharacterAttributeSet>();
+	if (!AttributeSet)
+	{
+		PPGAS_LOG(LogGAS, Log, TEXT("AttributeSet Not Found"));
+		return FGameplayAbilityTargetDataHandle();
+	}
+
 	FHitResult OutHitResult;
-	const float AttackRadius = 50.0f;
-	const float AttackRange = 100.0f;
+	const float AttackRadius = AttributeSet->GetAttackRadius();
+	const float AttackRange = AttributeSet->GetAttackRange();
 
 	//Params(SCENE_QUERY_STAT(태그이름), 복잡한 트레이스 할지, 충돌 검출 안할 액터)
 	//SCENE_QUERY_STAT(태그이름) 들어간 인자로 태그를 생성
