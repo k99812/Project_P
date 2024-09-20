@@ -80,7 +80,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
 	float Roll;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = ASC)
+	UPROPERTY(BlueprintReadOnly, Category = ASC)
 	TObjectPtr<class UAbilitySystemComponent> ASC;
 
 	FGameplayTagContainer SprintTagContainer;
