@@ -27,12 +27,16 @@ APPGASCharacterPlayer::APPGASCharacterPlayer()
 	}
 
 //애니메이션인스턴스클래스 설정
-	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimInstanceClassRef(TEXT("/Game/Project_P/Blueprint/Player/BP_PPABCountess.BP_PPABCountess_C"));
+	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimInstanceClassRef(TEXT("/Game/Project_P/Blueprint/Player/BPAB_PPCountess.BPAB_PPCountess_C"));
 	if (AnimInstanceClassRef.Class)
 	{
 		//Set함수 사용
 		GetMesh()->SetAnimInstanceClass(AnimInstanceClassRef.Class);
 	}
+
+//메쉬 설정
+//캐릭터 메쉬의 초기 위치, 로테이션값 설정
+	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -95.0f), FRotator(0.0f, -90.0f, 0.0f));
 
 //캐랙터 무브먼트 설정
 	GetCharacterMovement()->bOrientRotationToMovement = false;

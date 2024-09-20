@@ -39,8 +39,6 @@ APPCharacterBase::APPCharacterBase()
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.0f;
 
 //메쉬 설정
-	//캐릭터 메쉬의 초기 위치, 로테이션값 설정
-	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -95.0f), FRotator(0.0f, -90.0f, 0.0f));
 	//애니메이션 모드 지정
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 	//스켈레탈 메쉬 콜리전 설정
