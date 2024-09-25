@@ -6,6 +6,7 @@
 #include "GA/AT/PPAT_Trace.h"
 #include "GA/TA/PPTA_Trace.h"
 #include "Project_P.h"
+#include "Attribute/PPCharacterAttributeSet.h"
 
 UPPGA_AttackHitCheck::UPPGA_AttackHitCheck()
 {
@@ -33,6 +34,26 @@ void UPPGA_AttackHitCheck::TraceResultCallback(const FGameplayAbilityTargetDataH
 		FHitResult HitResult = UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(DataHandle, 0);
 
 		PPGAS_LOG(LogGAS, Log, TEXT("Target %s Detected"), *(HitResult.GetActor()->GetName()));
+
+		UAbilitySystemComponent* OwnerASC = GetAbilitySystemComponentFromActorInfo_Checked();
+		UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(HitResult.GetActor());
+
+		if (!OwnerASC || !TargetASC)
+		{
+			PPGAS_LOG(LogGAS, Error, TEXT("(Owner or Target)ASC Not Found"));
+			return;
+		}
+
+		const UPPCharacterAttributeSet* OwnerAttributeSet = OwnerASC->GetSet<UPPCharacterAttributeSet>();
+		UPPCharacterAttributeSet* TargetAttributeSet = const_cast<UPPCharacterAttributeSet*>(TargetASC->GetSet<UPPCharacterAttributeSet>());
+		if (!OwnerAttributeSet || !TargetAttributeSet)
+		{
+			PPGAS_LOG(LogGAS, Error, TEXT("(Owner or Target)AttributeSet Not Found"));
+			return;
+		}
+
+		const float AttackDamage = OwnerAttributeSet->GetAttackRate();
+		TargetAttributeSet->SetHealth(TargetAttributeSet->GetHealth() - AttackDamage);
 	}
 
 	bool bReplicateEndAbility = true;
