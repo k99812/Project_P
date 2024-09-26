@@ -16,4 +16,10 @@ class PROJECT_P_API APPGASCharacterGrunt : public APPGASCharacterNonPlayer
 	
 public:
 	APPGASCharacterGrunt();
+
+	virtual void PostInitializeComponents() override;
+
+protected:
+	UPROPERTY(EditAnywhere, Category = "AttributeData")
+	TObjectPtr<class UPPGruntAttributeData> AttributeData;
 };

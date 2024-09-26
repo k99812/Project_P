@@ -4,6 +4,8 @@
 #include "Character/PPGASCharacterGrunt.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Attribute/PPCharacterAttributeSet.h"
+#include "Data/PPGruntAttributeData.h"
 
 APPGASCharacterGrunt::APPGASCharacterGrunt()
 {
@@ -21,6 +23,13 @@ APPGASCharacterGrunt::APPGASCharacterGrunt()
 		GetMesh()->SetAnimInstanceClass(AnimInstanceClassRef.Class);
 	}
 
+//어트리뷰트 데이터 애셋 
+	static ConstructorHelpers::FObjectFinder<UPPGruntAttributeData> AttributeDataRef(TEXT("/Script/Project_P.PPGruntAttributeData'/Game/Project_P/Data/GruntAttributeData.GruntAttributeData'"));
+	if (AttributeDataRef.Object)
+	{
+		AttributeData = AttributeDataRef.Object;
+	}
+
 //캡슐 컴포넌트 설정
 	GetCapsuleComponent()->InitCapsuleSize(30.0f, 86.5f);
 
@@ -32,4 +41,22 @@ APPGASCharacterGrunt::APPGASCharacterGrunt()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
 	GetCharacterMovement()->MaxWalkSpeed = 500.0f;
+}
+
+void APPGASCharacterGrunt::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+//스탯 초기화
+	AttributeSet->InitAttackRadius(AttributeData->AttackRadius);
+	AttributeSet->InitMaxAttackRadius(AttributeData->MaxAttackRadius);
+
+	AttributeSet->InitAttackRange(AttributeData->AttackRange);
+	AttributeSet->InitMaxAttackRange(AttributeData->MaxAttackRange);
+
+	AttributeSet->InitAttackRate(AttributeData->AttackRate);
+	AttributeSet->InitMaxAttackRate(AttributeData->MaxAttackRate);
+
+	AttributeSet->InitMaxHealth(AttributeData->MaxHealth);
+	AttributeSet->InitHealth(AttributeSet->GetMaxHealth());
 }
