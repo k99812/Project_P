@@ -52,8 +52,11 @@ void UPPGA_AttackHitCheck::TraceResultCallback(const FGameplayAbilityTargetDataH
 			return;
 		}
 
-		const float AttackDamage = OwnerAttributeSet->GetAttackRate();
-		TargetAttributeSet->SetHealth(TargetAttributeSet->GetHealth() - AttackDamage);
+		FGameplayEffectSpecHandle SpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect);
+		if (SpecHandle.IsValid())
+		{
+			ApplyGameplayEffectSpecToTarget(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, SpecHandle, DataHandle);
+		}
 	}
 
 	bool bReplicateEndAbility = true;
