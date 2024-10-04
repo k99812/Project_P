@@ -102,7 +102,7 @@ protected:
 
 //Gameplay Tag Event
 protected:
-	void RemoveWalkingTag();
+	void RemoveTag(const FGameplayTagContainer& RemoveTagContainer);
 
 	//#include "GameplayEffectTypes.h" Ãß°¡
 	virtual void OnCCTagChanged(const FGameplayTag CallBackTag, int32 NewCount);

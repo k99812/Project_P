@@ -6,6 +6,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Attribute/PPCharacterAttributeSet.h"
 #include "Data/PPGruntAttributeData.h"
+#include "Data/PPComboActionData.h"
 
 APPGASCharacterGrunt::APPGASCharacterGrunt()
 {
@@ -28,6 +29,19 @@ APPGASCharacterGrunt::APPGASCharacterGrunt()
 	if (AttributeDataRef.Object)
 	{
 		AttributeData = AttributeDataRef.Object;
+	}
+
+//ÄÞº¸ 
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ComboAttackMontageRef(TEXT("/Script/Engine.AnimMontage'/Game/Project_P/Animation/Montage/GruntAttack_Montage.GruntAttack_Montage'"));
+	if (ComboAttackMontageRef.Object)
+	{
+		ComboAttackMontage = ComboAttackMontageRef.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UPPComboActionData> ComboActionDataRef(TEXT("/Script/Project_P.PPComboActionData'/Game/Project_P/Data/GruntComboActionData.GruntComboActionData'"));
+	if (ComboActionDataRef.Object)
+	{
+		ComboActionData = ComboActionDataRef.Object;
 	}
 
 //Ä¸½¶ ÄÄÆ÷³ÍÆ® ¼³Á¤

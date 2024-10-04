@@ -15,6 +15,7 @@
 #include "AbilitySystemGlobals.h"
 #include "GameplayTagContainer.h"
 #include "Tag/PPGameplayTag.h"
+#include "Data/PPComboActionData.h"
 
 APPGASCharacterPlayer::APPGASCharacterPlayer()
 {
@@ -32,6 +33,19 @@ APPGASCharacterPlayer::APPGASCharacterPlayer()
 	{
 		//Set함수 사용
 		GetMesh()->SetAnimInstanceClass(AnimInstanceClassRef.Class);
+	}
+
+//콤보 
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ComboAttackMontageRef(TEXT("/Script/Engine.AnimMontage'/Game/Project_P/Animation/Montage/ComboAttack_Montage.ComboAttack_Montage'"));
+	if (ComboAttackMontageRef.Object)
+	{
+		ComboAttackMontage = ComboAttackMontageRef.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UPPComboActionData> ComboActionDataRef(TEXT("/Script/Project_P.PPComboActionData'/Game/Project_P/Data/PlayerComboActionData.PlayerComboActionData'"));
+	if (ComboActionDataRef.Object)
+	{
+		ComboActionData = ComboActionDataRef.Object;
 	}
 
 //메쉬 설정
@@ -284,15 +298,7 @@ void APPGASCharacterPlayer::Move(const FInputActionValue& Value)
 
 	if (GetCharacterMovement()->GetMovementName() != TEXT("Walking"))
 	{
-		if (ASC->HasAnyMatchingGameplayTags(WalkingTagContainer))
-		{
-			ASC->RemoveLooseGameplayTags(WalkingTagContainer);
-
-			if (UAbilitySystemGlobals::Get().ShouldReplicateActivationOwnedTags())
-			{
-				ASC->RemoveReplicatedLooseGameplayTags(WalkingTagContainer);
-			}
-		}
+		RemoveTag(WalkingTagContainer);
 	}
 	
 }
@@ -308,8 +314,11 @@ void APPGASCharacterPlayer::Look(const FInputActionValue& Value)
 
 void APPGASCharacterPlayer::MoveInputReleased()
 {
+	FGameplayTagContainer WalkingTagContainer;
+	WalkingTagContainer.AddTag(PPTAG_CHARACTER_ISWALKING);
+
 	InputReleasedDelegate.Execute();
-	RemoveWalkingTag();
+	RemoveTag(WalkingTagContainer);
 
 	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID((int32)EInputAbility::Sprint);
 	if (Spec->IsActive())
@@ -318,19 +327,16 @@ void APPGASCharacterPlayer::MoveInputReleased()
 	}
 }
 
-void APPGASCharacterPlayer::RemoveWalkingTag()
+void APPGASCharacterPlayer::RemoveTag(const FGameplayTagContainer& RemoveTagContainer)
 {
 	// ASC에 태그 제거
-	FGameplayTagContainer WalkingTagContainer;
-	WalkingTagContainer.AddTag(PPTAG_CHARACTER_ISWALKING);
-
-	if (ASC->HasAnyMatchingGameplayTags(WalkingTagContainer))
+	if (ASC->HasAnyMatchingGameplayTags(RemoveTagContainer))
 	{
-		ASC->RemoveLooseGameplayTags(WalkingTagContainer);
+		ASC->RemoveLooseGameplayTags(RemoveTagContainer);
 
 		if (UAbilitySystemGlobals::Get().ShouldReplicateActivationOwnedTags())
 		{
-			ASC->RemoveReplicatedLooseGameplayTags(WalkingTagContainer);
+			ASC->RemoveReplicatedLooseGameplayTags(RemoveTagContainer);
 		}
 	}
 }
