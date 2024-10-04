@@ -43,17 +43,4 @@ APPCharacterBase::APPCharacterBase()
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 	//½ºÄÌ·¹Å» ¸Þ½¬ ÄÝ¸®Àü ¼³Á¤
 	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
-
-//ÄÞº¸ 
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> ComboAttackMontageRef(TEXT("/Script/Engine.AnimMontage'/Game/Project_P/Animation/Montage/ComboAttack_Montage.ComboAttack_Montage'"));
-	if (ComboAttackMontageRef.Object)
-	{
-		ComboAttackMontage = ComboAttackMontageRef.Object;
-	}
-
-	static ConstructorHelpers::FObjectFinder<UPPComboActionData> ComboActionDataRef(TEXT("/Script/Project_P.PPComboActionData'/Game/Project_P/Data/ComboActionData.ComboActionData'"));
-	if (ComboActionDataRef.Object)
-	{
-		ComboActionData = ComboActionDataRef.Object;
-	}
 }

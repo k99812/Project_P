@@ -22,6 +22,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Animation")
 	TObjectPtr<UAnimMontage> ComboAttackMontage;
 
-	UPROPERTY(VisibleAnywhere, Category = "Animation")
+	UPROPERTY(EditAnywhere, Category = "Animation")
 	TObjectPtr<class UPPComboActionData> ComboActionData;
 };
