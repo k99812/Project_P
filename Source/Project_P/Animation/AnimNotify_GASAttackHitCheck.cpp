@@ -6,6 +6,7 @@
 
 UAnimNotify_GASAttackHitCheck::UAnimNotify_GASAttackHitCheck()
 {
+	ComboAttackLevel = 1.0f;
 }
 
 FString UAnimNotify_GASAttackHitCheck::GetNotifyName_Implementation() const
@@ -23,6 +24,7 @@ void UAnimNotify_GASAttackHitCheck::Notify(USkeletalMeshComponent* MeshComp, UAn
 		if (OwerActor)
 		{
 			FGameplayEventData PayLoadData;
+			PayLoadData.EventMagnitude = ComboAttackLevel;
 
 			//#include "AbilitySystemBlueprintLibrary.h" Ãß°¡
 			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OwerActor, TriggerGameplayTag, PayLoadData);
