@@ -26,4 +26,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Tag")
 	FGameplayTag TriggerGameplayTag;
 
+	UPROPERTY(EditAnywhere, Category = "ComboLevel")
+	float ComboAttackLevel;
 };

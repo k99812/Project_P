@@ -17,6 +17,8 @@ void UPPGA_AttackHitCheck::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+	CurrentLevel = TriggerEventData->EventMagnitude;
+
 	//#include "GA/AT/PPAT_Trace.h" 추가
 	//#include "GA/TA/PPTA_Trace.h" 추가
 	UPPAT_Trace* AttackTraceTask = UPPAT_Trace::CreateTask(this, APPTA_Trace::StaticClass());
@@ -52,7 +54,7 @@ void UPPGA_AttackHitCheck::TraceResultCallback(const FGameplayAbilityTargetDataH
 			return;
 		}
 
-		FGameplayEffectSpecHandle SpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect);
+		FGameplayEffectSpecHandle SpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect, CurrentLevel);
 		if (SpecHandle.IsValid())
 		{
 			ApplyGameplayEffectSpecToTarget(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, SpecHandle, DataHandle);
