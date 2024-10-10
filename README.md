@@ -14,10 +14,10 @@
 
 ### 캐릭터 이동
 https://github.com/user-attachments/assets/d468b24e-221d-41f4-9882-67265ac3ae82
-
+<br/>
 ### 점프, 달리기, 공격
 https://github.com/user-attachments/assets/70242ec3-3067-40f8-95a6-00b82769add8
-
+<br/>
 ## 공격 판정, 몬스터 체력 감소
 https://github.com/user-attachments/assets/bac2ceb7-010f-45d1-8f28-6b4412a1e1af
 
