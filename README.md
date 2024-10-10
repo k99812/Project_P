@@ -3,7 +3,8 @@
 해당 프로젝트를 실행하려면 마켓플레이스에서 **Paragon Countess, Paragon Minions**를 프로젝트에 추가해야 합니다.   
 <br/>
 아래 블로그 링크에서 코드 및 구현 일지를 볼 수 있습니다   
-블로그: [링크][bloglink]
+<br/>
+**[블로그][bloglink]**
 
 [bloglink]: https://k99812.tistory.com/category/%ED%8F%AC%ED%8A%B8%ED%8F%B4%EB%A6%AC%EC%98%A4%20%EC%A0%9C%EC%9E%91 "블로그"
 
