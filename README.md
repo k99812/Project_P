@@ -21,5 +21,7 @@ https://github.com/user-attachments/assets/70242ec3-3067-40f8-95a6-00b82769add8
 ## 공격 판정, 몬스터 체력 감소
 https://github.com/user-attachments/assets/bac2ceb7-010f-45d1-8f28-6b4412a1e1af
 
-![image](https://github.com/user-attachments/assets/18b56d25-2973-482a-85bd-7e7d1ae492ed)
-![image](https://github.com/user-attachments/assets/fb611ded-5cc0-442d-a126-93809ab896df)
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/18b56d25-2973-482a-85bd-7e7d1ae492ed" width="150" height="200" title="px(픽셀) 크기 설정" alt="Attribute"></img>
+  <img src="https://github.com/user-attachments/assets/fb611ded-5cc0-442d-a126-93809ab896df" width="150" height="200" title="px(픽셀) 크기 설정" alt="Attribute"></img>
+</div>
