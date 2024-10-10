@@ -7,7 +7,7 @@
 
 [bloglink]: https://k99812.tistory.com/category/%ED%8F%AC%ED%8A%B8%ED%8F%B4%EB%A6%AC%EC%98%A4%20%EC%A0%9C%EC%9E%91 "블로그"
 
-## 2024-10-10까지 진행상황
+## 진행상황
 1. 캐릭터 이동 및 애니메이션
 2. GAS를 이용해 공격, 점프, 달리기 구현
 3. AttributeSet을 이용한 스탯 구현
