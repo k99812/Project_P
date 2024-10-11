@@ -22,4 +22,7 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, Category = "AttributeData")
 	TObjectPtr<class UPPGruntAttributeData> AttributeData;
+
+	UPROPERTY(VisibleAnywhere, Category = "UI")
+	TObjectPtr<class UPPGASWidgetComponent> HpBar;
 };

@@ -14,4 +14,6 @@ class PROJECT_P_API UPPGASWidgetComponent : public UWidgetComponent
 {
 	GENERATED_BODY()
 	
+protected:
+	virtual void InitWidget() override;
 };
