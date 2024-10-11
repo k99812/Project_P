@@ -7,6 +7,8 @@
 #include "Attribute/PPCharacterAttributeSet.h"
 #include "Data/PPGruntAttributeData.h"
 #include "Data/PPComboActionData.h"
+#include "UI/PPGASWidgetComponent.h"
+#include "UI/PPGASUserWidget.h"
 
 APPGASCharacterGrunt::APPGASCharacterGrunt()
 {
@@ -55,6 +57,21 @@ APPGASCharacterGrunt::APPGASCharacterGrunt()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
 	GetCharacterMovement()->MaxWalkSpeed = 500.0f;
+
+//HPBar ¼³Á¤
+	HpBar = CreateDefaultSubobject<UPPGASWidgetComponent>(TEXT("Widget"));
+	HpBar->SetupAttachment(GetMesh());
+	HpBar->SetRelativeLocation(FVector(0.0f, 03.0f, 200.0f));
+
+	static ConstructorHelpers::FClassFinder<UUserWidget> HpBarWidgetRef(TEXT("/Game/Project_P/Blueprint/UI/WBP_HpBar.WBP_HpBar_C"));
+	if (HpBarWidgetRef.Class)
+	{
+		//À§Á¬ ÄÄÆ÷³ÍÆ®¿¡ À§Á¬ ¼³Á¤
+		HpBar->SetWidgetClass(HpBarWidgetRef.Class);
+		HpBar->SetWidgetSpace(EWidgetSpace::Screen);
+		HpBar->SetDrawSize(FVector2D(200.0f, 20.f));
+		HpBar->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
 }
 
 void APPGASCharacterGrunt::PostInitializeComponents()
