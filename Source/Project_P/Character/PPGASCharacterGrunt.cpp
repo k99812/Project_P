@@ -61,7 +61,7 @@ APPGASCharacterGrunt::APPGASCharacterGrunt()
 //HPBar ¼³Á¤
 	HpBar = CreateDefaultSubobject<UPPGASWidgetComponent>(TEXT("Widget"));
 	HpBar->SetupAttachment(GetMesh());
-	HpBar->SetRelativeLocation(FVector(0.0f, 03.0f, 200.0f));
+	HpBar->SetRelativeLocation(FVector(0.0f, 0.0f, 175.0f));
 
 	static ConstructorHelpers::FClassFinder<UUserWidget> HpBarWidgetRef(TEXT("/Game/Project_P/Blueprint/UI/WBP_HpBar.WBP_HpBar_C"));
 	if (HpBarWidgetRef.Class)

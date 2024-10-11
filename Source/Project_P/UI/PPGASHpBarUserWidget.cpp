@@ -18,13 +18,15 @@ void UPPGASHpBarUserWidget::SetAbilitySystemComponent(AActor* Owner)
 		ASC->GetGameplayAttributeValueChangeDelegate(UPPCharacterAttributeSet::GetMaxHealthAttribute()).AddUObject(this, &UPPGASHpBarUserWidget::OnMaxHealthAttributeChange);
 	
 		const UPPCharacterAttributeSet* CurrentAttributeSet = ASC->GetSet<UPPCharacterAttributeSet>();
-		ensure(CurrentAttributeSet);
-
-		//CurrentHealth = CurrentAttributeSet->GetHealth();
-		//CurrentMaxHealth = CurrentAttributeSet->GetMaxHealth();
-		//ensure(CurrentMaxHealth > 0.0f);
-
-		UpdateHpBar();
+		if (CurrentAttributeSet)
+		{
+			CurrentHealth = CurrentAttributeSet->GetHealth();
+			CurrentMaxHealth = CurrentAttributeSet->GetMaxHealth();
+			if (CurrentMaxHealth > 0.0f)
+			{
+				UpdateHpBar();
+			}
+		}
 	}
 }
 
