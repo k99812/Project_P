@@ -14,6 +14,8 @@
 1. 캐릭터 이동 및 애니메이션
 2. GAS를 이용해 공격, 점프, 달리기 구현
 3. AttributeSet을 이용한 스탯 구현
+4. 공격 판정 및 데미지 구현
+5. 잡몹 HPBar, 체력 0 될시 죽는 몽타주 실행 및 Destroy
 
 ## 캐릭터 이동
 https://github.com/user-attachments/assets/d468b24e-221d-41f4-9882-67265ac3ae82
@@ -33,3 +35,9 @@ https://github.com/user-attachments/assets/bac2ceb7-010f-45d1-8f28-6b4412a1e1af
   <img src="https://github.com/user-attachments/assets/18b56d25-2973-482a-85bd-7e7d1ae492ed" width="150" height="200" title="px(픽셀) 크기 설정" alt="Attribute"></img>
   <img src="https://github.com/user-attachments/assets/fb611ded-5cc0-442d-a126-93809ab896df" width="150" height="200" title="px(픽셀) 크기 설정" alt="Attribute"></img>
 </div>
+
+<br/>
+
+## 체력바, 0이 될시 죽는 몽타주 실행
+https://github.com/user-attachments/assets/6e2dce8e-3aff-4ead-a0e2-844e4ce36ef4
+
