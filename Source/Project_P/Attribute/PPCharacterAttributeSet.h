@@ -13,6 +13,8 @@
 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FIsDeadDelegate);
+
 /**
  * 
  */
@@ -34,6 +36,8 @@ public:
 	ATTRIBUTE_ACCESSORS(UPPCharacterAttributeSet, Health);
 	ATTRIBUTE_ACCESSORS(UPPCharacterAttributeSet, MaxHealth);
 	ATTRIBUTE_ACCESSORS(UPPCharacterAttributeSet, Damage);
+
+	mutable FIsDeadDelegate ActorIsDead;
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
@@ -62,6 +66,8 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Damage;
+
+	bool bIsDead = false;
 
 protected:
 	virtual bool PreGameplayEffectExecute(struct FGameplayEffectModCallbackData& Data) override;

@@ -12,3 +12,4 @@
 #define PPTAG_CHARACTER_ISSPRINT FGameplayTag::RequestGameplayTag(FName("Character.State.IsSprint"))
 #define PPTAG_CHARACTER_ISWALKING FGameplayTag::RequestGameplayTag(FName("Character.State.IsWalking"))
 #define PPTAG_CHARACTER_ISCC FGameplayTag::RequestGameplayTag(FName("Character.State.IsCC"))
+#define PPTAG_CHARACTER_ISDEAD FGameplayTag::RequestGameplayTag(FName("Character.State.IsDead"))

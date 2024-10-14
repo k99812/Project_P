@@ -55,6 +55,13 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "GAS")
 	TMap<EInputAbility, TSubclassOf<class UGameplayAbility>> StartInputAbilites;
 
+// Dead Section
+protected:
+	UFUNCTION()
+	virtual void ActorIsDead();
+
+	virtual void SetDead() override;
+
 // InputRelease Delegate
 public:
 	FInputReleasedDelegate InputReleasedDelegate;

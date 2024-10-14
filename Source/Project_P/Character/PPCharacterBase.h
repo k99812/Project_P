@@ -19,9 +19,20 @@ public:
 	FORCEINLINE TObjectPtr<class UPPComboActionData> GetComboActionData() { return ComboActionData; }
 
 protected:
-	UPROPERTY(EditAnywhere, Category = "Animation")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combo")
 	TObjectPtr<UAnimMontage> ComboAttackMontage;
 
-	UPROPERTY(EditAnywhere, Category = "Animation")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combo")
 	TObjectPtr<class UPPComboActionData> ComboActionData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dead", Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UAnimMontage> DeadMontage;
+
+// Dead Section
+protected:
+	virtual void SetDead();
+	virtual void PlayDeadAnimation();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dead", Meta = (AllowPrivateAccess = "true"))
+	float DeadEventDelayTime = 5.0f;
 };

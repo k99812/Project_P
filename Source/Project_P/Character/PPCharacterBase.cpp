@@ -44,3 +44,20 @@ APPCharacterBase::APPCharacterBase()
 	//스켈레탈 메쉬 콜리전 설정
 	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
 }
+
+void APPCharacterBase::SetDead()
+{
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+	PlayDeadAnimation();
+	SetActorEnableCollision(false);
+}
+
+void APPCharacterBase::PlayDeadAnimation()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	AnimInstance->StopAllMontages(0.0f);
+	if (DeadMontage)
+	{
+		AnimInstance->Montage_Play(DeadMontage, 1.0f);
+	}
+}
