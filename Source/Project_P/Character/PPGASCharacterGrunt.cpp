@@ -72,6 +72,13 @@ APPGASCharacterGrunt::APPGASCharacterGrunt()
 		HpBar->SetDrawSize(FVector2D(200.0f, 20.f));
 		HpBar->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
+
+//Dead 몽타주 설정
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> DeadMontageRef(TEXT("/Script/Engine.AnimMontage'/Game/Project_P/Animation/Montage/GruntDead_Montage.GruntDead_Montage'"));
+	if (DeadMontageRef.Object)
+	{
+		DeadMontage = DeadMontageRef.Object;
+	}
 }
 
 void APPGASCharacterGrunt::PostInitializeComponents()

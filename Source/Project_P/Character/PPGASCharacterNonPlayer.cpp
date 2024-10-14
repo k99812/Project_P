@@ -21,4 +21,23 @@ void APPGASCharacterNonPlayer::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	ASC->InitAbilityActorInfo(this, this);
+	AttributeSet->ActorIsDead.AddDynamic(this, &APPGASCharacterNonPlayer::ActorIsDead);
+}
+
+void APPGASCharacterNonPlayer::ActorIsDead()
+{
+	SetDead();
+}
+
+void APPGASCharacterNonPlayer::SetDead()
+{
+	Super::SetDead();
+
+	FTimerHandle TimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda(
+		[&]()
+	{
+		Destroy();
+	}
+	), DeadEventDelayTime, false);
 }

@@ -28,4 +28,11 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = AttributeSet)
 	TObjectPtr<class UPPCharacterAttributeSet> AttributeSet;
+
+// Dead Section
+protected:
+	UFUNCTION()
+	virtual void ActorIsDead();
+
+	virtual void SetDead() override;
 };

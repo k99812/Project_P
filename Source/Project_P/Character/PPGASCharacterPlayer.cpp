@@ -16,6 +16,7 @@
 #include "GameplayTagContainer.h"
 #include "Tag/PPGameplayTag.h"
 #include "Data/PPComboActionData.h"
+#include "Attribute/PPCharacterAttributeSet.h"
 
 APPGASCharacterPlayer::APPGASCharacterPlayer()
 {
@@ -110,6 +111,13 @@ APPGASCharacterPlayer::APPGASCharacterPlayer()
 	{
 		LeftAttackAction = LeftAttackActionRef.Object;
 	}
+
+//Dead 몽타주 설정
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> DeadMontageRef(TEXT("/Script/Engine.AnimMontage'/Game/Project_P/Animation/Montage/PlayerDead_Montage.PlayerDead_Montage'"));
+	if (DeadMontageRef.Object)
+	{
+		DeadMontage = DeadMontageRef.Object;
+	}
 }
 
 UAbilitySystemComponent* APPGASCharacterPlayer::GetAbilitySystemComponent() const
@@ -128,6 +136,12 @@ void APPGASCharacterPlayer::PossessedBy(AController* NewController)
 		if (ASC)
 		{
 			ASC->InitAbilityActorInfo(GASPlayerState, this);
+
+			const UPPCharacterAttributeSet* AttributeSet = ASC->GetSet<UPPCharacterAttributeSet>();
+			if (AttributeSet)
+			{
+				AttributeSet->ActorIsDead.AddDynamic(this, &APPGASCharacterPlayer::ActorIsDead);
+			}
 
 			//ASC에 특정태그가 생기거나 제거되면 호출하는 델리게이트에 콜백함수 연결
 			ASC->RegisterGameplayTagEvent(PPTAG_CHARACTER_ISCC, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &APPGASCharacterPlayer::OnCCTagChanged);
@@ -253,6 +267,22 @@ void APPGASCharacterPlayer::GASInputReleased(int32 InputID)
 			//어빌리티가 실행중이면 GA의 InputReleased 실행
 			ASC->AbilitySpecInputReleased(*Spec);
 		}
+	}
+}
+
+void APPGASCharacterPlayer::ActorIsDead()
+{
+	SetDead();
+}
+
+void APPGASCharacterPlayer::SetDead()
+{
+	Super::SetDead();
+
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if (PlayerController)
+	{
+		DisableInput(PlayerController);
 	}
 }
 

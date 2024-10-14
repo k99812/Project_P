@@ -4,6 +4,7 @@
 #include "Attribute/PPCharacterAttributeSet.h"
 #include "GameplayEffectExtension.h"
 #include "Project_P.h"
+#include "Tag/PPGameplayTag.h"
 
 UPPCharacterAttributeSet::UPPCharacterAttributeSet() : 
 	AttackRange(100.0f), MaxAttackRange(300.0f),
@@ -43,6 +44,16 @@ void UPPCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 		SetHealth(FMath::Clamp(GetHealth() - GetDamage(), MinHealth, GetMaxHealth()));
 		SetDamage(0.0f);
 	}
+
+	if (GetHealth() <= 0.0f && !bIsDead)
+	{
+		Data.Target.AddLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
+		//Data.Target.AddReplicatedLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
+
+		ActorIsDead.Broadcast();
+	}
+
+	bIsDead = GetHealth() <= 0.0f;
 }
 
 void UPPCharacterAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
