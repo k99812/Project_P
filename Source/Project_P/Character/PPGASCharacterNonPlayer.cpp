@@ -4,11 +4,16 @@
 #include "Character/PPGASCharacterNonPlayer.h"
 #include "AbilitySystemComponent.h"
 #include "Attribute/PPCharacterAttributeSet.h"
+#include "AI/PPAIController.h"
 
 APPGASCharacterNonPlayer::APPGASCharacterNonPlayer()
 {
 	ASC = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("ASC"));
 	AttributeSet = CreateDefaultSubobject<UPPCharacterAttributeSet>(TEXT("AttributeSet"));
+
+//AI
+	AIControllerClass = APPAIController::StaticClass();
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
 UAbilitySystemComponent* APPGASCharacterNonPlayer::GetAbilitySystemComponent() const
