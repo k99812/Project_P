@@ -12,7 +12,12 @@ APPGASCharacterNonPlayer::APPGASCharacterNonPlayer()
 	AttributeSet = CreateDefaultSubobject<UPPCharacterAttributeSet>(TEXT("AttributeSet"));
 
 //AI
-	AIControllerClass = APPAIController::StaticClass();
+	static ConstructorHelpers::FClassFinder<AController> AIControllerRef(TEXT("/Script/CoreUObject.Class'/Script/Project_P.PPAIController'"));
+	if (AIControllerRef.Class)
+	{
+		AIControllerClass = AIControllerRef.Class;
+	}
+	//AIControllerClass = APPAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
