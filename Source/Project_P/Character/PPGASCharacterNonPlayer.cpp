@@ -17,7 +17,7 @@ APPGASCharacterNonPlayer::APPGASCharacterNonPlayer()
 	{
 		AIControllerClass = AIControllerRef.Class;
 	}
-	//AIControllerClass = APPAIController::StaticClass();
+
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
