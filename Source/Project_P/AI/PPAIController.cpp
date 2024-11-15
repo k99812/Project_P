@@ -5,6 +5,7 @@
 #include "BehaviorTree/BlackboardData.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "PPAI.h"
 
 APPAIController::APPAIController()
 {
@@ -29,6 +30,9 @@ void APPAIController::RunAI()
 	UBlackboardComponent* BBComponent = Blackboard.Get();
 	if (UseBlackboard(BBAsset, BBComponent))
 	{
+		//블랙보드 데이터에 값설정
+		Blackboard->SetValueAsVector(BBKEY_HOMEPOS, GetPawn()->GetActorLocation());
+
 		bool RunResult = RunBehaviorTree(BTAsset);
 		ensure(RunResult);
 	}
