@@ -17,6 +17,7 @@
 #include "Tag/PPGameplayTag.h"
 #include "Data/PPComboActionData.h"
 #include "Attribute/PPCharacterAttributeSet.h"
+#include "Animation/AnimInstance.h"
 
 APPGASCharacterPlayer::APPGASCharacterPlayer()
 {
@@ -118,6 +119,13 @@ APPGASCharacterPlayer::APPGASCharacterPlayer()
 	{
 		DeadMontage = DeadMontageRef.Object;
 	}
+
+//레벨 시작 몽타주 설정
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> LevelStartMontageRef(TEXT("/Script/Engine.AnimMontage'/Game/Project_P/Animation/Montage/Start_Montage.Start_Montage'"));
+	if (LevelStartMontageRef.Object)
+	{
+		LevelStartMontage = LevelStartMontageRef.Object;
+	}
 }
 
 UAbilitySystemComponent* APPGASCharacterPlayer::GetAbilitySystemComponent() const
@@ -190,6 +198,12 @@ void APPGASCharacterPlayer::BeginPlay()
 		//AddMappingContext(인풋맵핑컨택스트, 우선순위)
 		//Subsystem->RemoveMappingContext(DefaultMappingContext);
 		Subsystem->AddMappingContext(DefaultMappingContext, 0);
+	}
+	
+	//레벨 시작 몽타주 실행
+	if (!GetMesh()->GetAnimInstance()->Montage_IsPlaying(LevelStartMontage))
+	{
+		GetMesh()->GetAnimInstance()->Montage_Play(LevelStartMontage, 1.0f);
 	}
 }
 

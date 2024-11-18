@@ -2,22 +2,16 @@
 
 
 #include "Animation/PPAnimInstance.h"
-#include "Character/PPGASCharacterPlayer.h"
+#include "Character/PPCharacterBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Animation/AnimMontage.h"
 #include "AbilitySystemComponent.h"
 #include "GameplayTagContainer.h"
 #include "Tag/PPGameplayTag.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 UPPAnimInstance::UPPAnimInstance()
 {
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> LevelStartMontageRef(TEXT("/Script/Engine.AnimMontage'/Game/Project_P/Animation/Montage/Start_Montage.Start_Montage'"));
-	if (LevelStartMontageRef.Object)
-	{
-		LevelStartMontage = LevelStartMontageRef.Object;
-	}
-
 	MovingThreshould = 3.0f;
 	JumpingThreshould = 100.0f;
 
@@ -30,7 +24,7 @@ void UPPAnimInstance::NativeInitializeAnimation()
 
 	//AnimInstance가 생성될때 한번만 호출되어 포인터 변수들을 초기화할때 사용
 	//#include "Character/PPGASCharacterPlayer.h" 추가
-	Owner = Cast<APPGASCharacterPlayer>(GetOwningActor());
+	Owner = Cast<APPCharacterBase>(GetOwningActor());
 	if (Owner)
 	{
 		//#include "GameFramework/CharacterMovementComponent.h" 추가
@@ -72,15 +66,9 @@ void UPPAnimInstance::NativeBeginPlay()
 {
 	Super::NativeBeginPlay();
 
-	//#include "Animation/AnimMontage.h" 추가
-	if (!Montage_IsPlaying(LevelStartMontage))
-	{
-		Montage_Play(LevelStartMontage, 1.0f);
-	}
-
 	if (Owner)
 	{
-		ASC = Owner->GetAbilitySystemComponent();
+		ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Owner);
 	}
 }
 
