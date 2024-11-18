@@ -25,6 +25,7 @@ EBTNodeResult::Type UBTTask_FindPatrolPos::ExecuteTask(UBehaviorTreeComponent& O
 	}
 
 	//#include "NavigationSystem.h" 추가
+	//ControlPawn을 이용해 월드를 가져와 월드에서 UNavigationSystemV1을 가져옴
 	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetNavigationSystem(ControlPawn->GetWorld());
 	if (!IsValid(NavSystem))
 	{
@@ -32,7 +33,17 @@ EBTNodeResult::Type UBTTask_FindPatrolPos::ExecuteTask(UBehaviorTreeComponent& O
 	}
 
 	//블랙보드에 있는 데이터 가져오기
+	//#include "BehaviorTree/BlackboardComponent.h" 추가
 	FVector OriginPos = OwnerComp.GetBlackboardComponent()->GetValueAsVector(BBKEY_HOMEPOS);
+	FNavLocation NextPatrolPos;
+	float NextPosRadius = 500.0f;
 
-	return Result;
+	//GetRandomPointInNavigableRadius(기준 위치, 반지름(반경), 위치를 받아올 FNavLocation)
+	if (NavSystem->GetRandomPointInNavigableRadius(OriginPos, NextPosRadius, NextPatrolPos))
+	{
+		OwnerComp.GetBlackboardComponent()->SetValueAsVector(BBKEY_PATROLPOS, NextPatrolPos.Location);
+		return EBTNodeResult::Succeeded;
+	}
+
+	return EBTNodeResult::Failed;
 }

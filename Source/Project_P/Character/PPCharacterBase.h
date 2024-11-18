@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "PPCharacterBase.generated.h"
 
+DECLARE_DELEGATE(FInputReleasedDelegate);
+
 UCLASS()
 class PROJECT_P_API APPCharacterBase : public ACharacter
 {
@@ -17,6 +19,10 @@ public:
 
 	FORCEINLINE TObjectPtr<UAnimMontage> GetComboAttackMontage() { return ComboAttackMontage; }
 	FORCEINLINE TObjectPtr<class UPPComboActionData> GetComboActionData() { return ComboActionData; }
+
+	// InputRelease Delegate
+public:
+	FInputReleasedDelegate InputReleasedDelegate;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combo")
