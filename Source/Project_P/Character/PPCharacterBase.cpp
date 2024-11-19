@@ -15,7 +15,7 @@ APPCharacterBase::APPCharacterBase()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
-
+	
 //Ä¸½¶ ÄÝ¶óÀÌ´õ ¼³Á¤
 	//#include "Components/CapsuleComponent.h"Ãß°¡
 	GetCapsuleComponent()->InitCapsuleSize(25.0f, 92.0f);
