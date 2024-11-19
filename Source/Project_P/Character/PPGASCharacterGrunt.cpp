@@ -4,7 +4,7 @@
 #include "Character/PPGASCharacterGrunt.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Attribute/PPCharacterAttributeSet.h"
+#include "Attribute/PPGruntAttributeSet.h"
 #include "Data/PPGruntAttributeData.h"
 #include "Data/PPComboActionData.h"
 #include "UI/PPGASWidgetComponent.h"
@@ -97,4 +97,8 @@ void APPGASCharacterGrunt::PostInitializeComponents()
 
 	AttributeSet->InitMaxHealth(AttributeData->MaxHealth);
 	AttributeSet->InitHealth(AttributeSet->GetMaxHealth());
+
+	AttributeSet->InitAIDetectRange(AttributeData->AIDetectRange);
+	AttributeSet->InitAIPatrolRadius(AttributeData->AIPatrolRadius);
+	AttributeSet->InitAITurnSpeed(AttributeData->AITurnSpeed);
 }

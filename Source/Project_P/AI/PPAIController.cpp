@@ -6,6 +6,7 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "PPAI.h"
+#include "Perception/AIPerceptionTypes.h"
 
 APPAIController::APPAIController()
 {
@@ -22,6 +23,8 @@ APPAIController::APPAIController()
 	{
 		BTAsset = BTAssetRef.Object;
 	}
+	FAIStimulus test;
+	test.WasSuccessfullySensed();
 }
 
 void APPAIController::RunAI()

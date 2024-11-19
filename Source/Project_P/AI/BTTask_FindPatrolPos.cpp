@@ -6,6 +6,9 @@
 #include "AIController.h"
 #include "NavigationSystem.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "AbilitySystemComponent.h"
+#include "Attribute/PPGruntAttributeSet.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 
 UBTTask_FindPatrolPos::UBTTask_FindPatrolPos()
@@ -36,7 +39,27 @@ EBTNodeResult::Type UBTTask_FindPatrolPos::ExecuteTask(UBehaviorTreeComponent& O
 	//#include "BehaviorTree/BlackboardComponent.h" 추가
 	FVector OriginPos = OwnerComp.GetBlackboardComponent()->GetValueAsVector(BBKEY_HOMEPOS);
 	FNavLocation NextPatrolPos;
-	float NextPosRadius = 500.0f;
+	float NextPosRadius;
+
+	//#include "AbilitySystemComponent.h", #include "Attribute/PPGruntAttributeSet.h"
+	//#include "AbilitySystemBlueprintLibrary.h" 추가
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(ControlPawn);
+	if (ASC)
+	{
+		const UPPGruntAttributeSet* AttributeSet = ASC->GetSet<UPPGruntAttributeSet>();
+		if (AttributeSet)
+		{
+			NextPosRadius = AttributeSet->GetAIPatrolRadius();
+		}
+		else
+		{
+			return EBTNodeResult::Failed;
+		}
+	}
+	else
+	{
+		return EBTNodeResult::Failed;
+	}
 
 	//GetRandomPointInNavigableRadius(기준 위치, 반지름(반경), 위치를 받아올 FNavLocation)
 	if (NavSystem->GetRandomPointInNavigableRadius(OriginPos, NextPosRadius, NextPatrolPos))

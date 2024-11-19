@@ -3,13 +3,13 @@
 
 #include "Character/PPGASCharacterNonPlayer.h"
 #include "AbilitySystemComponent.h"
-#include "Attribute/PPCharacterAttributeSet.h"
+#include "Attribute/PPGruntAttributeSet.h"
 #include "AI/PPAIController.h"
 
 APPGASCharacterNonPlayer::APPGASCharacterNonPlayer()
 {
 	ASC = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("ASC"));
-	AttributeSet = CreateDefaultSubobject<UPPCharacterAttributeSet>(TEXT("AttributeSet"));
+	AttributeSet = CreateDefaultSubobject<UPPGruntAttributeSet>(TEXT("AttributeSet"));
 
 //AI
 	static ConstructorHelpers::FClassFinder<AController> AIControllerRef(TEXT("/Script/CoreUObject.Class'/Script/Project_P.PPAIController'"));
