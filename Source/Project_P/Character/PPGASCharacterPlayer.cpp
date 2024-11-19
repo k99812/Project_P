@@ -18,6 +18,8 @@
 #include "Data/PPComboActionData.h"
 #include "Attribute/PPCharacterAttributeSet.h"
 #include "Animation/AnimInstance.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
+#include "Perception/AISenseConfig_Sight.h"
 
 APPGASCharacterPlayer::APPGASCharacterPlayer()
 {
@@ -181,6 +183,12 @@ void APPGASCharacterPlayer::PossessedBy(AController* NewController)
 	//ASC µð¹ö±×
 	APlayerController* PlayerController = CastChecked<APlayerController>(NewController);
 	PlayerController->ConsoleCommand(TEXT("showdebug abilitysystem"));
+}
+
+void APPGASCharacterPlayer::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
 }
 
 void APPGASCharacterPlayer::BeginPlay()
