@@ -27,7 +27,7 @@ protected:
 	TObjectPtr<class UAbilitySystemComponent> ASC;
 
 	UPROPERTY(VisibleAnywhere, Category = AttributeSet)
-	TObjectPtr<class UPPCharacterAttributeSet> AttributeSet;
+	TObjectPtr<class UPPGruntAttributeSet> AttributeSet;
 
 // Dead Section
 protected:

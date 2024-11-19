@@ -37,4 +37,13 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Attribute")
 	float MaxHealth;
+
+	UPROPERTY(EditAnywhere, Category = "Attribute")
+	float AIPatrolRadius;
+
+	UPROPERTY(EditAnywhere, Category = "Attribute")
+	float AIDetectRange;
+
+	UPROPERTY(EditAnywhere, Category = "Attribute")
+	float AITurnSpeed;
 };
