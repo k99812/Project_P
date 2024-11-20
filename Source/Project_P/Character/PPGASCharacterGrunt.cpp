@@ -85,6 +85,8 @@ void APPGASCharacterGrunt::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
+	UE_LOG(LogTemp, Log, TEXT("Grunt PostInitializeComponents"));
+
 //스탯 초기화
 	AttributeSet->InitAttackRadius(AttributeData->AttackRadius);
 	AttributeSet->InitMaxAttackRadius(AttributeData->MaxAttackRadius);
@@ -98,7 +100,11 @@ void APPGASCharacterGrunt::PostInitializeComponents()
 	AttributeSet->InitMaxHealth(AttributeData->MaxHealth);
 	AttributeSet->InitHealth(AttributeSet->GetMaxHealth());
 
-	AttributeSet->InitAIDetectRange(AttributeData->AIDetectRange);
+//AI 관련 어트리뷰트 초기화
+	AttributeSet->InitAIDetectRadius(AttributeData->AIDetectRadius);
+	AttributeSet->InitAILoseRadius(AttributeData->AILoseRadius);
+	AttributeSet->InitAIVisionAngleDeg(AttributeData->AIVisionAngleDeg);
 	AttributeSet->InitAIPatrolRadius(AttributeData->AIPatrolRadius);
 	AttributeSet->InitAITurnSpeed(AttributeData->AITurnSpeed);
+	AttributeSet->InitAISenseAge(AttributeData->AISenseAge);
 }
