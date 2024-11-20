@@ -3,8 +3,9 @@
 
 #include "Attribute/PPGruntAttributeSet.h"
 
-UPPGruntAttributeSet::UPPGruntAttributeSet(): 
-	AIDetectRange(500.0f), AIPatrolRadius(500.0f), AITurnSpeed(0.f)
+UPPGruntAttributeSet::UPPGruntAttributeSet() :
+	AIDetectRadius(500.0f), AIPatrolRadius(500.0f), AITurnSpeed(0.f),
+	AILoseRadius(1000.0f), AIVisionAngleDeg(90.f)
 {
 	
 }

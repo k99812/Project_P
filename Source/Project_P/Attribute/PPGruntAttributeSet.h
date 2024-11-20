@@ -18,16 +18,28 @@ public:
 	UPPGruntAttributeSet();
 
 	ATTRIBUTE_ACCESSORS(UPPGruntAttributeSet, AIPatrolRadius);
-	ATTRIBUTE_ACCESSORS(UPPGruntAttributeSet, AIDetectRange);
+	ATTRIBUTE_ACCESSORS(UPPGruntAttributeSet, AIDetectRadius);
+	ATTRIBUTE_ACCESSORS(UPPGruntAttributeSet, AILoseRadius);
+	ATTRIBUTE_ACCESSORS(UPPGruntAttributeSet, AIVisionAngleDeg);
 	ATTRIBUTE_ACCESSORS(UPPGruntAttributeSet, AITurnSpeed);
+	ATTRIBUTE_ACCESSORS(UPPGruntAttributeSet, AISenseAge);
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "AI", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData AIPatrolRadius;
 
 	UPROPERTY(BlueprintReadOnly, Category = "AI", Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData AIDetectRange;
+	FGameplayAttributeData AIDetectRadius;
+
+	UPROPERTY(BlueprintReadOnly, Category = "AI", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData AILoseRadius;
+
+	UPROPERTY(BlueprintReadOnly, Category = "AI", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData AIVisionAngleDeg;
 
 	UPROPERTY(BlueprintReadOnly, Category = "AI", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData AITurnSpeed;
+
+	UPROPERTY(BlueprintReadOnly, Category = "AI", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData AISenseAge;
 };
