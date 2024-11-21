@@ -4,12 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "GameplayTagAssetInterface.h"
 #include "PPCharacterBase.generated.h"
 
 DECLARE_DELEGATE(FInputReleasedDelegate);
 
 UCLASS()
-class PROJECT_P_API APPCharacterBase : public ACharacter
+class PROJECT_P_API APPCharacterBase : public ACharacter, public IGameplayTagAssetInterface
 {
 	GENERATED_BODY()
 
@@ -19,6 +20,9 @@ public:
 
 	FORCEINLINE TObjectPtr<UAnimMontage> GetComboAttackMontage() { return ComboAttackMontage; }
 	FORCEINLINE TObjectPtr<class UPPComboActionData> GetComboActionData() { return ComboActionData; }
+
+	UFUNCTION(BlueprintCallable, Category = GameplayTags)
+	virtual void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const override;
 
 	// InputRelease Delegate
 public:
@@ -33,6 +37,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dead", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UAnimMontage> DeadMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GameplayTags", Meta = (AllowPrivateAccess = "true"))
+	FGameplayTagContainer GameplayTags;
 
 // Dead Section
 protected:
