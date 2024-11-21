@@ -14,6 +14,9 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "Attribute/PPGruntAttributeSet.h"
+#include "Tag/PPGameplayTag.h"
+#include "GameplayTagAssetInterface.h"
+#include "GameplayTagContainer.h"
 
 APPAIController::APPAIController()
 {
@@ -41,13 +44,13 @@ APPAIController::APPAIController()
 	AIPerceptionComp->ConfigureSense(*SenseConfig_Sight);
 	AIPerceptionComp->SetDominantSense(SenseConfig_Sight->GetSenseImplementation());
 
-	AIPerceptionComp->OnPerceptionUpdated.AddDynamic(this, &APPAIController::PerceptionUpdated);
-
 	// Hearing Config
 	SenseConfig_Hearing = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("SenseConfig_Hearing"));
 
 	// Damage Config
 	SenseConfig_Damage = CreateDefaultSubobject<UAISenseConfig_Damage>(TEXT("SenseConfig_Damage"));
+
+	AIPerceptionComp->OnPerceptionUpdated.AddDynamic(this, &APPAIController::PerceptionUpdated);
 }
 
 void APPAIController::RunAI()
@@ -111,11 +114,25 @@ void APPAIController::BeginPlay()
 
 void APPAIController::PerceptionUpdated(const TArray<AActor*>& UpdatedActors)
 {
+	UE_LOG(LogTemp, Log, TEXT("PerceptionUpdated"));
+
 	for (AActor* Actor : UpdatedActors)
 	{
-		if (Actor->ActorHasTag("Player"))
+		UE_LOG(LogTemp, Log, TEXT("PerceptionUpdated : %s"), *Actor->GetName());
+
+		/*
+		IGameplayTagAssetInterface* TagActor = Cast<IGameplayTagAssetInterface>(Actor);
+
+		if (TagActor)
 		{
-			UE_LOG(LogTemp, Log, TEXT("PercetionedActor : %s"), *Actor->GetName());
+			UE_LOG(LogTemp, Log, TEXT("TagActor : %s"), *Actor->GetName());
+			FGameplayTagContainer TagContainer(PPTAG_CHARACTER_PLAYER);
+
+			if (TagActor->HasAnyMatchingGameplayTags(TagContainer))
+			{
+				UE_LOG(LogTemp, Log, TEXT("TagActor Matching Player : %s"), *Actor->GetName());
+			}
 		}
+		*/
 	}
 }

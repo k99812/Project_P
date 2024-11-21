@@ -85,8 +85,6 @@ void APPGASCharacterGrunt::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	UE_LOG(LogTemp, Log, TEXT("Grunt PostInitializeComponents"));
-
 //½ºÅÈ ÃÊ±âÈ­
 	AttributeSet->InitAttackRadius(AttributeData->AttackRadius);
 	AttributeSet->InitMaxAttackRadius(AttributeData->MaxAttackRadius);

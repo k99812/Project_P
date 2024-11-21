@@ -45,6 +45,11 @@ APPCharacterBase::APPCharacterBase()
 	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
 }
 
+void APPCharacterBase::GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const
+{
+	TagContainer = GameplayTags;
+}
+
 void APPCharacterBase::SetDead()
 {
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
