@@ -41,6 +41,10 @@ APPAIController::APPAIController()
 	// Sight Config
 	SenseConfig_Sight = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SenseConfig_Sight"));
 
+	SenseConfig_Sight->DetectionByAffiliation.bDetectEnemies = true;
+	SenseConfig_Sight->DetectionByAffiliation.bDetectFriendlies = true;
+	SenseConfig_Sight->DetectionByAffiliation.bDetectNeutrals = true;
+
 	AIPerceptionComp->ConfigureSense(*SenseConfig_Sight);
 	AIPerceptionComp->SetDominantSense(SenseConfig_Sight->GetSenseImplementation());
 
@@ -104,10 +108,6 @@ void APPAIController::BeginPlay()
 			SenseConfig_Sight->SetMaxAge(GruntAttributeSet->GetAISenseAge());
 			//마지막으로 감지된 객체의 위치 탐지 성공 - 시야 범위를 벗어난 상태에서도 객체를 일정 거리 이내에서 추적할 수 있다.
 			SenseConfig_Sight->AutoSuccessRangeFromLastSeenLocation = -1.f;
-
-			SenseConfig_Sight->DetectionByAffiliation.bDetectEnemies = true;
-			SenseConfig_Sight->DetectionByAffiliation.bDetectFriendlies = true;
-			SenseConfig_Sight->DetectionByAffiliation.bDetectNeutrals = true;
 		}
 	}
 }
