@@ -42,6 +42,10 @@ public:
 	float AIPatrolRadius;
 
 	UPROPERTY(EditAnywhere, Category = "Attribute")
+	float AITurnSpeed;
+
+
+	UPROPERTY(EditAnywhere, Category = "Attribute")
 	float AIDetectRadius;
 
 	UPROPERTY(EditAnywhere, Category = "Attribute")
@@ -49,9 +53,6 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Attribute")
 	float AIVisionAngleDeg;
-
-	UPROPERTY(EditAnywhere, Category = "Attribute")
-	float AITurnSpeed;
 
 	UPROPERTY(EditAnywhere, Category = "Attribute")
 	float AISenseAge;

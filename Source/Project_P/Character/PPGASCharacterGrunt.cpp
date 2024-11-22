@@ -99,10 +99,6 @@ void APPGASCharacterGrunt::PostInitializeComponents()
 	AttributeSet->InitHealth(AttributeSet->GetMaxHealth());
 
 //AI 관련 어트리뷰트 초기화
-	AttributeSet->InitAIDetectRadius(AttributeData->AIDetectRadius);
-	AttributeSet->InitAILoseRadius(AttributeData->AILoseRadius);
-	AttributeSet->InitAIVisionAngleDeg(AttributeData->AIVisionAngleDeg);
 	AttributeSet->InitAIPatrolRadius(AttributeData->AIPatrolRadius);
 	AttributeSet->InitAITurnSpeed(AttributeData->AITurnSpeed);
-	AttributeSet->InitAISenseAge(AttributeData->AISenseAge);
 }
