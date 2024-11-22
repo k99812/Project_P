@@ -11,12 +11,10 @@
 #include "Perception/AISenseConfig_Sight.h"
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISenseConfig_Damage.h"
-#include "AbilitySystemBlueprintLibrary.h"
-#include "AbilitySystemComponent.h"
-#include "Attribute/PPGruntAttributeSet.h"
 #include "Tag/PPGameplayTag.h"
 #include "GameplayTagAssetInterface.h"
 #include "GameplayTagContainer.h"
+#include "Data/PPGruntAIData.h"
 
 APPAIController::APPAIController()
 {
@@ -33,6 +31,12 @@ APPAIController::APPAIController()
 	{
 		BTAsset = BTAssetRef.Object;
 	}
+
+	static ConstructorHelpers::FObjectFinder<UPPGruntAIData> AIDataRef(TEXT("/Script/Project_P.PPGruntAIData'/Game/Project_P/Data/GruntAIData.GruntAIData'"));
+	if (AIDataRef.Object)
+	{
+		GruntAIData = AIDataRef.Object;
+	}
 	
 // AI Perception 설정
 	AIPerceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComp"));
@@ -40,6 +44,14 @@ APPAIController::APPAIController()
 
 	// Sight Config
 	SenseConfig_Sight = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SenseConfig_Sight"));
+
+	SenseConfig_Sight->SightRadius = GruntAIData->SightRadius;
+	SenseConfig_Sight->LoseSightRadius = GruntAIData->LoseSightRadius;
+	SenseConfig_Sight->PeripheralVisionAngleDegrees = GruntAIData->AIVisionAngleDeg;
+	//탐지하면 몇초(age)동안 탐지를 유지할지
+	SenseConfig_Sight->SetMaxAge(GruntAIData->AISenseAge);
+	//마지막으로 감지된 객체의 위치 탐지 성공 - 시야 범위를 벗어난 상태에서도 객체를 일정 거리 이내에서 추적할 수 있다.
+	SenseConfig_Sight->AutoSuccessRangeFromLastSeenLocation = GruntAIData->AutoSuccessRange;
 
 	SenseConfig_Sight->DetectionByAffiliation.bDetectEnemies = true;
 	SenseConfig_Sight->DetectionByAffiliation.bDetectFriendlies = true;
@@ -55,6 +67,8 @@ APPAIController::APPAIController()
 	SenseConfig_Damage = CreateDefaultSubobject<UAISenseConfig_Damage>(TEXT("SenseConfig_Damage"));
 
 	AIPerceptionComp->OnPerceptionUpdated.AddDynamic(this, &APPAIController::PerceptionUpdated);
+	AIPerceptionComp->OnTargetPerceptionUpdated.AddDynamic(this, &APPAIController::ActorPerceptionUpdated);
+	AIPerceptionComp->OnTargetPerceptionForgotten.AddDynamic(this, &APPAIController::ActorPerceptionForgetUpdated);
 }
 
 void APPAIController::RunAI()
@@ -94,45 +108,52 @@ void APPAIController::OnPossess(APawn* InPawn)
 void APPAIController::BeginPlay()
 {
 	Super::BeginPlay();
-
-	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(ControlledPawn);
-	if (ASC)
-	{
-		const UPPGruntAttributeSet* GruntAttributeSet = ASC->GetSet<UPPGruntAttributeSet>();
-		if (GruntAttributeSet)
-		{
-			SenseConfig_Sight->SightRadius = GruntAttributeSet->GetAIDetectRadius();
-			SenseConfig_Sight->LoseSightRadius = GruntAttributeSet->GetAILoseRadius();
-			SenseConfig_Sight->PeripheralVisionAngleDegrees = GruntAttributeSet->GetAIVisionAngleDeg();
-			//탐지하면 몇초(age)동안 탐지를 유지할지
-			SenseConfig_Sight->SetMaxAge(GruntAttributeSet->GetAISenseAge());
-			//마지막으로 감지된 객체의 위치 탐지 성공 - 시야 범위를 벗어난 상태에서도 객체를 일정 거리 이내에서 추적할 수 있다.
-			SenseConfig_Sight->AutoSuccessRangeFromLastSeenLocation = -1.f;
-		}
-	}
 }
 
 void APPAIController::PerceptionUpdated(const TArray<AActor*>& UpdatedActors)
 {
-	UE_LOG(LogTemp, Log, TEXT("PerceptionUpdated"));
-
 	for (AActor* Actor : UpdatedActors)
 	{
-		UE_LOG(LogTemp, Log, TEXT("PerceptionUpdated : %s"), *Actor->GetName());
-
-		/*
 		IGameplayTagAssetInterface* TagActor = Cast<IGameplayTagAssetInterface>(Actor);
 
 		if (TagActor)
 		{
-			UE_LOG(LogTemp, Log, TEXT("TagActor : %s"), *Actor->GetName());
 			FGameplayTagContainer TagContainer(PPTAG_CHARACTER_PLAYER);
 
 			if (TagActor->HasAnyMatchingGameplayTags(TagContainer))
 			{
-				UE_LOG(LogTemp, Log, TEXT("TagActor Matching Player : %s"), *Actor->GetName());
+				//UE_LOG(LogTemp, Log, TEXT("TagActor Matching Player : %s"), *Actor->GetName());
 			}
 		}
-		*/
+	}
+}
+
+void APPAIController::ActorPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
+{
+	IGameplayTagAssetInterface* TagActor = Cast<IGameplayTagAssetInterface>(Actor);
+
+	if (TagActor)
+	{
+		FGameplayTagContainer TagContainer(PPTAG_CHARACTER_PLAYER);
+
+		if (TagActor->HasAnyMatchingGameplayTags(TagContainer))
+		{
+			UE_LOG(LogTemp, Log, TEXT("ActorPerceptionUpdated : %s"), *Actor->GetName());
+		}
+	}
+}
+
+void APPAIController::ActorPerceptionForgetUpdated(AActor* Actor)
+{
+	IGameplayTagAssetInterface* TagActor = Cast<IGameplayTagAssetInterface>(Actor);
+	UE_LOG(LogTemp, Log, TEXT("fffffff "));
+	if (TagActor)
+	{
+		FGameplayTagContainer TagContainer(PPTAG_CHARACTER_PLAYER);
+
+		if (TagActor->HasAnyMatchingGameplayTags(TagContainer))
+		{
+			UE_LOG(LogTemp, Log, TEXT("ActorPerceptionForgetUpdated : %s"), *Actor->GetName());
+		}
 	}
 }

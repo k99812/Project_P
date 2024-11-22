@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "Perception/AIPerceptionTypes.h"
 #include "PPAIController.generated.h"
 
 /**
@@ -31,6 +32,12 @@ protected:
 	UFUNCTION()
 	void PerceptionUpdated(const TArray<AActor*>& UpdatedActors);
 
+	UFUNCTION()
+	void ActorPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
+
+	UFUNCTION()
+	void ActorPerceptionForgetUpdated(AActor* Actor);
+
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<class UAIPerceptionComponent> AIPerceptionComp;
 
@@ -42,6 +49,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<class UAISenseConfig_Damage> SenseConfig_Damage;
+
+	UPROPERTY(VisibleAnywhere, Category = "Data")
+	TObjectPtr<class UPPGruntAIData> GruntAIData;
 
 private:
 	UPROPERTY()
