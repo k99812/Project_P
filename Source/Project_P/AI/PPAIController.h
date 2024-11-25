@@ -30,9 +30,6 @@ protected:
 //AI Section
 protected:
 	UFUNCTION()
-	void PerceptionUpdated(const TArray<AActor*>& UpdatedActors);
-
-	UFUNCTION()
 	void ActorPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
 
 	UFUNCTION()
