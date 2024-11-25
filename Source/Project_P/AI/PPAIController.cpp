@@ -6,11 +6,13 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "PPAI.h"
+#include "Perception/AIPerceptionSystem.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AIPerceptionTypes.h"
 #include "Perception/AISenseConfig_Sight.h"
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISenseConfig_Damage.h"
+#include "Perception/AISense_Sight.h"
 #include "Tag/PPGameplayTag.h"
 #include "GameplayTagAssetInterface.h"
 #include "GameplayTagContainer.h"
@@ -66,7 +68,6 @@ APPAIController::APPAIController()
 	// Damage Config
 	SenseConfig_Damage = CreateDefaultSubobject<UAISenseConfig_Damage>(TEXT("SenseConfig_Damage"));
 
-	AIPerceptionComp->OnPerceptionUpdated.AddDynamic(this, &APPAIController::PerceptionUpdated);
 	AIPerceptionComp->OnTargetPerceptionUpdated.AddDynamic(this, &APPAIController::ActorPerceptionUpdated);
 	AIPerceptionComp->OnTargetPerceptionForgotten.AddDynamic(this, &APPAIController::ActorPerceptionForgetUpdated);
 }
@@ -110,35 +111,24 @@ void APPAIController::BeginPlay()
 	Super::BeginPlay();
 }
 
-void APPAIController::PerceptionUpdated(const TArray<AActor*>& UpdatedActors)
-{
-	for (AActor* Actor : UpdatedActors)
-	{
-		IGameplayTagAssetInterface* TagActor = Cast<IGameplayTagAssetInterface>(Actor);
-
-		if (TagActor)
-		{
-			FGameplayTagContainer TagContainer(PPTAG_CHARACTER_PLAYER);
-
-			if (TagActor->HasAnyMatchingGameplayTags(TagContainer))
-			{
-				//UE_LOG(LogTemp, Log, TEXT("TagActor Matching Player : %s"), *Actor->GetName());
-			}
-		}
-	}
-}
-
 void APPAIController::ActorPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
 	IGameplayTagAssetInterface* TagActor = Cast<IGameplayTagAssetInterface>(Actor);
 
-	if (TagActor)
+	if (TagActor && Stimulus.WasSuccessfullySensed())
 	{
 		FGameplayTagContainer TagContainer(PPTAG_CHARACTER_PLAYER);
 
 		if (TagActor->HasAnyMatchingGameplayTags(TagContainer))
 		{
 			UE_LOG(LogTemp, Log, TEXT("ActorPerceptionUpdated : %s"), *Actor->GetName());
+
+			TSubclassOf<UAISense> SensedStimulsClass = UAIPerceptionSystem::GetSenseClassForStimulus(this, Stimulus);
+
+			if (SensedStimulsClass == UAISense_Sight::StaticClass())
+			{
+				UE_LOG(LogTemp, Log, TEXT("AI Sense Sight Perception Updated "));
+			}
 		}
 	}
 }
@@ -146,7 +136,7 @@ void APPAIController::ActorPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus
 void APPAIController::ActorPerceptionForgetUpdated(AActor* Actor)
 {
 	IGameplayTagAssetInterface* TagActor = Cast<IGameplayTagAssetInterface>(Actor);
-	UE_LOG(LogTemp, Log, TEXT("fffffff "));
+
 	if (TagActor)
 	{
 		FGameplayTagContainer TagContainer(PPTAG_CHARACTER_PLAYER);
