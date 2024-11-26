@@ -32,6 +32,15 @@ void APPGASCharacterNonPlayer::PossessedBy(AController* NewController)
 
 	ASC->InitAbilityActorInfo(this, this);
 	AttributeSet->ActorIsDead.AddDynamic(this, &APPGASCharacterNonPlayer::ActorIsDead);
+
+	for (const TSubclassOf<UGameplayAbility>& StartAbility : StartAbilites)
+	{
+		//ASC는 직접적으로 GA를 접근, 관리하는게 아닌
+		//FGameplayAbilitySpec 구조체를 통해 간접적으로 관리함
+		FGameplayAbilitySpec Spec(StartAbility);
+
+		ASC->GiveAbility(Spec);
+	}
 }
 
 void APPGASCharacterNonPlayer::ActorIsDead()
