@@ -13,9 +13,6 @@
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISenseConfig_Damage.h"
 #include "Perception/AISense_Sight.h"
-#include "Tag/PPGameplayTag.h"
-#include "GameplayTagAssetInterface.h"
-#include "GameplayTagContainer.h"
 #include "Data/PPGruntAIData.h"
 
 APPAIController::APPAIController()
@@ -113,37 +110,46 @@ void APPAIController::BeginPlay()
 
 void APPAIController::ActorPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
-	IGameplayTagAssetInterface* TagActor = Cast<IGameplayTagAssetInterface>(Actor);
+	APawn* Pawn_ = Cast<APawn>(Actor);
 
-	if (TagActor && Stimulus.WasSuccessfullySensed())
+	if (Pawn_ && Pawn_->GetController()->IsPlayerController())
 	{
-		FGameplayTagContainer TagContainer(PPTAG_CHARACTER_PLAYER);
+		TSubclassOf<UAISense> SensedStimulsClass = UAIPerceptionSystem::GetSenseClassForStimulus(this, Stimulus);
 
-		if (TagActor->HasAnyMatchingGameplayTags(TagContainer))
+		if (SensedStimulsClass == UAISense_Sight::StaticClass())
 		{
-			UE_LOG(LogTemp, Log, TEXT("ActorPerceptionUpdated : %s"), *Actor->GetName());
-
-			TSubclassOf<UAISense> SensedStimulsClass = UAIPerceptionSystem::GetSenseClassForStimulus(this, Stimulus);
-
-			if (SensedStimulsClass == UAISense_Sight::StaticClass())
-			{
-				UE_LOG(LogTemp, Log, TEXT("AI Sense Sight Perception Updated "));
-			}
+			PerceptionSensedSight(Pawn_);
 		}
 	}
 }
 
 void APPAIController::ActorPerceptionForgetUpdated(AActor* Actor)
 {
-	IGameplayTagAssetInterface* TagActor = Cast<IGameplayTagAssetInterface>(Actor);
+	APawn* Pawn_ = Cast<APawn>(Actor);
 
-	if (TagActor)
+	if (Pawn_ && Pawn_->GetController()->IsPlayerController())
 	{
-		FGameplayTagContainer TagContainer(PPTAG_CHARACTER_PLAYER);
+		UE_LOG(LogTemp, Log, TEXT("ActorPerceptionForgetUpdated : %s"), *Actor->GetName());
 
-		if (TagActor->HasAnyMatchingGameplayTags(TagContainer))
+		APawn* Target = Cast<APawn>(GetBlackboardComponent()->GetValueAsObject(BBKEY_TARGET));
+		if (Target && Pawn_ == Target)
 		{
-			UE_LOG(LogTemp, Log, TEXT("ActorPerceptionForgetUpdated : %s"), *Actor->GetName());
+			GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, nullptr);
 		}
 	}
+}
+
+void APPAIController::PerceptionSensedSight(APawn* Pawn_)
+{
+	UE_LOG(LogTemp, Log, TEXT("ActorPerceptionUpdated : %s"), *Pawn_->GetName());
+
+	GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, Pawn_);
+}
+
+void APPAIController::PerceptionSensedHearing(APawn* Pawn_)
+{
+}
+
+void APPAIController::PerceptionSensedDamage(APawn* Pawn_)
+{
 }

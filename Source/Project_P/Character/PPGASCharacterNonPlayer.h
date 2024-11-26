@@ -22,12 +22,16 @@ public:
 
 	virtual void PossessedBy(AController* NewController) override;
 
+// GAS Section
 protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TObjectPtr<class UAbilitySystemComponent> ASC;
 
 	UPROPERTY(VisibleAnywhere, Category = AttributeSet)
 	TObjectPtr<class UPPGruntAttributeSet> AttributeSet;
+
+	UPROPERTY(EditAnywhere, Category = "GAS")
+	TArray<TSubclassOf<class UGameplayAbility>> StartAbilites;
 
 // Dead Section
 protected:

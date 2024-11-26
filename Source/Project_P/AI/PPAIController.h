@@ -30,10 +30,16 @@ protected:
 //AI Section
 protected:
 	UFUNCTION()
-	void ActorPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
+	virtual void ActorPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
 
 	UFUNCTION()
-	void ActorPerceptionForgetUpdated(AActor* Actor);
+	virtual void ActorPerceptionForgetUpdated(AActor* Actor);
+
+	virtual void PerceptionSensedSight(APawn* Pawn_);
+
+	virtual void PerceptionSensedHearing(APawn* Pawn_);
+
+	virtual void PerceptionSensedDamage(APawn* Pawn_);
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<class UAIPerceptionComponent> AIPerceptionComp;
