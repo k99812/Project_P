@@ -18,8 +18,6 @@
 #include "Data/PPComboActionData.h"
 #include "Attribute/PPCharacterAttributeSet.h"
 #include "Animation/AnimInstance.h"
-#include "Perception/AIPerceptionStimuliSourceComponent.h"
-#include "Perception/AISenseConfig_Sight.h"
 
 APPGASCharacterPlayer::APPGASCharacterPlayer()
 {

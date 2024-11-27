@@ -44,22 +44,18 @@ EBTNodeResult::Type UBTTask_FindPatrolPos::ExecuteTask(UBehaviorTreeComponent& O
 	//#include "AbilitySystemComponent.h", #include "Attribute/PPGruntAttributeSet.h"
 	//#include "AbilitySystemBlueprintLibrary.h" 추가
 	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(ControlPawn);
-	if (ASC)
-	{
-		const UPPGruntAttributeSet* AttributeSet = ASC->GetSet<UPPGruntAttributeSet>();
-		if (AttributeSet)
-		{
-			NextPosRadius = AttributeSet->GetAIPatrolRadius();
-		}
-		else
-		{
-			return EBTNodeResult::Failed;
-		}
-	}
-	else
+	if (!IsValid(ASC))
 	{
 		return EBTNodeResult::Failed;
 	}
+
+	const UPPGruntAttributeSet* AttributeSet = ASC->GetSet<UPPGruntAttributeSet>();
+	if (!IsValid(AttributeSet))
+	{
+		return EBTNodeResult::Failed;
+	}
+
+	NextPosRadius = AttributeSet->GetAIPatrolRadius();
 
 	//GetRandomPointInNavigableRadius(기준 위치, 반지름(반경), 위치를 받아올 FNavLocation)
 	if (NavSystem->GetRandomPointInNavigableRadius(OriginPos, NextPosRadius, NextPatrolPos))
