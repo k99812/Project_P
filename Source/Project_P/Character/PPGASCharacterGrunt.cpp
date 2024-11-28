@@ -101,4 +101,5 @@ void APPGASCharacterGrunt::PostInitializeComponents()
 //AI 관련 어트리뷰트 초기화
 	AttributeSet->InitAIPatrolRadius(AttributeData->AIPatrolRadius);
 	AttributeSet->InitAITurnSpeed(AttributeData->AITurnSpeed);
+	AttributeSet->InitBTAttackRange(AttributeData->BTAttackRange);
 }

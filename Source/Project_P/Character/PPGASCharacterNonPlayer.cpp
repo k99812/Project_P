@@ -41,6 +41,15 @@ void APPGASCharacterNonPlayer::PossessedBy(AController* NewController)
 
 		ASC->GiveAbility(Spec);
 	}
+
+	for (const TPair<EInputAbility, TSubclassOf<class UGameplayAbility>>& StartInputAbility : StartInputAbilites)
+	{
+		FGameplayAbilitySpec Spec(StartInputAbility.Value);
+
+		Spec.InputID = (int32)StartInputAbility.Key;
+
+		ASC->GiveAbility(Spec);
+	}
 }
 
 void APPGASCharacterNonPlayer::ActorIsDead()

@@ -43,4 +43,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Attribute")
 	float AITurnSpeed;
+
+	UPROPERTY(EditAnywhere, Category = "Attribute")
+	float BTAttackRange;
 };

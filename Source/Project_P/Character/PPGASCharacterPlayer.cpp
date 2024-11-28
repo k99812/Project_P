@@ -18,6 +18,8 @@
 #include "Data/PPComboActionData.h"
 #include "Attribute/PPCharacterAttributeSet.h"
 #include "Animation/AnimInstance.h"
+#include "Components/CapsuleComponent.h"
+#include "Physics/PPCollision.h"
 
 APPGASCharacterPlayer::APPGASCharacterPlayer()
 {
@@ -304,6 +306,8 @@ void APPGASCharacterPlayer::SetDead()
 	{
 		DisableInput(PlayerController);
 	}
+
+	GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_NOCOLLISION);
 }
 
 void APPGASCharacterPlayer::Move(const FInputActionValue& Value)

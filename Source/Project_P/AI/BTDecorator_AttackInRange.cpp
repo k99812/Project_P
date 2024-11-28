@@ -47,7 +47,7 @@ bool UBTDecorator_AttackInRange::CalculateRawConditionValue(UBehaviorTreeCompone
 		return false;
 	}
 
-	float AttackRange = AttributeSet->GetAttackRange() + AttributeSet->GetAttackRadius() * 2;
+	float AttackRange = AttributeSet->GetBTAttackRange();
 	bResult = ControllingPawn->GetDistanceTo(Target) <= AttackRange;
 
 	return bResult;

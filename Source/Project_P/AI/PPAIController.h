@@ -65,4 +65,6 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<APawn> ControlledPawn;
+
+	void ResetTarget(APawn* Pawn_);
 };

@@ -33,6 +33,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "GAS")
 	TArray<TSubclassOf<class UGameplayAbility>> StartAbilites;
 
+	UPROPERTY(EditAnywhere, Category = "GAS")
+	TMap<EInputAbility, TSubclassOf<class UGameplayAbility>> StartInputAbilites;
+
 // Dead Section
 protected:
 	UFUNCTION()
