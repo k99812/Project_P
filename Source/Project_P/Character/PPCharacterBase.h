@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "GameplayTagAssetInterface.h"
+#include "Input/PPInputEnum.h"
 #include "PPCharacterBase.generated.h"
 
 DECLARE_DELEGATE(FInputReleasedDelegate);

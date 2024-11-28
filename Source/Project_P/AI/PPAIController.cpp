@@ -14,6 +14,10 @@
 #include "Perception/AISenseConfig_Damage.h"
 #include "Perception/AISense_Sight.h"
 #include "Data/PPGruntAIData.h"
+#include "AbilitySystemComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "GameplayTagContainer.h"
+#include "Tag/PPGameplayTag.h"
 
 APPAIController::APPAIController()
 {
@@ -131,11 +135,7 @@ void APPAIController::ActorPerceptionForgetUpdated(AActor* Actor)
 	{
 		UE_LOG(LogTemp, Log, TEXT("ActorPerceptionForgetUpdated : %s"), *Actor->GetName());
 
-		APawn* Target = Cast<APawn>(GetBlackboardComponent()->GetValueAsObject(BBKEY_TARGET));
-		if (Target && Pawn_ == Target)
-		{
-			GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, nullptr);
-		}
+		ResetTarget(Pawn_);
 	}
 }
 
@@ -143,7 +143,20 @@ void APPAIController::PerceptionSensedSight(APawn* Pawn_)
 {
 	UE_LOG(LogTemp, Log, TEXT("ActorPerceptionUpdated : %s"), *Pawn_->GetName());
 
-	GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, Pawn_);
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Pawn_);
+	if (ASC)
+	{
+		FGameplayTagContainer Tag(PPTAG_CHARACTER_ISDEAD);
+		if (ASC->HasAnyMatchingGameplayTags(Tag))
+		{
+			ResetTarget(Pawn_);
+		}
+		else
+		{
+			GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, Pawn_);
+		}
+	}
+	
 }
 
 void APPAIController::PerceptionSensedHearing(APawn* Pawn_)
@@ -152,4 +165,13 @@ void APPAIController::PerceptionSensedHearing(APawn* Pawn_)
 
 void APPAIController::PerceptionSensedDamage(APawn* Pawn_)
 {
+}
+
+void APPAIController::ResetTarget(APawn* Pawn_)
+{
+	APawn* Target = Cast<APawn>(GetBlackboardComponent()->GetValueAsObject(BBKEY_TARGET));
+	if (Pawn_ == Target)
+	{
+		GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, nullptr);
+	}
 }

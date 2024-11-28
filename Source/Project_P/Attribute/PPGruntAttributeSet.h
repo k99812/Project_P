@@ -19,6 +19,7 @@ public:
 
 	ATTRIBUTE_ACCESSORS(UPPGruntAttributeSet, AIPatrolRadius);
 	ATTRIBUTE_ACCESSORS(UPPGruntAttributeSet, AITurnSpeed);
+	ATTRIBUTE_ACCESSORS(UPPGruntAttributeSet, BTAttackRange);
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "AI", Meta = (AllowPrivateAccess = true))
@@ -26,4 +27,7 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "AI", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData AITurnSpeed;
+
+	UPROPERTY(BlueprintReadOnly, Category = "AI", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData BTAttackRange;
 };

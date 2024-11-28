@@ -8,6 +8,7 @@
 #include "GA/PPGA_Attack.h"
 #include "Tag/PPGameplayTag.h"
 #include "GameplayTagContainer.h"
+#include "Input/PPInputEnum.h"
 
 UBTTask_Attack::UBTTask_Attack()
 {
@@ -32,15 +33,18 @@ EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 		return EBTNodeResult::Failed;
 	}
 
-	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromClass(UPPGA_Attack::StaticClass());
+	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID((int32)EInputAbility::LeftAttack);
 	if (Spec)
 	{
+		UE_LOG(LogTemp, Log, TEXT("ExecuteTask Spec Has"));
 		if (Spec->IsActive())
 		{
+			UE_LOG(LogTemp, Log, TEXT("ExecuteTask Spec IsActive"));
 			ASC->AbilitySpecInputPressed(*Spec);
 		}
 		else
 		{
+			UE_LOG(LogTemp, Log, TEXT("ExecuteTask Spec IsNotActive"));
 			ASC->TryActivateAbility(Spec->Handle);
 		}
 	}
@@ -59,7 +63,6 @@ void UBTTask_Attack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemo
 	}
 
 	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(ControllingPawn);
-
 	if (!IsValid(ASC))
 	{
 		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
@@ -70,6 +73,4 @@ void UBTTask_Attack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemo
 	{
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
-
-	FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
 }

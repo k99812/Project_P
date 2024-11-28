@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 
+#define CPROFILE_NOCOLLISION TEXT("NoCollision")
 #define CPROFILE_PPCAPSULE TEXT("PPCapsule")
 #define CPROFILE_PPTRIGGER TEXT("PPTrigger")
 #define CCHANNEL_PPACTION ECC_GameTraceChannel1
