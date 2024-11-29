@@ -40,6 +40,11 @@ APPAIController::APPAIController()
 	{
 		GruntAIData = AIDataRef.Object;
 	}
+
+// Tick
+	PrimaryActorTick.bCanEverTick = true;
+	//AActor::SetActorTickEnabled() 함수로 조절
+	PrimaryActorTick.bStartWithTickEnabled = false;
 	
 // AI Perception 설정
 	AIPerceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComp"));
@@ -112,6 +117,13 @@ void APPAIController::BeginPlay()
 	Super::BeginPlay();
 }
 
+void APPAIController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	ResetTarget();
+}
+
 void APPAIController::ActorPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
 	APawn* Pawn_ = Cast<APawn>(Actor);
@@ -135,7 +147,12 @@ void APPAIController::ActorPerceptionForgetUpdated(AActor* Actor)
 	{
 		UE_LOG(LogTemp, Log, TEXT("ActorPerceptionForgetUpdated : %s"), *Actor->GetName());
 
-		ResetTarget(Pawn_);
+		APawn* Target = Cast<APawn>(GetBlackboardComponent()->GetValueAsObject(BBKEY_TARGET));
+		if (Pawn_ == Target)
+		{
+			GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, nullptr);
+			AActor::SetActorTickEnabled(false);
+		}
 	}
 }
 
@@ -146,17 +163,9 @@ void APPAIController::PerceptionSensedSight(APawn* Pawn_)
 	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Pawn_);
 	if (ASC)
 	{
-		FGameplayTagContainer Tag(PPTAG_CHARACTER_ISDEAD);
-		if (ASC->HasAnyMatchingGameplayTags(Tag))
-		{
-			ResetTarget(Pawn_);
-		}
-		else
-		{
-			GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, Pawn_);
-		}
+		GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, Pawn_);
+		AActor::SetActorTickEnabled(true);
 	}
-	
 }
 
 void APPAIController::PerceptionSensedHearing(APawn* Pawn_)
@@ -167,11 +176,21 @@ void APPAIController::PerceptionSensedDamage(APawn* Pawn_)
 {
 }
 
-void APPAIController::ResetTarget(APawn* Pawn_)
+void APPAIController::ResetTarget()
 {
 	APawn* Target = Cast<APawn>(GetBlackboardComponent()->GetValueAsObject(BBKEY_TARGET));
-	if (Pawn_ == Target)
+	if (Target)
 	{
-		GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, nullptr);
+		UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Target);
+
+		if (ASC)
+		{
+			FGameplayTagContainer Tag(PPTAG_CHARACTER_ISDEAD);
+			if (ASC->HasAnyMatchingGameplayTags(Tag))
+			{
+				GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, nullptr);
+				AActor::SetActorTickEnabled(false);
+			}
+		}
 	}
 }

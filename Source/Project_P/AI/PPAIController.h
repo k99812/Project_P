@@ -27,6 +27,8 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	virtual void Tick(float DeltaTime) override;
+
 //AI Section
 protected:
 	UFUNCTION()
@@ -66,5 +68,5 @@ private:
 	UPROPERTY()
 	TObjectPtr<APawn> ControlledPawn;
 
-	void ResetTarget(APawn* Pawn_);
+	void ResetTarget();
 };

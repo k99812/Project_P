@@ -331,8 +331,8 @@ void APPGASCharacterPlayer::Move(const FInputActionValue& Value)
 		}
 
 		//이동시 공격 어빌리티 캔슬
-		const FGameplayTagContainer* CancelAbilityTags = new FGameplayTagContainer(PPTAG_ABILITY_ATTACK);
-		ASC->CancelAbilities(CancelAbilityTags);
+		FGameplayTagContainer CancelAbilityTags(PPTAG_ABILITY_ATTACK);
+		ASC->CancelAbilities(&CancelAbilityTags);
 
 		//X는 좌우 Y는 상하 입력
 		FVector2D MovementVector = Value.Get<FVector2D>();

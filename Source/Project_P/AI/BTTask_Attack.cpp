@@ -9,6 +9,8 @@
 #include "Tag/PPGameplayTag.h"
 #include "GameplayTagContainer.h"
 #include "Input/PPInputEnum.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 UBTTask_Attack::UBTTask_Attack()
 {
@@ -21,13 +23,15 @@ EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 	EBTNodeResult::Type Retsult = Super::ExecuteTask(OwnerComp, NodeMemory);
 
 	//#include "AIController.h" Ãß°¡
-	APawn* ControllingPawn = OwnerComp.GetAIOwner()->GetPawn();
-	if (!IsValid(ControllingPawn))
+	ACharacter* Character = Cast<ACharacter>(OwnerComp.GetAIOwner()->GetPawn());
+	if (!IsValid(Character))
 	{
 		return EBTNodeResult::Failed;
 	}
 
-	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(ControllingPawn);
+	Character->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Character);
 	if (!IsValid(ASC))
 	{
 		return EBTNodeResult::Failed;
@@ -36,15 +40,12 @@ EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID((int32)EInputAbility::LeftAttack);
 	if (Spec)
 	{
-		UE_LOG(LogTemp, Log, TEXT("ExecuteTask Spec Has"));
 		if (Spec->IsActive())
 		{
-			UE_LOG(LogTemp, Log, TEXT("ExecuteTask Spec IsActive"));
 			ASC->AbilitySpecInputPressed(*Spec);
 		}
 		else
 		{
-			UE_LOG(LogTemp, Log, TEXT("ExecuteTask Spec IsNotActive"));
 			ASC->TryActivateAbility(Spec->Handle);
 		}
 	}
@@ -73,4 +74,26 @@ void UBTTask_Attack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemo
 	{
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
+}
+
+EBTNodeResult::Type UBTTask_Attack::AbortTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+{
+	ACharacter* Character = Cast<ACharacter>(OwnerComp.GetAIOwner()->GetPawn());
+	if (Character)
+	{
+		Character->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+	}
+
+	return Super::AbortTask(OwnerComp, NodeMemory);
+}
+
+void UBTTask_Attack::OnTaskFinished(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, EBTNodeResult::Type TaskResult)
+{
+	ACharacter* Character = Cast<ACharacter>(OwnerComp.GetAIOwner()->GetPawn());
+	if (!IsValid(Character))
+	{
+		Character->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+	}
+
+	Super::OnTaskFinished(OwnerComp, NodeMemory, TaskResult);
 }
