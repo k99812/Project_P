@@ -43,9 +43,11 @@ EBTNodeResult::Type UBTTask_GASMoveTo::ExecuteTask(UBehaviorTreeComponent& Owner
 		}
 	}
 
+	/*
 	//이동시 공격 어빌리티 캔슬
 	FGameplayTagContainer CancelAbilityTags(PPTAG_ABILITY_ATTACK);
 	ASC->CancelAbilities(&CancelAbilityTags);
+	*/
 
 	return Super::ExecuteTask(OwnerComp, NodeMemory);
 }
