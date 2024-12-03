@@ -50,7 +50,7 @@ APPAIController::APPAIController()
 	AIPerceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComp"));
 	SetPerceptionComponent(*AIPerceptionComp);
 
-	// Sight Config
+// Sight Config
 	SenseConfig_Sight = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SenseConfig_Sight"));
 
 	SenseConfig_Sight->SightRadius = GruntAIData->SightRadius;
@@ -68,10 +68,19 @@ APPAIController::APPAIController()
 	AIPerceptionComp->ConfigureSense(*SenseConfig_Sight);
 	AIPerceptionComp->SetDominantSense(SenseConfig_Sight->GetSenseImplementation());
 
-	// Hearing Config
+// Hearing Config
 	SenseConfig_Hearing = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("SenseConfig_Hearing"));
 
-	// Damage Config
+	SenseConfig_Hearing->HearingRange = GruntAIData->HearingRange;
+	SenseConfig_Hearing->SetMaxAge(GruntAIData->AISenseAge);
+
+	SenseConfig_Hearing->DetectionByAffiliation.bDetectEnemies = true;
+	SenseConfig_Hearing->DetectionByAffiliation.bDetectFriendlies = true;
+	SenseConfig_Hearing->DetectionByAffiliation.bDetectNeutrals = true;
+
+	AIPerceptionComp->ConfigureSense(*SenseConfig_Hearing);
+
+// Damage Config
 	SenseConfig_Damage = CreateDefaultSubobject<UAISenseConfig_Damage>(TEXT("SenseConfig_Damage"));
 
 	AIPerceptionComp->OnTargetPerceptionUpdated.AddDynamic(this, &APPAIController::ActorPerceptionUpdated);

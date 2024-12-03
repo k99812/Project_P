@@ -20,6 +20,7 @@
 #include "Animation/AnimInstance.h"
 #include "Components/CapsuleComponent.h"
 #include "Physics/PPCollision.h"
+#include "Perception/AISense_Hearing.h"
 
 APPGASCharacterPlayer::APPGASCharacterPlayer()
 {
@@ -312,6 +313,9 @@ void APPGASCharacterPlayer::SetDead()
 
 void APPGASCharacterPlayer::Move(const FInputActionValue& Value)
 {
+	//AI듣기 테스트
+	UAISense_Hearing::ReportNoiseEvent(this, this->GetActorLocation(), 1.f);
+
 	//ASC에 태그 달기
 	//#include "GameplayTagContainer.h" 추가
 	FGameplayTagContainer WalkingTagContainer;
