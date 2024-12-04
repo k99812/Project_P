@@ -257,6 +257,9 @@ void APPGASCharacterPlayer::SetupGASPlayerInputComponent()
 
 void APPGASCharacterPlayer::GASInputPressed(int32 InputID)
 {
+	//AI듣기 테스트
+	UAISense_Hearing::ReportNoiseEvent(this, this->GetActorLocation(), 1.f, this);
+
 	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(InputID);
 
 	if (Spec)
@@ -313,9 +316,6 @@ void APPGASCharacterPlayer::SetDead()
 
 void APPGASCharacterPlayer::Move(const FInputActionValue& Value)
 {
-	//AI듣기 테스트
-	UAISense_Hearing::ReportNoiseEvent(this, this->GetActorLocation(), 1.f);
-
 	//ASC에 태그 달기
 	//#include "GameplayTagContainer.h" 추가
 	FGameplayTagContainer WalkingTagContainer;

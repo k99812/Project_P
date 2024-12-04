@@ -135,29 +135,34 @@ void APPAIController::Tick(float DeltaTime)
 
 void APPAIController::ActorPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
-	APawn* Pawn_ = Cast<APawn>(Actor);
+	APawn* PerceptionedPawn = Cast<APawn>(Actor);
 
-	if (Pawn_ && Pawn_->GetController()->IsPlayerController())
+	if (PerceptionedPawn && PerceptionedPawn->GetController()->IsPlayerController())
 	{
 		TSubclassOf<UAISense> SensedStimulsClass = UAIPerceptionSystem::GetSenseClassForStimulus(this, Stimulus);
 
 		if (SensedStimulsClass == UAISense_Sight::StaticClass())
 		{
-			PerceptionSensedSight(Pawn_);
+			PerceptionSensedSight(PerceptionedPawn);
+		}
+
+		if (SensedStimulsClass == UAISense_Hearing::StaticClass())
+		{
+			PerceptionSensedHearing(PerceptionedPawn);
 		}
 	}
 }
 
 void APPAIController::ActorPerceptionForgetUpdated(AActor* Actor)
 {
-	APawn* Pawn_ = Cast<APawn>(Actor);
+	APawn* PerceptionedPawn = Cast<APawn>(Actor);
 
-	if (Pawn_ && Pawn_->GetController()->IsPlayerController())
+	if (PerceptionedPawn && PerceptionedPawn->GetController()->IsPlayerController())
 	{
 		UE_LOG(LogTemp, Log, TEXT("ActorPerceptionForgetUpdated : %s"), *Actor->GetName());
 
 		APawn* Target = Cast<APawn>(GetBlackboardComponent()->GetValueAsObject(BBKEY_TARGET));
-		if (Pawn_ == Target)
+		if (PerceptionedPawn == Target)
 		{
 			GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, nullptr);
 			AActor::SetActorTickEnabled(false);
@@ -165,23 +170,24 @@ void APPAIController::ActorPerceptionForgetUpdated(AActor* Actor)
 	}
 }
 
-void APPAIController::PerceptionSensedSight(APawn* Pawn_)
+void APPAIController::PerceptionSensedSight(APawn* PerceptionedPawn)
 {
-	UE_LOG(LogTemp, Log, TEXT("ActorPerceptionUpdated : %s"), *Pawn_->GetName());
+	UE_LOG(LogTemp, Log, TEXT("ActorPerceptionUpdated : %s"), *PerceptionedPawn->GetName());
 
-	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Pawn_);
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(PerceptionedPawn);
 	if (ASC)
 	{
-		GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, Pawn_);
+		GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, PerceptionedPawn);
 		AActor::SetActorTickEnabled(true);
 	}
 }
 
-void APPAIController::PerceptionSensedHearing(APawn* Pawn_)
+void APPAIController::PerceptionSensedHearing(APawn* PerceptionedPawn)
 {
+	UE_LOG(LogTemp, Log, TEXT("Perception Sensed Hearing : %s"), *PerceptionedPawn->GetName())
 }
 
-void APPAIController::PerceptionSensedDamage(APawn* Pawn_)
+void APPAIController::PerceptionSensedDamage(APawn* PerceptionedPawn)
 {
 }
 
