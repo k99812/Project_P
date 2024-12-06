@@ -116,8 +116,6 @@ void APPAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	ControlledPawn = InPawn;
-
 	RunAI();
 }
 

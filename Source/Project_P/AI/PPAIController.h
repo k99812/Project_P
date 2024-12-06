@@ -65,8 +65,5 @@ private:
 	UPROPERTY()
 	TObjectPtr<class UBehaviorTree> BTAsset;
 
-	UPROPERTY()
-	TObjectPtr<APawn> ControlledPawn;
-
 	void ResetTarget();
 };
