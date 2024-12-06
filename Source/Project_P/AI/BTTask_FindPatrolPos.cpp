@@ -13,6 +13,7 @@
 
 UBTTask_FindPatrolPos::UBTTask_FindPatrolPos()
 {
+	NodeName = TEXT("FInd Patrol Position");
 }
 
 EBTNodeResult::Type UBTTask_FindPatrolPos::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -57,7 +58,7 @@ EBTNodeResult::Type UBTTask_FindPatrolPos::ExecuteTask(UBehaviorTreeComponent& O
 
 	NextPosRadius = AttributeSet->GetAIPatrolRadius();
 
-	//GetRandomPointInNavigableRadius(기준 위치, 반지름(반경), 위치를 받아올 FNavLocation)
+	//GetRandomPointInNavigableRadius(기준 위치, 반지름(반경), 위치를 저장할 FNavLocation)
 	if (NavSystem->GetRandomPointInNavigableRadius(OriginPos, NextPosRadius, NextPatrolPos))
 	{
 		OwnerComp.GetBlackboardComponent()->SetValueAsVector(BBKEY_PATROLPOS, NextPatrolPos.Location);
