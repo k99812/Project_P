@@ -39,7 +39,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dead", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UAnimMontage> DeadMontage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GameplayTags", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", Meta = (AllowPrivateAccess = "true"))
 	FGameplayTagContainer GameplayTags;
 
 // Dead Section
