@@ -23,15 +23,13 @@ EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 	EBTNodeResult::Type Retsult = Super::ExecuteTask(OwnerComp, NodeMemory);
 
 	//#include "AIController.h" Ãß°¡
-	ACharacter* Character = Cast<ACharacter>(OwnerComp.GetAIOwner()->GetPawn());
-	if (!IsValid(Character))
+	APawn* ControllingPawn = OwnerComp.GetAIOwner()->GetPawn();
+	if (!IsValid(ControllingPawn))
 	{
 		return EBTNodeResult::Failed;
 	}
 
-	Character->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
-
-	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Character);
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(ControllingPawn);
 	if (!IsValid(ASC))
 	{
 		return EBTNodeResult::Failed;
@@ -70,30 +68,8 @@ void UBTTask_Attack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemo
 	}
 
 	FGameplayTagContainer Tags(PPTAG_ABILITY_ATTACK);
-	if (!ASC->HasAnyMatchingGameplayTags(Tags))
+	if (!ASC->HasAllMatchingGameplayTags(Tags))
 	{
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
-}
-
-EBTNodeResult::Type UBTTask_Attack::AbortTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
-{
-	ACharacter* Character = Cast<ACharacter>(OwnerComp.GetAIOwner()->GetPawn());
-	if (Character)
-	{
-		Character->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
-	}
-
-	return Super::AbortTask(OwnerComp, NodeMemory);
-}
-
-void UBTTask_Attack::OnTaskFinished(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, EBTNodeResult::Type TaskResult)
-{
-	ACharacter* Character = Cast<ACharacter>(OwnerComp.GetAIOwner()->GetPawn());
-	if (!IsValid(Character))
-	{
-		Character->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
-	}
-
-	Super::OnTaskFinished(OwnerComp, NodeMemory, TaskResult);
 }
