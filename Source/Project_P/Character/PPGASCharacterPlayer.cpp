@@ -257,8 +257,7 @@ void APPGASCharacterPlayer::SetupGASPlayerInputComponent()
 
 void APPGASCharacterPlayer::GASInputPressed(int32 InputID)
 {
-	//AI듣기 테스트
-	UAISense_Hearing::ReportNoiseEvent(this, this->GetActorLocation(), 1.f, this);
+	//UAISense_Hearing::ReportNoiseEvent(this, this->GetActorLocation(), 1.f, this);
 
 	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(InputID);
 
@@ -323,7 +322,7 @@ void APPGASCharacterPlayer::Move(const FInputActionValue& Value)
 
 	if (GetCharacterMovement()->GetMovementName() == TEXT("Walking"))
 	{
-		if (!ASC->HasAnyMatchingGameplayTags(WalkingTagContainer))
+		if (!ASC->HasAllMatchingGameplayTags(WalkingTagContainer))
 		{
 			ASC->AddLooseGameplayTags(WalkingTagContainer);
 
@@ -388,7 +387,7 @@ void APPGASCharacterPlayer::MoveInputReleased()
 void APPGASCharacterPlayer::RemoveTag(const FGameplayTagContainer& RemoveTagContainer)
 {
 	// ASC에 태그 제거
-	if (ASC->HasAnyMatchingGameplayTags(RemoveTagContainer))
+	if (ASC->HasAllMatchingGameplayTags(RemoveTagContainer))
 	{
 		ASC->RemoveLooseGameplayTags(RemoveTagContainer);
 

@@ -30,7 +30,7 @@ bool UBTDecorator_IsAttaking::CalculateRawConditionValue(UBehaviorTreeComponent&
 	}
 
 	FGameplayTagContainer Tags(PPTAG_ABILITY_ATTACK);
-	Result = ASC->HasAnyMatchingGameplayTags(Tags);
+	Result = ASC->HasAllMatchingGameplayTags(Tags);
 
 	return Result;
 }
