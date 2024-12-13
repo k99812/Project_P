@@ -14,8 +14,10 @@ void UPPGASHpBarUserWidget::SetAbilitySystemComponent(AActor* Owner)
 	if (ASC)
 	{
 		//특정 어트리뷰트값이 바뀔때 마다 호출되는 델리게이트
-		ASC->GetGameplayAttributeValueChangeDelegate(UPPCharacterAttributeSet::GetHealthAttribute()).AddUObject(this, &UPPGASHpBarUserWidget::OnHealthAttributeChange);
-		ASC->GetGameplayAttributeValueChangeDelegate(UPPCharacterAttributeSet::GetMaxHealthAttribute()).AddUObject(this, &UPPGASHpBarUserWidget::OnMaxHealthAttributeChange);
+		ASC->GetGameplayAttributeValueChangeDelegate(UPPCharacterAttributeSet::GetHealthAttribute()).
+			AddUObject(this, &UPPGASHpBarUserWidget::OnHealthAttributeChange);
+		ASC->GetGameplayAttributeValueChangeDelegate(UPPCharacterAttributeSet::GetMaxHealthAttribute()).
+			AddUObject(this, &UPPGASHpBarUserWidget::OnMaxHealthAttributeChange);
 	
 		const UPPCharacterAttributeSet* CurrentAttributeSet = ASC->GetSet<UPPCharacterAttributeSet>();
 		if (CurrentAttributeSet)

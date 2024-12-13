@@ -21,6 +21,8 @@
 #include "Components/CapsuleComponent.h"
 #include "Physics/PPCollision.h"
 #include "Perception/AISense_Hearing.h"
+#include "UI/PPGASWidgetComponent.h"
+#include "UI/PPGASPlayerHpBarUserWidget.h"
 
 APPGASCharacterPlayer::APPGASCharacterPlayer()
 {

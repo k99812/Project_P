@@ -38,4 +38,11 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UTextBlock> TxtMpStat;
+
+private:
+	float CurrentHealth = 0.0f;
+	float CurrentMaxHealth = 0.1f;
+
+	float CurrentMana = 0.0f;
+	float CurrentMaxMana = 0.1f;
 };
