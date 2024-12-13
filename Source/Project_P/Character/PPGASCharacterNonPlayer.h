@@ -24,10 +24,10 @@ public:
 
 // GAS Section
 protected:
-	UPROPERTY(EditAnywhere, Category = GAS)
+	UPROPERTY(EditAnywhere, Category = "GAS")
 	TObjectPtr<class UAbilitySystemComponent> ASC;
 
-	UPROPERTY(VisibleAnywhere, Category = AttributeSet)
+	UPROPERTY(VisibleAnywhere, Category = "AttributeSet")
 	TObjectPtr<class UPPGruntAttributeSet> AttributeSet;
 
 	UPROPERTY(EditAnywhere, Category = "GAS")

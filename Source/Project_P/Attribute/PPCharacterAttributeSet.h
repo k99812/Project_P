@@ -36,6 +36,8 @@ public:
 	ATTRIBUTE_ACCESSORS(UPPCharacterAttributeSet, Health);
 	ATTRIBUTE_ACCESSORS(UPPCharacterAttributeSet, MaxHealth);
 	ATTRIBUTE_ACCESSORS(UPPCharacterAttributeSet, Damage);
+	ATTRIBUTE_ACCESSORS(UPPCharacterAttributeSet, Mana);
+	ATTRIBUTE_ACCESSORS(UPPCharacterAttributeSet, MaxMana);
 
 	mutable FIsDeadDelegate ActorIsDead;
 
@@ -63,6 +65,12 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Health", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxHealth;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Mana", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData Mana;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Mana", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MaxMana;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Damage;

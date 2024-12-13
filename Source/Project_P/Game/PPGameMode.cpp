@@ -3,6 +3,7 @@
 
 #include "Game/PPGameMode.h"
 #include "Player/PPGASPlayerState.h"
+#include "UI/PPHUD.h"
 
 APPGameMode::APPGameMode()
 {
@@ -18,6 +19,12 @@ APPGameMode::APPGameMode()
 	if (PlayerControllerClassRef.Class)
 	{
 		PlayerControllerClass = PlayerControllerClassRef.Class;
+	}
+
+	static ConstructorHelpers::FClassFinder<APPHUD> HUDRef(TEXT("/Game/Project_P/Blueprint/UI/BPPP_HUD.BPPP_HUD_C"));
+	if (HUDRef.Class)
+	{
+		HUDClass = HUDRef.Class;
 	}
 	
 	/*
