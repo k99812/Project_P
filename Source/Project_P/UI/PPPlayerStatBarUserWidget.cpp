@@ -15,6 +15,8 @@ UPPPlayerStatBarUserWidget::UPPPlayerStatBarUserWidget(const FObjectInitializer&
 
 void UPPPlayerStatBarUserWidget::NativeConstruct()
 {
+	UE_LOG(LogTemp, Log, TEXT("HUD : %s"), *GetOwningPlayerPawn()->GetName());
+
 	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetOwningPlayerPawn());
 
 	if (ASC)
