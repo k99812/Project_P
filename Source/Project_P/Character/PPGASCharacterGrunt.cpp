@@ -84,7 +84,7 @@ APPGASCharacterGrunt::APPGASCharacterGrunt()
 void APPGASCharacterGrunt::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-
+	
 //½ºÅÈ ÃÊ±âÈ­
 	AttributeSet->InitAttackRadius(AttributeData->AttackRadius);
 	AttributeSet->InitMaxAttackRadius(AttributeData->MaxAttackRadius);
