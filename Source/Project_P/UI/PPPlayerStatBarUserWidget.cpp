@@ -8,6 +8,11 @@
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 
+UPPPlayerStatBarUserWidget::UPPPlayerStatBarUserWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+{
+
+}
+
 void UPPPlayerStatBarUserWidget::NativeConstruct()
 {
 	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetOwningPlayerPawn());

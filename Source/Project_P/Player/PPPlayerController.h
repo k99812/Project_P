@@ -14,6 +14,17 @@ class PROJECT_P_API APPPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
+public:
+	APPPlayerController();
+
 protected:
 	virtual void BeginPlay() override;
+
+// HUD
+protected:
+	UPROPERTY(EditAnywhere, Category = "HUD")
+	TSubclassOf<class UUserWidget> HUDWidgetClass;
+
+	UPROPERTY(EditAnywhere, Category = "HUD")
+	TObjectPtr<class UPPHUDWidget> HUDWidget;
 };
