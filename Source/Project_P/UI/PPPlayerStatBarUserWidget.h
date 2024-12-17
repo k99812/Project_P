@@ -5,18 +5,18 @@
 #include "CoreMinimal.h"
 #include "UI/PPGASUserWidget.h"
 #include "GameplayEffectTypes.h"
-#include "PPGASPlayerHpBarUserWidget.generated.h"
+#include "PPPlayerStatBarUserWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECT_P_API UPPGASPlayerHpBarUserWidget : public UPPGASUserWidget
+class PROJECT_P_API UPPPlayerStatBarUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
 protected:
-	virtual void SetAbilitySystemComponent(AActor* Owner) override;
+	virtual void NativeConstruct() override;
 
 	void OnHealthAttributeChange(const FOnAttributeChangeData& ChangeData);
 	void OnMaxHealthAttributeChange(const FOnAttributeChangeData& ChangeData);

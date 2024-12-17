@@ -1,27 +1,28 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UI/PPGASPlayerHpBarUserWidget.h"
+#include "UI/PPPlayerStatBarUserWidget.h"
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "Attribute/PPCharacterAttributeSet.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 
-void UPPGASPlayerHpBarUserWidget::SetAbilitySystemComponent(AActor* Owner)
+void UPPPlayerStatBarUserWidget::NativeConstruct()
 {
-	Super::SetAbilitySystemComponent(Owner);
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetOwningPlayerPawn());
 
 	if (ASC)
 	{
 		ASC->GetGameplayAttributeValueChangeDelegate(UPPCharacterAttributeSet::GetHealthAttribute()).
-			AddUObject(this, &UPPGASPlayerHpBarUserWidget::OnHealthAttributeChange);
+			AddUObject(this, &UPPPlayerStatBarUserWidget::OnHealthAttributeChange);
 		ASC->GetGameplayAttributeValueChangeDelegate(UPPCharacterAttributeSet::GetMaxHealthAttribute()).
-			AddUObject(this, &UPPGASPlayerHpBarUserWidget::OnMaxHealthAttributeChange);
+			AddUObject(this, &UPPPlayerStatBarUserWidget::OnMaxHealthAttributeChange);
 
 		ASC->GetGameplayAttributeValueChangeDelegate(UPPCharacterAttributeSet::GetManaAttribute()).
-			AddUObject(this, &UPPGASPlayerHpBarUserWidget::OnManaAttributeChange);
+			AddUObject(this, &UPPPlayerStatBarUserWidget::OnManaAttributeChange);
 		ASC->GetGameplayAttributeValueChangeDelegate(UPPCharacterAttributeSet::GetMaxManaAttribute()).
-			AddUObject(this, &UPPGASPlayerHpBarUserWidget::OnMaxManaAttributeChange);
+			AddUObject(this, &UPPPlayerStatBarUserWidget::OnMaxManaAttributeChange);
 
 		const UPPCharacterAttributeSet* AttributeSet = ASC->GetSet<UPPCharacterAttributeSet>();
 		if (AttributeSet)
@@ -45,31 +46,31 @@ void UPPGASPlayerHpBarUserWidget::SetAbilitySystemComponent(AActor* Owner)
 	}
 }
 
-void UPPGASPlayerHpBarUserWidget::OnHealthAttributeChange(const FOnAttributeChangeData& ChangeData)
+void UPPPlayerStatBarUserWidget::OnHealthAttributeChange(const FOnAttributeChangeData& ChangeData)
 {
 	CurrentHealth = ChangeData.NewValue;
 	UpdateHpBar();
 }
 
-void UPPGASPlayerHpBarUserWidget::OnMaxHealthAttributeChange(const FOnAttributeChangeData& ChangeData)
+void UPPPlayerStatBarUserWidget::OnMaxHealthAttributeChange(const FOnAttributeChangeData& ChangeData)
 {
 	CurrentMaxHealth = ChangeData.NewValue;
 	UpdateHpBar();
 }
 
-void UPPGASPlayerHpBarUserWidget::OnManaAttributeChange(const FOnAttributeChangeData& ChangeData)
+void UPPPlayerStatBarUserWidget::OnManaAttributeChange(const FOnAttributeChangeData& ChangeData)
 {
 	CurrentMana = ChangeData.NewValue;
 	UpdateMpBar();
 }
 
-void UPPGASPlayerHpBarUserWidget::OnMaxManaAttributeChange(const FOnAttributeChangeData& ChangeData)
+void UPPPlayerStatBarUserWidget::OnMaxManaAttributeChange(const FOnAttributeChangeData& ChangeData)
 {
 	CurrentMaxMana = ChangeData.NewValue;
 	UpdateMpBar();
 }
 
-void UPPGASPlayerHpBarUserWidget::UpdateHpBar()
+void UPPPlayerStatBarUserWidget::UpdateHpBar()
 {
 	if (PbHpBar)
 	{
@@ -82,7 +83,7 @@ void UPPGASPlayerHpBarUserWidget::UpdateHpBar()
 	}
 }
 
-void UPPGASPlayerHpBarUserWidget::UpdateMpBar()
+void UPPPlayerStatBarUserWidget::UpdateMpBar()
 {
 	if (PbMpBar)
 	{
