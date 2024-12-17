@@ -2,6 +2,16 @@
 
 
 #include "Player/PPPlayerController.h"
+#include "UI/PPHUDWidget.h"
+
+APPPlayerController::APPPlayerController()
+{
+	static ConstructorHelpers::FClassFinder<UPPHUDWidget> HUDWidgetClassRef(TEXT("/Game/Project_P/Blueprint/UI/WBP_HUDWidget.WBP_HUDWidget_C"));
+	if (HUDWidgetClassRef.Class)
+	{
+		HUDWidgetClass = HUDWidgetClassRef.Class;
+	}
+}
 
 void APPPlayerController::BeginPlay()
 {
@@ -9,4 +19,10 @@ void APPPlayerController::BeginPlay()
 
 	//게임 시작하면 마우스 가두기
 	SetInputMode(FInputModeGameOnly());
+
+	HUDWidget = CreateWidget<UPPHUDWidget>(this, HUDWidgetClass);
+	if (HUDWidget)
+	{
+		HUDWidget->AddToViewport();
+	}
 }

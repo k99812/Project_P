@@ -14,7 +14,10 @@ UCLASS()
 class PROJECT_P_API UPPPlayerStatBarUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
+public:
+	UPPPlayerStatBarUserWidget(const FObjectInitializer& ObjectInitializer);
+
 protected:
 	virtual void NativeConstruct() override;
 
@@ -41,8 +44,8 @@ protected:
 
 private:
 	float CurrentHealth = 0.0f;
-	float CurrentMaxHealth = 0.1f;
+	float CurrentMaxHealth = 0.0f;
 
 	float CurrentMana = 0.0f;
-	float CurrentMaxMana = 0.1f;
+	float CurrentMaxMana = 0.0f;
 };

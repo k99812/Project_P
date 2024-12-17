@@ -48,28 +48,5 @@ EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 		}
 	}
 
-	return EBTNodeResult::InProgress;
-}
-
-void UBTTask_Attack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
-{
-	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
-
-	APawn* ControllingPawn = OwnerComp.GetAIOwner()->GetPawn();
-	if (!IsValid(ControllingPawn))
-	{
-		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
-	}
-
-	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(ControllingPawn);
-	if (!IsValid(ASC))
-	{
-		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
-	}
-
-	FGameplayTagContainer Tags(PPTAG_ABILITY_ATTACK);
-	if (!ASC->HasAllMatchingGameplayTags(Tags))
-	{
-		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
-	}
+	return EBTNodeResult::Succeeded;
 }
