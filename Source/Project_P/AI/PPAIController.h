@@ -7,6 +7,8 @@
 #include "Perception/AIPerceptionTypes.h"
 #include "PPAIController.generated.h"
 
+DECLARE_DYNAMIC_DELEGATE_OneParam(FFindTargetDelegate, bool, bFindTarget);
+
 /**
  * 
  */
@@ -20,6 +22,8 @@ public:
 
 	void RunAI();
 	void StopAI();
+
+	FFindTargetDelegate FindTargetDelegate;
 
 protected:
 	//컨트롤러가 폰에 빙의할때 실행되는 함수
