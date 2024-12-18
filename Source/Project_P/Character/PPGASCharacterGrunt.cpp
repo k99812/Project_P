@@ -9,6 +9,7 @@
 #include "Data/PPComboActionData.h"
 #include "UI/PPGASWidgetComponent.h"
 #include "UI/PPGASUserWidget.h"
+#include "AI/PPAIController.h"
 
 APPGASCharacterGrunt::APPGASCharacterGrunt()
 {
@@ -71,6 +72,7 @@ APPGASCharacterGrunt::APPGASCharacterGrunt()
 		HpBar->SetWidgetSpace(EWidgetSpace::Screen);
 		HpBar->SetDrawSize(FVector2D(200.0f, 20.f));
 		HpBar->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		HpBar->SetVisibility(false);
 	}
 
 //Dead ¸ùÅ¸ÁÖ ¼³Á¤
@@ -102,4 +104,17 @@ void APPGASCharacterGrunt::PostInitializeComponents()
 	AttributeSet->InitAIPatrolRadius(AttributeData->AIPatrolRadius);
 	AttributeSet->InitAITurnSpeed(AttributeData->AITurnSpeed);
 	AttributeSet->InitBTAttackRange(AttributeData->BTAttackRange);
+
+// HPBar
+	APPAIController* AIController = Cast<APPAIController>(GetController());
+	if (AIController)
+	{
+		AIController->FindTargetDelegate.BindDynamic(this, &APPGASCharacterGrunt::FoundTargetCallback);
+	}
+}
+
+void APPGASCharacterGrunt::FoundTargetCallback(bool bFoundTarget)
+{
+	UE_LOG(LogTemp, Log, TEXT("FoundTargetCallback : %s"), bFoundTarget ? TEXT("true") : TEXT("false"));
+	HpBar->SetVisibility(bFoundTarget);
 }

@@ -25,4 +25,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "UI")
 	TObjectPtr<class UPPGASWidgetComponent> HpBar;
+
+	UFUNCTION()
+	void FoundTargetCallback(bool bFoundTarget);
 };
