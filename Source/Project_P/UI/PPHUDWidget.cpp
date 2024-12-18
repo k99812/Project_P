@@ -2,6 +2,7 @@
 
 
 #include "UI/PPHUDWidget.h"
+#include "UI/PPPlayerStatBarUserWidget.h"
 
 UPPHUDWidget::UPPHUDWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
