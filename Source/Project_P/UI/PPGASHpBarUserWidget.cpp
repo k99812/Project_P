@@ -11,8 +11,6 @@ void UPPGASHpBarUserWidget::SetAbilitySystemComponent(AActor* Owner)
 {
 	Super::SetAbilitySystemComponent(Owner);
 
-	//UE_LOG(LogTemp, Log, TEXT("WidgetComponent : %s"), *GetOwningPlayerPawn()->GetName());
-
 	if (ASC)
 	{
 		//특정 어트리뷰트값이 바뀔때 마다 호출되는 델리게이트

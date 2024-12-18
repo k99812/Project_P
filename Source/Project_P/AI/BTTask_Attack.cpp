@@ -32,7 +32,7 @@ EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(ControllingPawn);
 	if (!IsValid(ASC))
 	{
-		return EBTNodeResult::Failed;
+		return EBTNodeResult::Failed; 
 	}
 
 	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID((int32)EInputAbility::LeftAttack);

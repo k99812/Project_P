@@ -105,7 +105,7 @@ void APPGASCharacterGrunt::PostInitializeComponents()
 	AttributeSet->InitAITurnSpeed(AttributeData->AITurnSpeed);
 	AttributeSet->InitBTAttackRange(AttributeData->BTAttackRange);
 
-// HPBar
+// HPBar 델리게이트 연결
 	APPAIController* AIController = Cast<APPAIController>(GetController());
 	if (AIController)
 	{
@@ -115,6 +115,5 @@ void APPGASCharacterGrunt::PostInitializeComponents()
 
 void APPGASCharacterGrunt::FoundTargetCallback(bool bFoundTarget)
 {
-	UE_LOG(LogTemp, Log, TEXT("FoundTargetCallback : %s"), bFoundTarget ? TEXT("true") : TEXT("false"));
 	HpBar->SetVisibility(bFoundTarget);
 }
