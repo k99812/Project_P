@@ -13,7 +13,8 @@
 ## 기술 설명서
 
 ## Character 구조
-![image](https://github.com/user-attachments/assets/e66736fa-95b7-4f78-8ea9-4d5db1ea5973)
+![image](https://github.com/user-attachments/assets/e1efdf56-1f39-42af-a700-45ef463b2cf9)
+
 
 ### CharacterBase
 플레이어 캐릭터, NPC 캐릭터가 공통적으로 사용하는 함수 및 변수 선언
