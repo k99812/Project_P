@@ -44,11 +44,10 @@
 
 ### CharacterGrunt
 * 체력 HPBar UI 관리
-* 체력바 구현 <a href="https://k99812.tistory.com/119" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
 
 ## Controller
 ### PlayerController
-* HUD 관리 <a href="https://k99812.tistory.com/126" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
+* HUD 관리
 * 인풋모드 관리
 
 
@@ -60,6 +59,8 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 
 ## UI
 ![image](https://github.com/user-attachments/assets/3b7bde60-6a59-44ea-86c5-f2f5b3741e28)
+<a href="https://k99812.tistory.com/119" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
+
 ### WidgetComponent
 * InitWidget 함수에서 생성한 위젯을 가져와 오너를 넘겨줌
 
