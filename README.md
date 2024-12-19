@@ -10,6 +10,14 @@
 
 <br/>
 
+## 기술 설명서
+
+### Character 구조
+![image](https://github.com/user-attachments/assets/e66736fa-95b7-4f78-8ea9-4d5db1ea5973)
+
+
+<br/>
+
 ## 진행상황
 1. 캐릭터 이동 및 애니메이션
 2. GAS를 이용해 공격, 점프, 달리기 구현
