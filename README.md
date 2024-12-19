@@ -12,7 +12,7 @@
 
 ## 기술 설명서
 
-### Character 구조
+## Character 구조
 ![image](https://github.com/user-attachments/assets/e66736fa-95b7-4f78-8ea9-4d5db1ea5973)
 
 ### CharacterBase
@@ -45,9 +45,11 @@
 * 체력 HPBar UI 관리
 * 체력바 구현 <a href="https://k99812.tistory.com/119" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
 
+## Controller
 ### PlayerController
 * HUD 관리 <a href="https://k99812.tistory.com/126" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
 * 인풋모드 관리
+
 
 ### AIController
 ![image](https://github.com/user-attachments/assets/37c90fd0-c08d-4018-9a61-3e35d7d1be04)
