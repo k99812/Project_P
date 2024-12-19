@@ -58,6 +58,32 @@
 AI컨트롤러에서 AI Perception 기능을 이용해 적을 인식 하여 블랙보드에 저장합니다
 AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 컨트롤 합니다   <a href="https://k99812.tistory.com/123" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
 
+## UI
+![image](https://github.com/user-attachments/assets/3b7bde60-6a59-44ea-86c5-f2f5b3741e28)
+### WidgetComponent
+* InitWidget 함수에서 생성한 위젯을 가져와 오너를 넘겨줌
+
+### PPGASUserWidget
+위젯 컴포넌트를 이용하여 위젯을 생성하면 GetOwningPlayer 함수를 사용할 수 없음 
+그래서 별도로 위젯 컴포넌트에서 오너를 받아올 수 있는 함수를 생성해야 됨
+* SetAbilitySystemComponent 가상함수를 선언하여 WidgetComponent에서 오너를 받음
+
+### PPGASHPBarUserWidget
+* SetAbilitySystemComponent 함수에서 매개변수로 들어온 오너를 이용하여 ASC에 어트리뷰트 체인지 델리게이트에 함수 등록
+* 프로그래스바, 텍스트 박스 관리
+
+## Player HUD
+![image](https://github.com/user-attachments/assets/e31c1aba-8d31-4b98-bb7d-23700a240a32)
+<a href="https://k99812.tistory.com/126" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
+
+### PPHUDWidget
+* 생성한 위젯들을 관리할 클래스
+
+### PPPlayerStatBarUserWidget
+* ASC를 통해 어트리뷰트 체인지 델리게이트를 통해 콜백함수 연결
+* 프로그래스바, 텍스트박스 관리
+
+
 <br/>
 
 ## 진행상황
