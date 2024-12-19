@@ -15,6 +15,26 @@
 ### Character 구조
 ![image](https://github.com/user-attachments/assets/e66736fa-95b7-4f78-8ea9-4d5db1ea5973)
 
+### CharacterBase
+플레이어 캐릭터, NPC 캐릭터가 공통적으로 사용하는 함수 및 변수 선언
+* Dead 이벤트 관련 함수 및 몽타주
+* 콤보공격 관련 변수 및 몽타주
+* 캐릭터의 소속을 가진 게임 플레이 태그 관리
+
+### PlayerCharacter
+캐릭터의 스탯을 관리하는 어트리뷰트셋은 플레이어 스테이트 클래스에 선언
+* 캐릭터의 능력 및 스탯을 관리 해주는 ASC를 생성
+* Dead 관련 함수들을 Override
+* 사용자 입력처리
+
+### NonPlayerCharacter
+추후 보스몬스터를 추가할 수 있어 보스몬스터, 잡몹의 공통 함수 및 변수를 선언
+* 능력, 스탯 관리 ASC 생성
+* 스탯을 저장할 어트리뷰트셋 관리
+* Dead 관련 함수 Override
+
+### CharacterGrunt
+* 체력 HPBar UI 관리
 
 <br/>
 
