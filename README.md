@@ -21,11 +21,18 @@
 * 콤보공격 관련 변수 및 몽타주
 * 캐릭터의 소속을 가진 게임 플레이 태그 관리
 
+
 ### PlayerCharacter
 캐릭터의 스탯을 관리하는 어트리뷰트셋은 플레이어 스테이트 클래스에 선언
 * 캐릭터의 능력 및 스탯을 관리 해주는 ASC를 생성
 * Dead 관련 함수들을 Override
 * 사용자 입력처리
+
+<br/>
+캐릭터 설정
+<a href="https://k99812.tistory.com/85" height="5" width="10" target="_blank" >
+<img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
+</a>
 
 ### NonPlayerCharacter
 추후 보스몬스터를 추가할 수 있어 보스몬스터, 잡몹의 공통 함수 및 변수를 선언
