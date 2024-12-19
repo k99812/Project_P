@@ -27,12 +27,13 @@
 * 캐릭터의 능력 및 스탯을 관리 해주는 ASC를 생성
 * Dead 관련 함수들을 Override
 * 사용자 입력처리
+* 캐릭터 구현  <a href="https://k99812.tistory.com/85" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
+* 인풋 구현 <a href="https://k99812.tistory.com/86" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
+* 애니메이션 구현 <a href="https://k99812.tistory.com/93" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
+* GA 생성 <a href="https://k99812.tistory.com/101" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
+* 입력에 따른 GA 실행 <a href="https://k99812.tistory.com/102" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
+* 어트리뷰트셋 생성 <a href="https://k99812.tistory.com/116" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
 
-<br/>
-캐릭터 설정
-<a href="https://k99812.tistory.com/85" height="5" width="10" target="_blank" >
-<img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
-</a>
 
 ### NonPlayerCharacter
 추후 보스몬스터를 추가할 수 있어 보스몬스터, 잡몹의 공통 함수 및 변수를 선언
@@ -42,6 +43,7 @@
 
 ### CharacterGrunt
 * 체력 HPBar UI 관리
+* 체력바 구현 <a href="https://k99812.tistory.com/119" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
 
 <br/>
 
