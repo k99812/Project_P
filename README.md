@@ -128,6 +128,15 @@ https://github.com/user-attachments/assets/6e2dce8e-3aff-4ead-a0e2-844e4ce36ef4
 <br/>
 
 ## 몬스터 AI
+https://github.com/user-attachments/assets/2d78aa19-0131-4055-b490-936a8b35c4de
+
+초록색 범위 : 몬스터 시야 인식 범위
+빨강색 범위 : 몬스터가 인식한 경우 해당 범위를 벗어나야 잊혀짐
+노랑색 범위 : 노이즈 이벤트 범위
+
+
+https://github.com/user-attachments/assets/304a73f8-e93c-4e49-8669-28b2bcbe6248
+
 
 <br/>
 
