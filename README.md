@@ -99,6 +99,7 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 3. AttributeSet을 이용한 스탯 구현
 4. 공격 판정 및 데미지 구현
 5. 잡몹 HPBar, 체력 0 될시 죽는 몽타주 실행 및 Destroy
+6. 행동트리를 이용해 몬스터 AI 구현
 
 ## 캐릭터 이동
 https://github.com/user-attachments/assets/d468b24e-221d-41f4-9882-67265ac3ae82
@@ -123,4 +124,11 @@ https://github.com/user-attachments/assets/bac2ceb7-010f-45d1-8f28-6b4412a1e1af
 
 ## 체력바, 0이 될시 죽는 몽타주 실행
 https://github.com/user-attachments/assets/6e2dce8e-3aff-4ead-a0e2-844e4ce36ef4
+
+<br/>
+
+## 몬스터 AI
+
+<br/>
+
 
