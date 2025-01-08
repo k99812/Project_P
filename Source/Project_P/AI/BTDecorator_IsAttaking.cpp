@@ -15,7 +15,7 @@ UBTDecorator_IsAttaking::UBTDecorator_IsAttaking()
 
 bool UBTDecorator_IsAttaking::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const
 {
-	bool Result = Super::CalculateRawConditionValue(OwnerComp, NodeMemory);
+	bool bResult = Super::CalculateRawConditionValue(OwnerComp, NodeMemory);
 
 	APawn* ControllingPawn = OwnerComp.GetAIOwner()->GetPawn();
 	if (!IsValid(ControllingPawn))
@@ -30,7 +30,7 @@ bool UBTDecorator_IsAttaking::CalculateRawConditionValue(UBehaviorTreeComponent&
 	}
 
 	FGameplayTagContainer Tags(PPTAG_CHARACTER_ISATTACKING);
-	Result = ASC->HasAllMatchingGameplayTags(Tags);
+	bResult = ASC->HasAllMatchingGameplayTags(Tags);
 
-	return Result;
+	return bResult;
 }
