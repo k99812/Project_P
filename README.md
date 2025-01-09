@@ -57,10 +57,7 @@ TArray<TSubclassOf<class UGameplayAbility>> StartAbilites;
 
 for (const TSubclassOf<UGameplayAbility>& StartAbility : StartAbilites)
 {
-	//ASC는 직접적으로 GA를 접근, 관리하는게 아닌
-	//FGameplayAbilitySpec 구조체를 통해 간접적으로 관리함
 	FGameplayAbilitySpec Spec(StartAbility);
-
 	ASC->GiveAbility(Spec);
 }
 '''
@@ -79,7 +76,9 @@ enum class EInputAbility : uint8
 	RightAttack UMETA(DisplayName = "RAttack"),
 	Skill UMETA(DisplayName = "Skill")
 };
+'''
 
+'''
 UPROPERTY(EditAnywhere, Category = "GAS")
 TMap<EInputAbility, TSubclassOf<class UGameplayAbility>> StartInputAbilites;
 
