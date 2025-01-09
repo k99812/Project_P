@@ -45,17 +45,16 @@
 
 ## 입력 처리
 ![image](https://github.com/user-attachments/assets/8c7fb823-4e61-4d59-81b2-43ccdae2e110)
+
 EnhancedInput을 사용
 InputMappintContext에서 InputAction을 맵핑 후 저장
 
 ## GA(능력) 처리
 GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 진행됨
 '''C++
-//캐릭터 헤더파일
 UPROPERTY(EditAnywhere, Category = "GAS")
 TArray<TSubclassOf<class UGameplayAbility>> StartAbilites;
 
-//캐릭터 Cpp파일
 for (const TSubclassOf<UGameplayAbility>& StartAbility : StartAbilites)
 {
 	//ASC는 직접적으로 GA를 접근, 관리하는게 아닌
@@ -70,7 +69,6 @@ for (const TSubclassOf<UGameplayAbility>& StartAbility : StartAbilites)
 
 
 '''C++
-//PPInputEnum.h
 UENUM(BlueprintType)
 enum class EInputAbility : uint8
 {
@@ -82,11 +80,9 @@ enum class EInputAbility : uint8
 	Skill UMETA(DisplayName = "Skill")
 };
 
-//캐릭터 헤더파일
 UPROPERTY(EditAnywhere, Category = "GAS")
 TMap<EInputAbility, TSubclassOf<class UGameplayAbility>> StartInputAbilites;
 
-//캐릭터 Cpp파일
 for (const TPair<EInputAbility, TSubclassOf<class UGameplayAbility>>& StartInputAbility : StartInputAbilites)
 {
 	FGameplayAbilitySpec Spec(StartInputAbility.Value);
