@@ -45,7 +45,23 @@
 
 ## 입력 처리
 ![image](https://github.com/user-attachments/assets/8c7fb823-4e61-4d59-81b2-43ccdae2e110)
+> DemoPlayerController.cpp
 
+    MainUserWidget = CreateWidget<UMainUserWidget>(this, MainUserWidgetClass);
+	MainUserWidget->AddToViewport();
+
+	ADemoGameStateBase* DemoGameState = GetWorld()->GetGameState<ADemoGameStateBase>();
+	MainUserWidget->BindGameState(DemoGameState);
+
+	ADemoPlayerState* DemoPlayerState = GetPlayerState<ADemoPlayerState>();
+	MainUserWidget->BindPlayerState(DemoPlayerState);
+
+	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(GetCharacter());
+	if (PlayerCharacter)
+	{
+		MainUserWidget->BindCharacterState(PlayerCharacter);
+	}
+ 
 EnhancedInput을 사용
 InputMappintContext에서 InputAction을 맵핑 후 저장
 
