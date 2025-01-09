@@ -51,46 +51,23 @@ InputMappintContext에서 InputAction을 맵핑 후 저장
 
 ## GA(능력) 처리
 GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 진행됨
-'''
-UPROPERTY(EditAnywhere, Category = "GAS")
-TArray<TSubclassOf<class UGameplayAbility>> StartAbilites;
+![image](https://github.com/user-attachments/assets/90492b04-8fa4-4f6e-9563-75e4b119437b)
 
-for (const TSubclassOf<UGameplayAbility>& StartAbility : StartAbilites)
-{
-	FGameplayAbilitySpec Spec(StartAbility);
-	ASC->GiveAbility(Spec);
-}
-'''
+![image](https://github.com/user-attachments/assets/6fa56004-1b8f-4aff-a0ff-91629ef73c48)
+
 실행에 입력이 필요없는 GA(Ex 공격판정)들은 TArray를 사용해 블루프린트 클래스를 통해 TArray에 지정
+
+
 ![image](https://github.com/user-attachments/assets/2c939ffe-2e9b-4c8e-873f-ce75342d2506)
 
+![image](https://github.com/user-attachments/assets/c71bf3e9-7f7f-474f-b4f6-9a25bae6aab2)
 
-'''C++
-UENUM(BlueprintType)
-enum class EInputAbility : uint8
-{
-	None UMETA(DisplayName = "None"),
-	Jump = 10 UMETA(DisplayName = "Jump"),
-	Sprint UMETA(DisplayName = "Sprint"),
-	LeftAttack UMETA(DisplayName = "LAttack"),
-	RightAttack UMETA(DisplayName = "RAttack"),
-	Skill UMETA(DisplayName = "Skill")
-};
-'''
 
-'''
-UPROPERTY(EditAnywhere, Category = "GAS")
-TMap<EInputAbility, TSubclassOf<class UGameplayAbility>> StartInputAbilites;
+![image](https://github.com/user-attachments/assets/39104a50-d1d8-4681-b8da-cd3de6e49ecd)
 
-for (const TPair<EInputAbility, TSubclassOf<class UGameplayAbility>>& StartInputAbility : StartInputAbilites)
-{
-	FGameplayAbilitySpec Spec(StartInputAbility.Value);
 
-	Spec.InputID = (int32)StartInputAbility.Key;
+![image](https://github.com/user-attachments/assets/80d14fea-bdd1-410f-9818-b472bfbd7659)
 
-	ASC->GiveAbility(Spec);
-}
-'''
 입력을 통해서 발동되는 GA들은 TMap으로 <열겨형, GA>로 받아 Key값을 GA를 부여할때 InputID로 지정
 열거형을 사용한 이유는 int로 지정시 지정한 숫자가 맞는지 코드를 통해서 확인 해야됨 
 열거형은 코드를 이름을 통해서 지정을 하여 직관적이라고 느껴 열거형을 사용함 
