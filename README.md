@@ -51,7 +51,7 @@ InputMappintContext에서 InputAction을 맵핑 후 저장
 
 ## GA(능력) 처리
 GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 진행됨
-'''C++
+'''
 UPROPERTY(EditAnywhere, Category = "GAS")
 TArray<TSubclassOf<class UGameplayAbility>> StartAbilites;
 
