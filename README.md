@@ -54,21 +54,24 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 
 > APPGASCharacterPlayer
 
+    //헤더파일
     UPROPERTY(EditAnywhere, Category = "GAS")
     TArray<TSubclassOf<class UGameplayAbility>> StartAbilites;
+
+    //Cpp파일
+    for (const TSubclassOf<UGameplayAbility>& StartAbility : StartAbilites)
+    {
+	         //ASC는 직접적으로 GA를 접근, 관리하는게 아닌
+	         //FGameplayAbilitySpec 구조체를 통해 간접적으로 관리함
+         	FGameplayAbilitySpec Spec(StartAbility);
+
+         	ASC->GiveAbility(Spec);
+    }
+    
 
 실행에 입력이 필요없는 GA(Ex 공격판정)들은 TArray를 사용해 블루프린트 클래스를 통해 TArray에 지정
 
 
-![image](https://github.com/user-attachments/assets/2c939ffe-2e9b-4c8e-873f-ce75342d2506)
-
-![image](https://github.com/user-attachments/assets/c71bf3e9-7f7f-474f-b4f6-9a25bae6aab2)
-
-
-![image](https://github.com/user-attachments/assets/39104a50-d1d8-4681-b8da-cd3de6e49ecd)
-
-
-![image](https://github.com/user-attachments/assets/80d14fea-bdd1-410f-9818-b472bfbd7659)
 
 입력을 통해서 발동되는 GA들은 TMap으로 <열겨형, GA>로 받아 Key값을 GA를 부여할때 InputID로 지정
 열거형을 사용한 이유는 int로 지정시 지정한 숫자가 맞는지 코드를 통해서 확인 해야됨 
