@@ -45,31 +45,17 @@
 
 ## 입력 처리
 ![image](https://github.com/user-attachments/assets/8c7fb823-4e61-4d59-81b2-43ccdae2e110)
-> DemoPlayerController.cpp
-
-    MainUserWidget = CreateWidget<UMainUserWidget>(this, MainUserWidgetClass);
-	MainUserWidget->AddToViewport();
-
-	ADemoGameStateBase* DemoGameState = GetWorld()->GetGameState<ADemoGameStateBase>();
-	MainUserWidget->BindGameState(DemoGameState);
-
-	ADemoPlayerState* DemoPlayerState = GetPlayerState<ADemoPlayerState>();
-	MainUserWidget->BindPlayerState(DemoPlayerState);
-
-	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(GetCharacter());
-	if (PlayerCharacter)
-	{
-		MainUserWidget->BindCharacterState(PlayerCharacter);
-	}
  
 EnhancedInput을 사용
 InputMappintContext에서 InputAction을 맵핑 후 저장
 
 ## GA(능력) 처리
 GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 진행됨
-![image](https://github.com/user-attachments/assets/90492b04-8fa4-4f6e-9563-75e4b119437b)
 
-![image](https://github.com/user-attachments/assets/6fa56004-1b8f-4aff-a0ff-91629ef73c48)
+> APPGASCharacterPlayer
+
+    UPROPERTY(EditAnywhere, Category = "GAS")
+    TArray<TSubclassOf<class UGameplayAbility>> StartAbilites;
 
 실행에 입력이 필요없는 GA(Ex 공격판정)들은 TArray를 사용해 블루프린트 클래스를 통해 TArray에 지정
 
