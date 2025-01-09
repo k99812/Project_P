@@ -35,11 +35,74 @@
 ### NonPlayerCharacter
 추후 보스몬스터를 추가할 수 있어 보스몬스터, 잡몹의 공통 함수 및 변수를 선언
 * 능력, 스탯 관리 ASC 생성
-* 스탯을 저장할 어트리뷰트셋 관리
+* 스탯을 저장할 어트리뷰트셋 생성
 * Dead 관련 함수 Override
 
 ### CharacterGrunt
-* 체력 HPBar UI 관리
+잡몹 클래스
+* 체력 HPBar 위젯 관리
+* 어트리뷰트 초기화
+
+## 입력 처리
+![image](https://github.com/user-attachments/assets/8c7fb823-4e61-4d59-81b2-43ccdae2e110)
+EnhancedInput을 사용
+InputMappintContext에서 InputAction을 맵핑 후 저장
+
+## GA(능력) 처리
+GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 진행됨
+'''C++
+//캐릭터 헤더파일
+UPROPERTY(EditAnywhere, Category = "GAS")
+TArray<TSubclassOf<class UGameplayAbility>> StartAbilites;
+
+//캐릭터 Cpp파일
+for (const TSubclassOf<UGameplayAbility>& StartAbility : StartAbilites)
+{
+	//ASC는 직접적으로 GA를 접근, 관리하는게 아닌
+	//FGameplayAbilitySpec 구조체를 통해 간접적으로 관리함
+	FGameplayAbilitySpec Spec(StartAbility);
+
+	ASC->GiveAbility(Spec);
+}
+'''
+실행에 입력이 필요없는 GA(Ex 공격판정)들은 TArray를 사용해 블루프린트 클래스를 통해 TArray에 지정
+![image](https://github.com/user-attachments/assets/2c939ffe-2e9b-4c8e-873f-ce75342d2506)
+
+
+'''C++
+//PPInputEnum.h
+UENUM(BlueprintType)
+enum class EInputAbility : uint8
+{
+	None UMETA(DisplayName = "None"),
+	Jump = 10 UMETA(DisplayName = "Jump"),
+	Sprint UMETA(DisplayName = "Sprint"),
+	LeftAttack UMETA(DisplayName = "LAttack"),
+	RightAttack UMETA(DisplayName = "RAttack"),
+	Skill UMETA(DisplayName = "Skill")
+};
+
+//캐릭터 헤더파일
+UPROPERTY(EditAnywhere, Category = "GAS")
+TMap<EInputAbility, TSubclassOf<class UGameplayAbility>> StartInputAbilites;
+
+//캐릭터 Cpp파일
+for (const TPair<EInputAbility, TSubclassOf<class UGameplayAbility>>& StartInputAbility : StartInputAbilites)
+{
+	FGameplayAbilitySpec Spec(StartInputAbility.Value);
+
+	Spec.InputID = (int32)StartInputAbility.Key;
+
+	ASC->GiveAbility(Spec);
+}
+'''
+입력을 통해서 발동되는 GA들은 TMap으로 <열겨형, GA>로 받아 Key값을 GA를 부여할때 InputID로 지정
+열거형을 사용한 이유는 int로 지정시 지정한 숫자가 맞는지 코드를 통해서 확인 해야됨 
+열거형은 코드를 이름을 통해서 지정을 하여 직관적이라고 느껴 열거형을 사용함 
+또 별도의 헤더파일을 생성하여 선언해 다른 클래스에서 GA를 사용할때 해당 열거형을 추가하여 사용 가능
+
+![image](https://github.com/user-attachments/assets/94a63822-dcae-474e-a31a-ca5538c30a11)
+
 
 <br/>
 
@@ -58,7 +121,9 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 * 블랙보드, 행동트리 관리
 * AIPerception 이벤트 처리
 
-행동트리 구현 코드 <a href="https://k99812.tistory.com/124" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
+### 행동트리
+![image](https://github.com/user-attachments/assets/92f1224a-b851-48a2-9c5f-eff7578e503a)
+
 
 
 ## UI
