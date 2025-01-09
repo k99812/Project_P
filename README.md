@@ -77,16 +77,16 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 
 > PPInputEnum.h
 
-UENUM(BlueprintType)
-enum class EInputAbility : uint8
-{
-	None UMETA(DisplayName = "None"),
-	Jump = 10 UMETA(DisplayName = "Jump"),
-	Sprint UMETA(DisplayName = "Sprint"),
-	LeftAttack UMETA(DisplayName = "LAttack"),
-	RightAttack UMETA(DisplayName = "RAttack"),
-	Skill UMETA(DisplayName = "Skill")
-};
+	UENUM(BlueprintType)
+	enum class EInputAbility : uint8
+	{
+		None UMETA(DisplayName = "None"),
+		Jump = 10 UMETA(DisplayName = "Jump"),
+		Sprint UMETA(DisplayName = "Sprint"),
+		LeftAttack UMETA(DisplayName = "LAttack"),
+		RightAttack UMETA(DisplayName = "RAttack"),
+		Skill UMETA(DisplayName = "Skill")
+	};
 
 > APPGASCharacterPlayer
 
