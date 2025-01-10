@@ -115,7 +115,21 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 
 <br/>
 
-입력을 통해서 발동되는 GA들은 TMap을 활용해 <열겨형, GA>로 Key값을 GA를 부여할때 InputID로 지정
+입력을 통해서 발동되는 GA들은 TMap을 활용해 <열겨형, GA>로 Key값을 GA를 부여할때 InputID로 지정  
+
+<br/>
+
+> SetupGASPlayerInputComponent
+
+ 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::GASInputPressed, (int32)EInputAbility::Jump);
+
+인풋컴포넌트에 함수를 바인드할 때 열거형을 활용하여 매개변수로 전달
+
+> GASInputPressed
+
+	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(InputID);
+
+전달받은 열거형을 통해 어빌리티 시스템 컴포넌트에서 등록된 GA의 스펙을 가져옴
 
 <br/>
 
