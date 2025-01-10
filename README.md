@@ -90,7 +90,7 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 		Skill UMETA(DisplayName = "Skill")
 	};
 
-입력 ID, TMap의 Key로 사용할 열거형 Key값을 INT로 사용할 때 보다 직관적임
+입력 ID, TMap의 Key로 사용할 열거형 Key값을 INT로 사용할 때 보다 직관적임  
 별도의 헤더파일을 만들어 구현해 다른 클래스에서 GA를 사용할때 해당 열거형을 추가하여 사용 가능
 
  <br/>
