@@ -70,10 +70,12 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
     
 ![image](https://github.com/user-attachments/assets/2136441d-ce6b-497b-ac62-bdf38ce5952e)
 
+<br/>
 
+실행에 입력이 필요없는 GA(Ex 공격판정)들은 TArray를 사용해 저장
+캐릭터 블루프린트 클래스를 통해 TArray에 GA를 지정
 
-실행에 입력이 필요없는 GA(Ex 공격판정)들은 TArray를 사용해 블루프린트 클래스를 통해 TArray에 지정
-
+<br/>
 
 > PPInputEnum.h
 
@@ -87,6 +89,11 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 		RightAttack UMETA(DisplayName = "RAttack"),
 		Skill UMETA(DisplayName = "Skill")
 	};
+
+입력 ID, TMap의 Key로 사용할 열거형 Key값을 INT로 사용할 때 보다 직관적임
+별도의 헤더파일을 만들어 구현해 다른 클래스에서 GA를 사용할때 해당 열거형을 추가하여 사용 가능
+
+ <br/>
 
 > APPGASCharacterPlayer
 
@@ -106,14 +113,9 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 
 ![image](https://github.com/user-attachments/assets/94a63822-dcae-474e-a31a-ca5538c30a11)
 
+<br/>
 
-
-입력을 통해서 발동되는 GA들은 TMap으로 <열겨형, GA>로 받아 Key값을 GA를 부여할때 InputID로 지정
-열거형을 사용한 이유는 int로 지정시 지정한 숫자가 맞는지 코드를 통해서 확인 해야됨 
-열거형은 코드를 이름을 통해서 지정을 하여 직관적이라고 느껴 열거형을 사용함 
-또 별도의 헤더파일을 생성하여 선언해 다른 클래스에서 GA를 사용할때 해당 열거형을 추가하여 사용 가능
-
-
+입력을 통해서 발동되는 GA들은 TMap을 활용해 <열겨형, GA>로 Key값을 GA를 부여할때 InputID로 지정
 
 <br/>
 
