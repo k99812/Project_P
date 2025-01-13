@@ -72,7 +72,7 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 
 <br/>
 
-실행에 입력이 필요없는 GA(Ex 공격판정)들은 TArray를 사용해 저장
+실행에 입력이 필요없는 GA(Ex 공격판정)들은 TArray를 사용해 저장  
 캐릭터 블루프린트 클래스를 통해 TArray에 GA를 지정
 
 <br/>
@@ -130,6 +130,21 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(InputID);
 
 전달받은 열거형을 통해 어빌리티 시스템 컴포넌트에서 등록된 GA의 스펙을 가져옴
+
+<br/>
+
+## Animation
+### 전체 AnimGraph
+![image](https://github.com/user-attachments/assets/68a6b76b-9141-41f2-821d-7be518fa4d9c)
+### GroundLoco
+![image](https://github.com/user-attachments/assets/896eefde-9528-4ecd-965c-958545f0756f)
+### GroundLoco + JumpLoco
+![image](https://github.com/user-attachments/assets/fd1f9363-7740-4631-9f4e-d5b65d4997f4)
+### Loco + AnimOffset
+![image](https://github.com/user-attachments/assets/ec6ac10b-70c4-471b-8f8e-c997652cf305)
+### UpperBody
+![image](https://github.com/user-attachments/assets/ca2b6773-7c4c-440b-b480-87c9be78478f)
+
 
 <br/>
 
