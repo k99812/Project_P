@@ -170,7 +170,7 @@ Velocity(캐릭터가 움직이는 방향), GetLastUpdateRotation을 넘겨 Dire
 ![image](https://github.com/user-attachments/assets/fd1f9363-7740-4631-9f4e-d5b65d4997f4)
 ### Loco + AimOffset
 ![image](https://github.com/user-attachments/assets/ec6ac10b-70c4-471b-8f8e-c997652cf305)
-UPPAnimInstance 에서 AimRotation - ActorRotation으로 보고있는 방향의 로테이션을 계산하여 AimOffset을 적용
+*UPPAnimInstance 에서 AimRotation - ActorRotation으로 보고있는 방향의 로테이션을 계산하여 AimOffset을 적용
 
 ### UpperBody
 ![image](https://github.com/user-attachments/assets/ca2b6773-7c4c-440b-b480-87c9be78478f)
