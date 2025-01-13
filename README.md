@@ -138,13 +138,43 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 ![image](https://github.com/user-attachments/assets/68a6b76b-9141-41f2-821d-7be518fa4d9c)
 ### GroundLoco
 ![image](https://github.com/user-attachments/assets/896eefde-9528-4ecd-965c-958545f0756f)
+![image](https://github.com/user-attachments/assets/a0843bb2-cb3e-416a-917e-8d9709ea03db)
+> Character
+	//APPCharacterBase.h
+	DECLARE_DELEGATE(FInputReleasedDelegate);
+
+ 	//APPGASCharacterPlayer.cpp
+  	void APPGASCharacterPlayer::MoveInputReleased()
+	{
+		InputReleasedDelegate.Execute();
+	}
+움직이는 방향에 맞는 StopAnimation을 실행하기 위해 캐릭터에 델리게이트를 생성함  
+플레이어의 입력이 끝나면 델리게이트를 실행  
+
+> UPPAnimInstance
+	//NativeInitializeAnimation
+	Owner = Cast<APPCharacterBase>(GetOwningActor());
+	if (Owner)
+	{
+		Owner->InputReleasedDelegate.BindUObject(this, &UPPAnimInstance::SaveLastDirection);
+	}
+
+ 	//void UPPAnimInstance::SaveLastDirection()
+	LastDirection = CalculateDirection(Velocity , Movement->GetLastUpdateRotation());
+NativeInitializeAnimation 함수에서 델리게이트를 연결  
+SaveLastDirection함수가 델리게이트로 호출되면 CalculateDirection함수로   
+Velocity(캐릭터가 움직이는 방향), GetLastUpdateRotation을 넘겨 Direction을 계산
+
 ### GroundLoco + JumpLoco
 ![image](https://github.com/user-attachments/assets/fd1f9363-7740-4631-9f4e-d5b65d4997f4)
-### Loco + AnimOffset
+### Loco + AimOffset
 ![image](https://github.com/user-attachments/assets/ec6ac10b-70c4-471b-8f8e-c997652cf305)
+UPPAnimInstance 에서 AimRotation - ActorRotation으로 보고있는 방향의 로테이션을 계산하여 AimOffset을 적용
+
 ### UpperBody
 ![image](https://github.com/user-attachments/assets/ca2b6773-7c4c-440b-b480-87c9be78478f)
-
+* UpperBody 슬롯 애니메이션 몽타주를 실행 및 저장
+* Layered blend per bone을 통해 특정 bone을 기준으로 UpperBody 몽타주 실행시 기존 애니메이션과 혼합되어 재생
 
 <br/>
 
