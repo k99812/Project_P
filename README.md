@@ -53,6 +53,7 @@ InputMappintContext에서 InputAction을 맵핑 후 저장
 GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 진행됨
 
 > APPGASCharacterPlayer
+
     //헤더파일
     UPROPERTY(EditAnywhere, Category = "GAS")
     TArray<TSubclassOf<class UGameplayAbility>> StartAbilites;
@@ -138,6 +139,7 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 ![image](https://github.com/user-attachments/assets/896eefde-9528-4ecd-965c-958545f0756f)
 ![image](https://github.com/user-attachments/assets/a0843bb2-cb3e-416a-917e-8d9709ea03db)
 > Character
+
 	//APPCharacterBase.h
 	DECLARE_DELEGATE(FInputReleasedDelegate);
 
@@ -150,6 +152,7 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 플레이어의 입력이 끝나면 델리게이트를 실행  
 
 > UPPAnimInstance
+
 	//NativeInitializeAnimation
 	Owner = Cast<APPCharacterBase>(GetOwningActor());
 	if (Owner)
