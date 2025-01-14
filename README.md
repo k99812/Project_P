@@ -197,6 +197,20 @@ UPPAnimInstance 에서 AimRotation - ActorRotation으로 보고있는 방향의 
 ### PlayerController
 * HUD 관리
 * 인풋모드 관리
+> APPPlayerController
+
+	void APPPlayerController::BeginPlay()
+	{
+		Super::BeginPlay();
+
+		SetInputMode(FInputModeGameOnly());
+
+		HUDWidget = CreateWidget<UPPHUDWidget>(this, HUDWidgetClass);
+			if (HUDWidget)
+		{
+			HUDWidget->AddToViewport();
+		}
+	}
 
 
 ### AIController
