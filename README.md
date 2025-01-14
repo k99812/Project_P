@@ -127,7 +127,10 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 
 > GASInputPressed
 
-	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(InputID);
+	void APPGASCharacterPlayer::GASInputPressed(int32 InputID)
+	{
+		FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(InputID);
+  	}
 
 전달받은 열거형을 통해 어빌리티 시스템 컴포넌트에서 등록된 GA의 스펙을 가져옴
 
