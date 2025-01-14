@@ -78,7 +78,8 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 <br/>
 
 > PPInputEnum.h
-	UENUM(BlueprintType)
+
+ 	UENUM(BlueprintType)
 	enum class EInputAbility : uint8
 	{
 		None UMETA(DisplayName = "None"),
