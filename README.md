@@ -142,7 +142,8 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 <br/>
 
 ## Attack Hit Check
-![image](https://github.com/user-attachments/assets/c40d0401-df96-45a0-9622-11ede95ef70a)
+![image](https://github.com/user-attachments/assets/e8a02dba-3131-4878-a954-79987474b3f1)
+
 
 <br/>
 
