@@ -7,13 +7,16 @@
 #include "AbilitySystemInterface.h"
 #include "InputActionValue.h"
 #include "GameplayEffectTypes.h"
+#include "Interface/PPAnimInterface.h"
 #include "PPGASCharacterPlayer.generated.h"
+
+DECLARE_DELEGATE(FInputReleasedDelegate);
 
 /**
  * 
  */
 UCLASS()
-class PROJECT_P_API APPGASCharacterPlayer : public APPCharacterBase, public IAbilitySystemInterface
+class PROJECT_P_API APPGASCharacterPlayer : public APPCharacterBase, public IAbilitySystemInterface, public IPPAnimInterface
 {
 	GENERATED_BODY()
 
@@ -29,6 +32,12 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	// InputRelease Delegate
+public:
+	FInputReleasedDelegate InputReleasedDelegate;
+
+	virtual void BindInputReleasedDelegate(class UPPAnimInstance* InAnimInstance) override;
 
 // GAS Section
 protected:
