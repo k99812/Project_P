@@ -2,13 +2,14 @@
 
 
 #include "Animation/PPAnimInstance.h"
-#include "Character/PPCharacterBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "GameplayTagContainer.h"
 #include "Tag/PPGameplayTag.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "GameFramework/Character.h"
+#include "Interface/PPAnimInterface.h"
 
 UPPAnimInstance::UPPAnimInstance()
 {
@@ -24,12 +25,17 @@ void UPPAnimInstance::NativeInitializeAnimation()
 
 	//AnimInstance가 생성될때 한번만 호출되어 포인터 변수들을 초기화할때 사용
 	//#include "Character/PPGASCharacterPlayer.h" 추가
-	Owner = Cast<APPCharacterBase>(GetOwningActor());
+	Owner = Cast<ACharacter>(GetOwningActor());
 	if (Owner)
 	{
 		//#include "GameFramework/CharacterMovementComponent.h" 추가
 		Movement = Owner->GetCharacterMovement();
-		Owner->InputReleasedDelegate.BindUObject(this, &UPPAnimInstance::SaveLastDirection);
+
+		IPPAnimInterface* OwnerInter = Cast<IPPAnimInterface>(Owner);
+		if (OwnerInter)
+		{
+			OwnerInter->BindInputReleasedDelegate(this);
+		}
 	}
 }
 

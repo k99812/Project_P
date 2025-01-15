@@ -28,7 +28,7 @@ protected:
 	virtual void NativeBeginPlay() override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Character)
-	TObjectPtr<class APPCharacterBase> Owner;
+	TObjectPtr<class ACharacter> Owner;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Character)
 	TObjectPtr<class UCharacterMovementComponent> Movement;
@@ -82,6 +82,6 @@ protected:
 
 	FGameplayTagContainer SprintTagContainer;
 
-protected:
+public:
 	void SaveLastDirection();
 };

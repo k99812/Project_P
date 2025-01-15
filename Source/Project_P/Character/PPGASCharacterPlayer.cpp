@@ -17,7 +17,7 @@
 #include "Tag/PPGameplayTag.h"
 #include "Data/PPComboActionData.h"
 #include "Attribute/PPCharacterAttributeSet.h"
-#include "Animation/AnimInstance.h"
+#include "Animation/PPAnimInstance.h"
 #include "Components/CapsuleComponent.h"
 #include "Physics/PPCollision.h"
 #include "Perception/AISense_Hearing.h"
@@ -233,6 +233,11 @@ void APPGASCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::Look);
 
 	SetupGASPlayerInputComponent();
+}
+
+void APPGASCharacterPlayer::BindInputReleasedDelegate(UPPAnimInstance* InAnimInstance)
+{
+	InputReleasedDelegate.BindUObject(InAnimInstance, &UPPAnimInstance::SaveLastDirection);
 }
 
 void APPGASCharacterPlayer::SetupGASPlayerInputComponent()

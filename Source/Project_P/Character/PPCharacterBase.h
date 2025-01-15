@@ -8,8 +8,6 @@
 #include "Input/PPInputEnum.h"
 #include "PPCharacterBase.generated.h"
 
-DECLARE_DELEGATE(FInputReleasedDelegate);
-
 UCLASS()
 class PROJECT_P_API APPCharacterBase : public ACharacter, public IGameplayTagAssetInterface
 {
@@ -24,10 +22,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = GameplayTags)
 	virtual void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const override;
-
-	// InputRelease Delegate
-public:
-	FInputReleasedDelegate InputReleasedDelegate;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combo")
