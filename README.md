@@ -156,8 +156,11 @@ GameAbility, AbilityTask, TargetActor를 사용해 개발한 공격 히트 체�
 ![image](https://github.com/user-attachments/assets/a0843bb2-cb3e-416a-917e-8d9709ea03db)
 > Character
 
-	//APPCharacterBase.h
-	DECLARE_DELEGATE(FInputReleasedDelegate);
+	//APPGASCharacterPlayer.h
+ 	DECLARE_DELEGATE(FInputReleasedDelegate);
+  
+ 	FInputReleasedDelegate InputReleasedDelegate;
+  	virtual void BindInputReleasedDelegate(class UPPAnimInstance* InAnimInstance) override;
 
  	//APPGASCharacterPlayer.cpp
   	void APPGASCharacterPlayer::MoveInputReleased()
