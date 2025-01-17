@@ -13,7 +13,7 @@
 ## 기술 설명서
 
 ## Character 구조
-![image](https://github.com/user-attachments/assets/e1efdf56-1f39-42af-a700-45ef463b2cf9)
+![image](https://github.com/user-attachments/assets/7e81a2ac-d643-4896-a3df-c9fcce9a7544)
 
 
 ### CharacterBase
@@ -150,10 +150,12 @@ GameAbility, AbilityTask, TargetActor를 사용해 개발한 공격 히트 체�
 
 ## Animation
 ### 전체 AnimGraph
-![image](https://github.com/user-attachments/assets/68a6b76b-9141-41f2-821d-7be518fa4d9c)
+![image](https://github.com/user-attachments/assets/64146ffd-b744-4bdf-a716-b30218c425f7)
+
 ### GroundLoco
 ![image](https://github.com/user-attachments/assets/896eefde-9528-4ecd-965c-958545f0756f)
 ![image](https://github.com/user-attachments/assets/a0843bb2-cb3e-416a-917e-8d9709ea03db)
+
 > Character
 
 	//APPGASCharacterPlayer.h
@@ -167,8 +169,15 @@ GameAbility, AbilityTask, TargetActor를 사용해 개발한 공격 히트 체�
 	{
 		InputReleasedDelegate.Execute();
 	}
+
+ 	void APPGASCharacterPlayer::BindInputReleasedDelegate(UPPAnimInstance* InAnimInstance)
+	{
+		InputReleasedDelegate.BindUObject(InAnimInstance, &UPPAnimInstance::SaveLastDirection);
+	}
+
 움직이는 방향에 맞는 StopAnimation을 실행하기 위해 캐릭터에 델리게이트를 생성함  
 플레이어의 입력이 끝나면 델리게이트를 실행  
+인터페이스를 통해 캐릭터의 델리게이트에 AnimInstance의 함수를 바인드
 
 > UPPAnimInstance
 
@@ -176,13 +185,21 @@ GameAbility, AbilityTask, TargetActor를 사용해 개발한 공격 히트 체�
 	Owner = Cast<APPCharacterBase>(GetOwningActor());
 	if (Owner)
 	{
-		Owner->InputReleasedDelegate.BindUObject(this, &UPPAnimInstance::SaveLastDirection);
+		IPPAnimInterface* OwnerInter = Cast<IPPAnimInterface>(Owner);
+		if (OwnerInter)
+		{
+			OwnerInter->BindInputReleasedDelegate(this);
+		}
 	}
 
- 	//void UPPAnimInstance::SaveLastDirection()
-	LastDirection = CalculateDirection(Velocity , Movement->GetLastUpdateRotation());
-NativeInitializeAnimation 함수에서 델리게이트를 연결  
-SaveLastDirection함수가 델리게이트로 호출되면 CalculateDirection함수로   
+ 	//SaveLastDirection
+	void UPPAnimInstance::SaveLastDirection()
+	{
+		LastDirection = CalculateDirection(Velocity , Movement->GetLastUpdateRotation());
+	}
+
+NativeInitializeAnimation 함수에서 인터페이스를 통해 자기자신을 넘겨 델리게이트에 함수 바인드  
+SaveLastDirection함수가 델리게이트로 호출되면 CalculateDirection함수로  
 Velocity(캐릭터가 움직이는 방향), GetLastUpdateRotation을 넘겨 Direction을 계산
 
 ### GroundLoco + JumpLoco
@@ -219,10 +236,10 @@ UPPAnimInstance 에서 AimRotation - ActorRotation으로 보고있는 방향의 
 
 
 ### AIController
-![image](https://github.com/user-attachments/assets/37c90fd0-c08d-4018-9a61-3e35d7d1be04)
-
+![image](https://github.com/user-attachments/assets/37c90fd0-c08d-4018-9a61-3e35d7d1be04)  
+<a href="https://k99812.tistory.com/123" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>  
 AI컨트롤러에서 AI Perception 기능을 이용해 적을 인식 하여 블랙보드에 저장합니다
-AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 컨트롤 합니다   <a href="https://k99812.tistory.com/123" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
+AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 컨트롤 합니다   
 * AISense 관리
 * 블랙보드, 행동트리 관리
 * AIPerception 이벤트 처리
