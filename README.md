@@ -13,7 +13,7 @@
 ## 기술 설명서
 
 ## Character 구조
-![image](https://github.com/user-attachments/assets/e6963f42-b7ca-43c2-af12-3231017f5d5a)
+![image](https://github.com/user-attachments/assets/fc6fe1aa-107e-465b-8587-855d1f157972)
 
 
 ### CharacterBase
