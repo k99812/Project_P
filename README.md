@@ -167,8 +167,15 @@ GameAbility, AbilityTask, TargetActor를 사용해 개발한 공격 히트 체�
 	{
 		InputReleasedDelegate.Execute();
 	}
+
+ 	void APPGASCharacterPlayer::BindInputReleasedDelegate(UPPAnimInstance* InAnimInstance)
+	{
+		InputReleasedDelegate.BindUObject(InAnimInstance, &UPPAnimInstance::SaveLastDirection);
+	}
+
 움직이는 방향에 맞는 StopAnimation을 실행하기 위해 캐릭터에 델리게이트를 생성함  
-플레이어의 입력이 끝나면 델리게이트를 실행  
+플레이어의 입력이 끝나면 델리게이트를 실행 
+인터페이스를 통해 델리게이트에 함수를 바인드
 
 > UPPAnimInstance
 
@@ -176,13 +183,21 @@ GameAbility, AbilityTask, TargetActor를 사용해 개발한 공격 히트 체�
 	Owner = Cast<APPCharacterBase>(GetOwningActor());
 	if (Owner)
 	{
-		Owner->InputReleasedDelegate.BindUObject(this, &UPPAnimInstance::SaveLastDirection);
+		IPPAnimInterface* OwnerInter = Cast<IPPAnimInterface>(Owner);
+		if (OwnerInter)
+		{
+			OwnerInter->BindInputReleasedDelegate(this);
+		}
 	}
 
- 	//void UPPAnimInstance::SaveLastDirection()
-	LastDirection = CalculateDirection(Velocity , Movement->GetLastUpdateRotation());
-NativeInitializeAnimation 함수에서 델리게이트를 연결  
-SaveLastDirection함수가 델리게이트로 호출되면 CalculateDirection함수로   
+ 	//SaveLastDirection
+	void UPPAnimInstance::SaveLastDirection()
+	{
+		LastDirection = CalculateDirection(Velocity , Movement->GetLastUpdateRotation());
+	}
+
+NativeInitializeAnimation 함수에서 인터페이스를 통해 자기자신을 넘겨 델리게이트에 함수 바인드  
+SaveLastDirection함수가 델리게이트로 호출되면 CalculateDirection함수로  
 Velocity(캐릭터가 움직이는 방향), GetLastUpdateRotation을 넘겨 Direction을 계산
 
 ### GroundLoco + JumpLoco
