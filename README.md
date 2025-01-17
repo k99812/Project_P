@@ -150,10 +150,12 @@ GameAbility, AbilityTask, TargetActor를 사용해 개발한 공격 히트 체�
 
 ## Animation
 ### 전체 AnimGraph
-![image](https://github.com/user-attachments/assets/68a6b76b-9141-41f2-821d-7be518fa4d9c)
+![image](https://github.com/user-attachments/assets/64146ffd-b744-4bdf-a716-b30218c425f7)
+
 ### GroundLoco
 ![image](https://github.com/user-attachments/assets/896eefde-9528-4ecd-965c-958545f0756f)
 ![image](https://github.com/user-attachments/assets/a0843bb2-cb3e-416a-917e-8d9709ea03db)
+
 > Character
 
 	//APPGASCharacterPlayer.h
