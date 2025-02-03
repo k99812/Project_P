@@ -3,6 +3,7 @@
 
 #include "Game/PPGameMode.h"
 #include "Player/PPGASPlayerState.h"
+#include "Player/PPPlayerController.h"
 
 APPGameMode::APPGameMode()
 {
@@ -29,4 +30,13 @@ APPGameMode::APPGameMode()
 	* }
 	*/
 	PlayerStateClass = APPGASPlayerState::StaticClass();
+}
+
+void APPGameMode::OnPlayerDead()
+{
+	for (FConstPlayerControllerIterator itr = GetWorld()->GetPlayerControllerIterator(); itr; itr++)
+	{
+		APPPlayerController* PlayerController = Cast<APPPlayerController>(itr->Get());
+		PlayerController->GameOver();
+	}
 }

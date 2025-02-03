@@ -13,6 +13,11 @@ APPPlayerController::APPPlayerController()
 	}
 }
 
+void APPPlayerController::GameOver()
+{
+	K2_OnGameOver();
+}
+
 void APPPlayerController::BeginPlay()
 {
 	Super::BeginPlay();

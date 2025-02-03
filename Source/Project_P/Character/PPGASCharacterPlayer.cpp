@@ -22,6 +22,8 @@
 #include "Physics/PPCollision.h"
 #include "Perception/AISense_Hearing.h"
 #include "UI/PPGASWidgetComponent.h"
+#include "Interface/PPGameInterface.h"
+#include "GameFramework/GameModeBase.h"
 
 APPGASCharacterPlayer::APPGASCharacterPlayer()
 {
@@ -314,9 +316,16 @@ void APPGASCharacterPlayer::SetDead()
 	if (PlayerController)
 	{
 		DisableInput(PlayerController);
-	}
 
-	GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_NOCOLLISION);
+		GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_NOCOLLISION);
+
+		
+		IPPGameInterface* PPGameMode = Cast<IPPGameInterface>(GetWorld()->GetAuthGameMode());
+		if (PPGameMode)
+		{
+			PPGameMode->OnPlayerDead();
+		}
+	}
 }
 
 void APPGASCharacterPlayer::Move(const FInputActionValue& Value)
