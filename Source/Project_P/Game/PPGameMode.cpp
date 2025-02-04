@@ -15,7 +15,7 @@ APPGameMode::APPGameMode()
 		DefaultPawnClass = DefaultPawnClassRef.Class;
 	}
 	
-	static ConstructorHelpers::FClassFinder<APlayerController> PlayerControllerClassRef(TEXT("/Script/CoreUObject.Class'/Script/Project_P.PPPlayerController'"));
+	static ConstructorHelpers::FClassFinder<APlayerController> PlayerControllerClassRef(TEXT("/Game/Project_P/Blueprint/BP_PPPlayerController.BP_PPPlayerController_C"));
 	if (PlayerControllerClassRef.Class)
 	{
 		PlayerControllerClass = PlayerControllerClassRef.Class;
