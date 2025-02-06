@@ -33,4 +33,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "HUD")
 	TObjectPtr<class UPPHUDWidget> HUDWidget;
+
+//GameOver UI
+protected:
+	UPROPERTY(EditAnywhere, Category = "HUD")
+	TSubclassOf<class UUserWidget> GameOverUIClass;
+
+	UPROPERTY(EditAnywhere, Category = "HUD")
+	TObjectPtr<class UPPGameOverUserWidget> GameOverUIWidget;
 };

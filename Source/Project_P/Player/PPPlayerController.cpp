@@ -3,6 +3,7 @@
 
 #include "Player/PPPlayerController.h"
 #include "UI/PPHUDWidget.h"
+#include "UI/PPGameOverUserWidget.h"
 
 APPPlayerController::APPPlayerController()
 {
@@ -11,11 +12,21 @@ APPPlayerController::APPPlayerController()
 	{
 		HUDWidgetClass = HUDWidgetClassRef.Class;
 	}
+
+	static ConstructorHelpers::FClassFinder<UPPGameOverUserWidget> GameOverUIClassRef(TEXT("/Game/Project_P/Blueprint/UI/WBP_GameOver.WBP_GameOver_C"));
+	if (GameOverUIClassRef.Class)
+	{
+		GameOverUIClass = GameOverUIClassRef.Class;
+	}
 }
 
 void APPPlayerController::GameOver()
 {
-	K2_OnGameOver();
+	EnableInput(this);
+	//K2_OnGameOver();
+	
+	UE_LOG(LogTemp, Log, TEXT("CreateWidget GameOverUIWidget"));
+	GameOverUIWidget = CreateWidget<UPPGameOverUserWidget>(this, GameOverUIClass);
 }
 
 void APPPlayerController::BeginPlay()

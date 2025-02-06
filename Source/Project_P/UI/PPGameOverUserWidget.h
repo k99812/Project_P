@@ -20,7 +20,7 @@ public:
 protected:
 	virtual void NativeConstruct() override;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void BtnEventGameRestart();
 
 protected:
@@ -29,4 +29,7 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UTextBlock> TxtGameOver;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UTextBlock> TxtRetry;
 };
