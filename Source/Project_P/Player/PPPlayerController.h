@@ -18,7 +18,7 @@ public:
 	APPPlayerController();
 
 	//블루프린트 임플리먼트 이벤트는 함수 본문 구현을 언리얼에서 자동으로 해줌
-	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnGameOverCpp"))
+	UFUNCTION(BlueprintImplementableEvent, Category = "Game", Meta = (DisplayName = "OnGameOverCpp"))
 	void K2_OnGameOver();
 
 	void GameOver();

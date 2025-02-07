@@ -4,6 +4,7 @@
 #include "UI/PPGameOverUserWidget.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
+#include "Kismet/GameplayStatics.h"
 
 
 UPPGameOverUserWidget::UPPGameOverUserWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -13,7 +14,7 @@ UPPGameOverUserWidget::UPPGameOverUserWidget(const FObjectInitializer& ObjectIni
 
 void UPPGameOverUserWidget::NativeConstruct()
 {
-	BtnRestart->OnClicked.AddDynamic(this, &UPPGameOverUserWidget::BtnEventGameRestart);
+	//BtnRestart->OnClicked.AddDynamic(this, &UPPGameOverUserWidget::BtnEventGameRestart);
 }
 
 void UPPGameOverUserWidget::BtnEventGameRestart()
@@ -22,12 +23,20 @@ void UPPGameOverUserWidget::BtnEventGameRestart()
 
 	APlayerController* OwingPlayerController = GetOwningPlayer();
 
-	GetWorld()->Exec(GetWorld(), TEXT("RestartLevel"));
-	//OwingPlayerController->ConsoleCommand(TEXT("RestartLevel"));
+	if (OwingPlayerController)
+	{
+		//커맨드로 레벨 재시작
+		//GetWorld()->Exec(GetWorld(), TEXT("RestartLevel"));
+		//OwingPlayerController->ConsoleCommand(TEXT("RestartLevel"));
 
-	//사용자 입력 비활성화
-	OwingPlayerController->DisableInput(OwingPlayerController);
+		//OpenLevel을 이용해 레벨 재시작
+		UGameplayStatics::OpenLevel(GetWorld(), FName(TEXT("Level_1")));
 
-	//재시작시 해당 위젯 제거
-	RemoveFromParent();
+		//사용자 입력 비활성화
+		OwingPlayerController->SetShowMouseCursor(false);
+		OwingPlayerController->DisableInput(OwingPlayerController);
+
+		//재시작시 해당 위젯 제거
+		RemoveFromParent();
+	}
 }
