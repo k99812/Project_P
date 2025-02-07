@@ -20,7 +20,7 @@ public:
 protected:
 	virtual void NativeConstruct() override;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Meta = (DisplayName = "BtnEventGameRestartCpp"))
 	void BtnEventGameRestart();
 
 protected:

@@ -318,14 +318,13 @@ void APPGASCharacterPlayer::SetDead()
 		DisableInput(PlayerController);
 
 		GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_NOCOLLISION);
+	}
 
-		
-		IPPGameInterface* PPGameMode = Cast<IPPGameInterface>(GetWorld()->GetAuthGameMode());
-		if (PPGameMode)
-		{
-			UE_LOG(LogTemp, Log, TEXT("APPGASCharacterPlayer::SetDead Call PPGameMode->OnPlayerDead"));
-			PPGameMode->OnPlayerDead();
-		}
+	IPPGameInterface* IPPGameMode = Cast<IPPGameInterface>(GetWorld()->GetAuthGameMode());
+	if (IPPGameMode)
+	{
+		UE_LOG(LogTemp, Log, TEXT("APPGASCharacterPlayer::SetDead Call PPGameMode->OnPlayerDead"));
+		IPPGameMode->OnPlayerDead();
 	}
 }
 

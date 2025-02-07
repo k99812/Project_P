@@ -22,11 +22,14 @@ APPPlayerController::APPPlayerController()
 
 void APPPlayerController::GameOver()
 {
-	EnableInput(this);
 	//K2_OnGameOver();
-	
-	UE_LOG(LogTemp, Log, TEXT("CreateWidget GameOverUIWidget"));
 	GameOverUIWidget = CreateWidget<UPPGameOverUserWidget>(this, GameOverUIClass);
+	if (GameOverUIWidget)
+	{
+		GameOverUIWidget->AddToViewport();
+		EnableInput(this);
+		SetShowMouseCursor(true);
+	}
 }
 
 void APPPlayerController::BeginPlay()

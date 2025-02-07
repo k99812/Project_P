@@ -49,7 +49,6 @@ void APPGameMode::OnPlayerDead()
 	APPPlayerController* PlayerController = Cast<APPPlayerController>(GetWorld()->GetFirstPlayerController());
 	if (PlayerController)
 	{
-		UE_LOG(LogTemp, Log, TEXT("APPGameMode::OnPlayerDead Call PlayerController->GameOver"));
 		PlayerController->GameOver();
 	}
 }
