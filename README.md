@@ -276,6 +276,12 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 * ASC를 통해 어트리뷰트 체인지 델리게이트를 통해 콜백함수 연결
 * 프로그래스바, 텍스트박스 관리
 
+## 재시작 UI
+![image](https://github.com/user-attachments/assets/796bd9f7-2586-4520-bc19-a23bb26e9eab)
+
+1. 캐릭터 사망시 SetDead 함수가 실행
+2. GameMode를 가져와 인터페이스로 캐스팅하여 함수 실행
+3. 게임모드에서 PlayerController 함수를 실행하여 UI 생성
 
 <br/>
 
