@@ -278,6 +278,7 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 
 ## 재시작 UI
 ![image](https://github.com/user-attachments/assets/796bd9f7-2586-4520-bc19-a23bb26e9eab)
+<a href="https://k99812.tistory.com/133" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
 
 1. 캐릭터 사망시 SetDead 함수가 실행
 2. GameMode를 가져와 인터페이스로 캐스팅하여 함수 실행
