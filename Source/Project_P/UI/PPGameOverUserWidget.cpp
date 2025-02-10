@@ -19,8 +19,6 @@ void UPPGameOverUserWidget::NativeConstruct()
 
 void UPPGameOverUserWidget::BtnEventGameRestart()
 {
-	UE_LOG(LogTemp, Log, TEXT("OnCliked BtnEventGameRestart"));
-
 	APlayerController* OwingPlayerController = GetOwningPlayer();
 
 	if (OwingPlayerController)
@@ -29,6 +27,7 @@ void UPPGameOverUserWidget::BtnEventGameRestart()
 		//GetWorld()->Exec(GetWorld(), TEXT("RestartLevel"));
 		//OwingPlayerController->ConsoleCommand(TEXT("RestartLevel"));
 
+		//#include "Kismet/GameplayStatics.h" 추가
 		//OpenLevel을 이용해 레벨 재시작
 		UGameplayStatics::OpenLevel(GetWorld(), FName(TEXT("Level_1")));
 
