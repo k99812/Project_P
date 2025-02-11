@@ -293,6 +293,7 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 4. 공격 판정 및 데미지 구현
 5. 잡몹 HPBar, 체력 0 될시 죽는 몽타주 실행 및 Destroy
 6. 행동트리를 이용해 몬스터 AI 구현
+7. 캐릭터 사망시 재시작 및 UI 출력
 
 ## 캐릭터 이동
 https://github.com/user-attachments/assets/d468b24e-221d-41f4-9882-67265ac3ae82
@@ -329,6 +330,13 @@ https://github.com/user-attachments/assets/2d78aa19-0131-4055-b490-936a8b35c4de
 
 
 https://github.com/user-attachments/assets/304a73f8-e93c-4e49-8669-28b2bcbe6248
+
+## 캐릭터 사망시 재시작 및 UI 출력
+
+
+https://github.com/user-attachments/assets/e9e4e0ee-f90a-4545-8b29-fa12db39658c
+
+
 
 
 <br/>
