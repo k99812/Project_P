@@ -10,6 +10,8 @@
 
 <br/>
 
+
+
 ## 기술 설명서
 
 ## Character 구조
@@ -42,6 +44,9 @@
 잡몹 클래스
 * 체력 HPBar 위젯 관리
 * 어트리뷰트 초기화
+
+
+
 
 ## 입력 처리
 ![image](https://github.com/user-attachments/assets/8c7fb823-4e61-4d59-81b2-43ccdae2e110)
@@ -136,6 +141,8 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 
 <br/>
 
+
+
 ## Combo Attack
 ![image](https://github.com/user-attachments/assets/360325b1-1141-4885-94fb-c94afd2047fb)
 GameAbility를 사용해 개발한 콤보공격 플로우 차트
@@ -146,7 +153,13 @@ GameAbility를 사용해 개발한 콤보공격 플로우 차트
 ![image](https://github.com/user-attachments/assets/49a357a4-081c-49bc-a447-edef2450c8d8)
 GameAbility, AbilityTask, TargetActor를 사용해 개발한 공격 히트 체크 플로우 차트
 
+
+
+
 <br/>
+
+
+
 
 ## Animation
 ### 전체 AnimGraph
@@ -215,6 +228,8 @@ UPPAnimInstance 에서 AimRotation - ActorRotation으로 보고있는 방향의 
 
 <br/>
 
+
+
 ## Controller
 ### PlayerController
 * HUD 관리
@@ -246,6 +261,8 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 
 ### 행동트리
 ![image](https://github.com/user-attachments/assets/92f1224a-b851-48a2-9c5f-eff7578e503a)
+
+
 
 
 
@@ -284,7 +301,11 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 2. GameMode를 가져와 인터페이스로 캐스팅하여 함수 실행
 3. 게임모드에서 PlayerController 함수를 실행하여 UI 생성
 
+
+
 <br/>
+
+
 
 ## 진행상황
 1. 캐릭터 이동 및 애니메이션
