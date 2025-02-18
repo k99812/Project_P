@@ -50,6 +50,9 @@ void APPGASCharacterNonPlayer::PossessedBy(AController* NewController)
 
 		ASC->GiveAbility(Spec);
 	}
+
+	ASC->GetGameplayAttributeValueChangeDelegate(UPPGruntAttributeSet::GetDamageAttribute()).
+		AddUObject(this, &APPGASCharacterNonPlayer::TakeDamage);
 }
 
 void APPGASCharacterNonPlayer::ActorIsDead()
@@ -68,4 +71,8 @@ void APPGASCharacterNonPlayer::SetDead()
 		Destroy();
 	}
 	), DeadEventDelayTime, false);
+}
+
+void APPGASCharacterNonPlayer::TakeDamage(const FOnAttributeChangeData& ChangeData)
+{
 }

@@ -19,4 +19,6 @@ public:
 	APPGameMode();
 
 	virtual void OnPlayerDead() override;
+
+	virtual void OnTakeDamage(const float& Damage, const FVector& ActorPosition) override;
 };

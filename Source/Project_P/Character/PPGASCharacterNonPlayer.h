@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Character/PPCharacterBase.h"
 #include "AbilitySystemInterface.h"
+#include "GameplayEffectTypes.h"
 #include "PPGASCharacterNonPlayer.generated.h"
 
 /**
@@ -42,4 +43,8 @@ protected:
 	virtual void ActorIsDead();
 
 	virtual void SetDead() override;
+
+// Damage
+protected:
+	virtual void TakeDamage(const FOnAttributeChangeData& ChangeData);
 };
