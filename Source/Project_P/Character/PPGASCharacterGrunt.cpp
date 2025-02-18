@@ -10,6 +10,8 @@
 #include "UI/PPGASWidgetComponent.h"
 #include "UI/PPGASUserWidget.h"
 #include "AI/PPAIController.h"
+#include "Interface/PPGameInterface.h"
+#include "GameFramework/GameModeBase.h"
 
 APPGASCharacterGrunt::APPGASCharacterGrunt()
 {
@@ -116,4 +118,20 @@ void APPGASCharacterGrunt::PostInitializeComponents()
 void APPGASCharacterGrunt::FoundTargetCallback(bool bFoundTarget)
 {
 	HpBar->SetVisibility(bFoundTarget);
+}
+
+void APPGASCharacterGrunt::TakeDamage(const FOnAttributeChangeData& ChangeData)
+{
+	Super::TakeDamage(ChangeData);
+
+	if (ChangeData.NewValue)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Grunt had taked Damage : %f"), ChangeData.NewValue);
+
+		IPPGameInterface* IPPGameMode = Cast<IPPGameInterface>(GetWorld()->GetAuthGameMode());
+		if (IPPGameMode)
+		{
+			IPPGameMode->OnTakeDamage(ChangeData.NewValue, GetActorLocation());
+		}
+	}
 }

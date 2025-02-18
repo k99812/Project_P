@@ -17,11 +17,17 @@ class PROJECT_P_API APPPlayerController : public APlayerController
 public:
 	APPPlayerController();
 
+// GameOver Function
+public:
 	//블루프린트 임플리먼트 이벤트는 함수 본문 구현을 언리얼에서 자동으로 해줌
 	UFUNCTION(BlueprintImplementableEvent, Category = "Game", Meta = (DisplayName = "OnGameOverCpp"))
 	void K2_OnGameOver();
 
 	void GameOver();
+
+//d Damage Section
+public:
+	void ActorTakedDamage(const float& Damage, const FVector& ActorPosition);
 
 protected:
 	virtual void BeginPlay() override;

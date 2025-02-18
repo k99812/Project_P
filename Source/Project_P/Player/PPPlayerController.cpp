@@ -32,6 +32,11 @@ void APPPlayerController::GameOver()
 	}
 }
 
+void APPPlayerController::ActorTakedDamage(const float& Damage, const FVector& ActorPosition)
+{
+	UE_LOG(LogTemp, Log, TEXT("PlayerController Location : %f:%f:%f"), ActorPosition.X, ActorPosition.Y, ActorPosition.Z);
+}
+
 void APPPlayerController::BeginPlay()
 {
 	Super::BeginPlay();

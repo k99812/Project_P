@@ -28,4 +28,8 @@ protected:
 
 	UFUNCTION()
 	void FoundTargetCallback(bool bFoundTarget);
+
+// Damage
+protected:
+	virtual void TakeDamage(const FOnAttributeChangeData& ChangeData) override;
 };
