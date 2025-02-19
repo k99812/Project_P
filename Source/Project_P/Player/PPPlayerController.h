@@ -47,4 +47,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "HUD")
 	TObjectPtr<class UPPGameOverUserWidget> GameOverUIWidget;
+
+//Damage UI
+protected:
+	//UPROPERTY(VisibleAnywhere, Category = "HUD")
+	//TQueue<>
 };
