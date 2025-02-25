@@ -7,12 +7,11 @@
 
 UPPFloatingTextUserWidget::UPPFloatingTextUserWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
+
 }
 
 void UPPFloatingTextUserWidget::NativeConstruct()
 {
-	Super::NativeConstruct();
-
 	
 }
 
@@ -20,7 +19,7 @@ void UPPFloatingTextUserWidget::NativeTick(const FGeometry& MyGeometry, float In
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-
+	
 }
 
 void UPPFloatingTextUserWidget::SetTextWidget(const float& Damage, const FVector& ActorPosition)
