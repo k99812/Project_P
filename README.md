@@ -326,6 +326,7 @@ AI가 캐릭터를 인식하였을때만 틱함수 실행
 		ResetTarget();
 	}
 
+	//ResetTarget 함수
 	//플레이어가 죽었는지 확인
  	void APPAIController::ResetTarget()
 	{
@@ -350,7 +351,7 @@ FindTargetDelegate(콜백함수에서 몬스터의 HPBar 비활성화) 실행
    
 > APPPlayerController
 
-	//AI 인식
+	//AI 인식 업데이트
 	void APPAIController::ActorPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 	{
 		APawn* PerceptionedPawn = Cast<APawn>(Actor);
@@ -378,6 +379,7 @@ GetSenseClass 함수로 클래스를 가져와 클래스에 맞는 함수를 호
     
 > APPPlayerController
 
+	//PerceptionSensedSight
 	//AI가 시야를 통해 인식했을때 실행
 	void APPAIController::PerceptionSensedSight(APawn* PerceptionedPawn)
 	{
@@ -398,6 +400,7 @@ FindTargetDelegate(콜백함수에서 몬스터의 HPBar 활성화) 실행
    
 > APPPlayerController
 
+	//ActorPerceptionForgetUpdated
 	//타겟이 시야범위를 벗어나고 일정시간이 지났을때 실행
 	void APPAIController::ActorPerceptionForgetUpdated(AActor* Actor)
 	{
