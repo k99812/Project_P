@@ -306,7 +306,7 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
     		~~~
 
 		//AI 인식, 잊힘 이벤트 델리게이트에 콜백함수 바인드
-      		AIPerceptionComp->OnTargetPerceptionUpdated.AddDynamic(this, &APPAIController::ActorPerceptionUpdated);
+  		AIPerceptionComp->OnTargetPerceptionUpdated.AddDynamic(this, &APPAIController::ActorPerceptionUpdated);
 		AIPerceptionComp->OnTargetPerceptionForgotten.AddDynamic(this, &APPAIController::ActorPerceptionForgetUpdated);
 	}
 
