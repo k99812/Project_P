@@ -120,7 +120,7 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 
 <br/>
 
-입력을 통해서 발동되는 GA들은 TMap을 활용해 <열겨형, GA>로 Key값을 GA를 부여할때 InputID로 지정  
+입력을 통해서 발동되는 GA들은 TMap을 활용해 <열겨형, GA> Key값을 GA를 부여할때 InputID로 지정  
 
 <br/>
 
@@ -128,7 +128,7 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 
  	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::GASInputPressed, (int32)EInputAbility::Jump);
 
-인풋컴포넌트에 함수를 바인드할 때 열거형을 활용하여 매개변수로 전달
+인풋컴포넌트에서 함수를 바인드할 때 열거형을 활용하여 바이된 함수에 매개변수로 전달
 
 > GASInputPressed
 
@@ -137,7 +137,8 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 		FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(InputID);
   	}
 
-전달받은 열거형을 통해 어빌리티 시스템 컴포넌트에서 등록된 GA의 스펙을 가져옴
+전달받은 열거형을 통해 어빌리티 시스템 컴포넌트(ASC)에서 등록된 GA의 스펙을 가져옴
+스펙을 통해 GA를 실행 및 취소 등 컨트롤할 수 있음
 
 <br/>
 
@@ -188,9 +189,9 @@ GameAbility, AbilityTask, TargetActor를 사용해 개발한 공격 히트 체�
 		InputReleasedDelegate.BindUObject(InAnimInstance, &UPPAnimInstance::SaveLastDirection);
 	}
 
-움직이는 방향에 맞는 StopAnimation을 실행하기 위해 캐릭터에 델리게이트를 생성함  
-플레이어의 입력이 끝나면 델리게이트를 실행  
-인터페이스를 통해 캐릭터의 델리게이트에 AnimInstance의 함수를 바인드
+움직이는 방향에 맞는 StopAnimation을 실행하기 위해 플레이어 캐릭터에 델리게이트를 생성함  
+플레이어의 입력이 끝나면 델리게이트를 실행하여 마지막으로 움직인 방향을 계산  
+의존성을 낮추기 위해 인터페이스를 통해 캐릭터의 델리게이트에 AnimInstance 클래스의 함수를 바인드
 
 > UPPAnimInstance
 
@@ -211,7 +212,7 @@ GameAbility, AbilityTask, TargetActor를 사용해 개발한 공격 히트 체�
 		LastDirection = CalculateDirection(Velocity , Movement->GetLastUpdateRotation());
 	}
 
-NativeInitializeAnimation 함수에서 인터페이스를 통해 자기자신을 넘겨 델리게이트에 함수 바인드  
+NativeInitializeAnimation 함수에서 인터페이스를 통해 자기자신(AnimInstance)을 넘겨 델리게이트에 콜백함수 바인드  
 SaveLastDirection함수가 델리게이트로 호출되면 CalculateDirection함수로  
 Velocity(캐릭터가 움직이는 방향), GetLastUpdateRotation을 넘겨 Direction을 계산
 
