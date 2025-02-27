@@ -339,7 +339,7 @@ AI가 캐릭터를 인식하였을때만 틱함수 실행
 			FindTargetDelegate.ExecuteIfBound(false);
 		}
   
-    		~~~
+  		~~~
 	}
 
 ResetTarget 함수에선 캐릭터의 DeadTag를 확인하여 캐릭터의 죽음을 확인
