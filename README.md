@@ -192,7 +192,9 @@ GameAbility, AbilityTask, TargetActor를 사용해 개발한 공격 히트 체�
 움직이는 방향에 맞는 StopAnimation을 실행하기 위해 플레이어 캐릭터에 델리게이트를 생성함  
 플레이어의 입력이 끝나면 델리게이트를 실행하여 마지막으로 움직인 방향을 계산  
 의존성을 낮추기 위해 인터페이스를 통해 캐릭터의 델리게이트에 AnimInstance 클래스의 함수를 바인드
-   
+
+<br/>
+
 > UPPAnimInstance
 
 	//NativeInitializeAnimation
@@ -217,6 +219,8 @@ NativeInitializeAnimation 함수에서 인터페이스를 통해
    
 SaveLastDirection함수가 델리게이트로 호출되면 CalculateDirection함수로  
 Velocity(캐릭터가 움직이는 방향), GetLastUpdateRotation을 넘겨 Direction을 계산
+
+<br/>
    
 ### GroundLoco + JumpLoco
 ![image](https://github.com/user-attachments/assets/fd1f9363-7740-4631-9f4e-d5b65d4997f4)
@@ -229,7 +233,9 @@ UPPAnimInstance 에서 AimRotation - ActorRotation으로 보고있는 방향의 
  	Roll = DeltaRotation.Roll;
 	Yaw = DeltaRotation.Yaw;
 	Pitch = DeltaRotation.Pitch;
-   
+
+<br/>
+
 ### UpperBody
 ![image](https://github.com/user-attachments/assets/ca2b6773-7c4c-440b-b480-87c9be78478f)
 * UpperBody 슬롯 애니메이션 몽타주를 실행 및 저장
@@ -267,7 +273,9 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 * AISense 관리
 * 블랙보드, 행동트리 관리
 * AIPerception 이벤트 처리
-   
+
+<br/>
+
 > APPPlayerController
 
 	//생성자
@@ -305,6 +313,8 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 틱함수로 AI가 캐릭터가 죽었는지 확인
 SetActorTickEnabled 함수를 이용하여 틱을 계속 실행하지 않고    
 AI가 캐릭터를 인식하였을때만 틱함수 실행   
+
+<br/>
      
 > APPPlayerController
 
@@ -333,6 +343,8 @@ AI가 캐릭터를 인식하였을때만 틱함수 실행
 	}
 
 ResetTarget 함수에선 캐릭터의 DeadTag를 확인하여 캐릭터의 죽음을 확인
+
+<br/>
    
 > APPPlayerController
 
@@ -359,6 +371,8 @@ ResetTarget 함수에선 캐릭터의 DeadTag를 확인하여 캐릭터의 죽�
 
 Stimulus변수에 AI의 어떤 감각으로 함수가 호출됐는지 정보가 들어옴   
 GetSenseClass 함수로 클래스를 가져와 클래스에 맞는 함수를 호출   
+
+<br/>
     
 > APPPlayerController
 
@@ -377,6 +391,8 @@ GetSenseClass 함수로 클래스를 가져와 클래스에 맞는 함수를 호
 BlackBoard의 타겟변수 업데이트  
 틱함수 활성화   
 FindTargetDelegate(콜백함수에서 몬스터의 HPBar 활성화) 실행   
+
+<br/>
    
 > APPPlayerController
 
@@ -400,6 +416,8 @@ FindTargetDelegate(콜백함수에서 몬스터의 HPBar 활성화) 실행
 벗어난 액터가 블랙보드의 타겟인지 확인 후 타겟초기화   
 틱함수 비활성화   
 FindTargetDelegate 실행   
+
+<br/>
    
 ### 행동트리
 ![image](https://github.com/user-attachments/assets/92f1224a-b851-48a2-9c5f-eff7578e503a)
