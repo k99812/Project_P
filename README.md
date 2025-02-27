@@ -310,7 +310,7 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 		AIPerceptionComp->OnTargetPerceptionForgotten.AddDynamic(this, &APPAIController::ActorPerceptionForgetUpdated);
 	}
 
-틱함수로 AI가 캐릭터가 죽었는지 확인
+틱함수로 AI가 캐릭터가 죽었는지 확인   
 SetActorTickEnabled 함수를 이용하여 틱을 계속 실행하지 않고    
 AI가 캐릭터를 인식하였을때만 틱함수 실행   
 
@@ -343,6 +343,8 @@ AI가 캐릭터를 인식하였을때만 틱함수 실행
 	}
 
 ResetTarget 함수에선 캐릭터의 DeadTag를 확인하여 캐릭터의 죽음을 확인
+틱함수 비활성화   
+FindTargetDelegate(콜백함수에서 몬스터의 HPBar 비활성화) 실행   
 
 <br/>
    
@@ -415,7 +417,7 @@ FindTargetDelegate(콜백함수에서 몬스터의 HPBar 활성화) 실행
 
 벗어난 액터가 블랙보드의 타겟인지 확인 후 타겟초기화   
 틱함수 비활성화   
-FindTargetDelegate 실행   
+FindTargetDelegate(콜백함수에서 몬스터의 HPBar 비활성화) 실행   
 
 <br/>
    
