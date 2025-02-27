@@ -310,8 +310,8 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 		AIPerceptionComp->OnTargetPerceptionForgotten.AddDynamic(this, &APPAIController::ActorPerceptionForgetUpdated);
 	}
 
-틱함수로 AI가 캐릭터가 죽었는지 확인   
-SetActorTickEnabled 함수를 이용하여 틱을 계속 실행하지 않고 AI가 캐릭터를 인식하였을때만 틱함수 실행   
+bStartWithTickEnabled = false 로 틱함수를 비활성화   
+SetActorTickEnabled 함수를 이용하여 AI가 캐릭터를 인식하였을때만 틱함수 실행   
 
 <br/>
      
