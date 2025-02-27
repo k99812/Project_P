@@ -268,6 +268,139 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 * 블랙보드, 행동트리 관리
 * AIPerception 이벤트 처리
 
+> APPPlayerController
+
+	//생성자
+ 	APPAIController::APPAIController()
+	{
+ 		~~~
+   
+   		// Tick
+		PrimaryActorTick.bCanEverTick = true;
+		//AActor::SetActorTickEnabled() 함수로 조절
+		PrimaryActorTick.bStartWithTickEnabled = false;
+  
+		// AI Perception 설정
+		AIPerceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComp"));
+		SetPerceptionComponent(*AIPerceptionComp);
+
+		// Sight Config
+		SenseConfig_Sight = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SenseConfig_Sight"));
+
+		//SightConfig 변수 초기화
+  		SenseConfig_Sight->SightRadius = GruntAIData->SightRadius;
+		~~~ 생략 ~~~
+  
+  		//시야 등록
+		AIPerceptionComp->ConfigureSense(*SenseConfig_Sight);
+		AIPerceptionComp->SetDominantSense(SenseConfig_Sight->GetSenseImplementation());
+  
+    		~~~
+
+		//AI 인식, 잊힘 이벤트 델리게이트에 콜백함수 바인드
+      		AIPerceptionComp->OnTargetPerceptionUpdated.AddDynamic(this, &APPAIController::ActorPerceptionUpdated);
+		AIPerceptionComp->OnTargetPerceptionForgotten.AddDynamic(this, &APPAIController::ActorPerceptionForgetUpdated);
+	}
+
+틱함수로 AI가 캐릭터가 죽었는지 확인
+SetActorTickEnabled 함수를 이용하여 틱을 계속 실행하지 않고    
+AI가 캐릭터를 인식하였을때만 틱함수 실행   
+     
+> APPPlayerController
+
+	//Tick
+	void APPAIController::Tick(float DeltaTime)
+	{
+		Super::Tick(DeltaTime);
+
+		ResetTarget();
+	}
+
+	//플레이어가 죽었는지 확인
+ 	void APPAIController::ResetTarget()
+	{
+		~~~
+  
+		FGameplayTagContainer Tag(PPTAG_CHARACTER_ISDEAD);
+		if (ASC->HasAnyMatchingGameplayTags(Tag))
+		{
+			GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, nullptr);
+			AActor::SetActorTickEnabled(false);
+			FindTargetDelegate.ExecuteIfBound(false);
+		}
+  
+    		~~~
+	}
+
+ResetTarget 함수에선 캐릭터의 DeadTag를 확인하여 캐릭터의 죽음을 확인
+   
+> APPPlayerController
+
+	//AI 인식
+	void APPAIController::ActorPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
+	{
+		APawn* PerceptionedPawn = Cast<APawn>(Actor);
+
+		if (PerceptionedPawn && PerceptionedPawn->GetController()->IsPlayerController())
+		{
+			TSubclassOf<UAISense> SensedStimulsClass = UAIPerceptionSystem::GetSenseClassForStimulus(this, Stimulus);
+
+			if (SensedStimulsClass == UAISense_Sight::StaticClass())
+			{
+				PerceptionSensedSight(PerceptionedPawn);
+			}
+
+			if (SensedStimulsClass == UAISense_Hearing::StaticClass())
+			{
+				PerceptionSensedHearing(PerceptionedPawn);
+			}
+		}
+	}
+
+Stimulus변수에 AI의 어떤 감각으로 함수가 호출됐는지 정보가 들어옴   
+GetSenseClass 함수로 클래스를 가져와 클래스에 맞는 함수를 호출   
+
+> APPPlayerController
+
+	//AI가 시야를 통해 인식했을때 실행
+	void APPAIController::PerceptionSensedSight(APawn* PerceptionedPawn)
+	{
+		UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(PerceptionedPawn);
+		if (ASC)
+		{
+			GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, PerceptionedPawn);
+			AActor::SetActorTickEnabled(true);
+			FindTargetDelegate.ExecuteIfBound(true);
+		}
+	}
+
+BlackBoard의 타겟변수 업데이트  
+틱함수 활성화   
+FindTargetDelegate(콜백함수에서 몬스터의 HPBar 활성화) 실행   
+ 
+> APPPlayerController
+
+	//타겟이 시야범위를 벗어나고 일정시간이 지났을때 실행
+	void APPAIController::ActorPerceptionForgetUpdated(AActor* Actor)
+	{
+		APawn* PerceptionedPawn = Cast<APawn>(Actor);
+
+		if (PerceptionedPawn && PerceptionedPawn->GetController()->IsPlayerController())
+		{
+			APawn* Target = Cast<APawn>(GetBlackboardComponent()->GetValueAsObject(BBKEY_TARGET));
+			if (PerceptionedPawn == Target)
+			{
+				GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, nullptr);
+				AActor::SetActorTickEnabled(false);
+				FindTargetDelegate.ExecuteIfBound(false);
+			}
+		}
+	}
+
+벗어난 액터가 블랙보드의 타겟인지 확인 후 타겟초기화   
+틱함수 비활성화   
+FindTargetDelegate 실행   
+
 ### 행동트리
 ![image](https://github.com/user-attachments/assets/92f1224a-b851-48a2-9c5f-eff7578e503a)
 
