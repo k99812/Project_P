@@ -15,6 +15,8 @@ UPPPlayerStatBarUserWidget::UPPPlayerStatBarUserWidget(const FObjectInitializer&
 
 void UPPPlayerStatBarUserWidget::NativeConstruct()
 {
+	Super::NativeConstruct();
+
 	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetOwningPlayerPawn());
 
 	if (ASC)

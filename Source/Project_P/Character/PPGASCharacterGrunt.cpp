@@ -126,8 +126,6 @@ void APPGASCharacterGrunt::TakeDamage(const FOnAttributeChangeData& ChangeData)
 
 	if (ChangeData.NewValue)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Grunt had taked Damage : %f"), ChangeData.NewValue);
-
 		IPPGameInterface* IPPGameMode = Cast<IPPGameInterface>(GetWorld()->GetAuthGameMode());
 		if (IPPGameMode)
 		{

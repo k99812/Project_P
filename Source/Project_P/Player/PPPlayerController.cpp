@@ -4,6 +4,7 @@
 #include "Player/PPPlayerController.h"
 #include "UI/PPHUDWidget.h"
 #include "UI/PPGameOverUserWidget.h"
+#include "UI/PPFloatingTextUserWidget.h"
 
 APPPlayerController::APPPlayerController()
 {
@@ -17,6 +18,12 @@ APPPlayerController::APPPlayerController()
 	if (GameOverUIClassRef.Class)
 	{
 		GameOverUIClass = GameOverUIClassRef.Class;
+	}
+
+	static ConstructorHelpers::FClassFinder<UPPFloatingTextUserWidget> DamageUIClassRef(TEXT("/Game/Project_P/Blueprint/UI/WBP_FloatingText.WBP_FloatingText_C"));
+	if (DamageUIClassRef.Class)
+	{
+		DamageUIClass = DamageUIClassRef.Class;
 	}
 }
 
@@ -35,6 +42,13 @@ void APPPlayerController::GameOver()
 void APPPlayerController::ActorTakedDamage(const float& Damage, const FVector& ActorPosition)
 {
 	UE_LOG(LogTemp, Log, TEXT("PlayerController Location : %f:%f:%f"), ActorPosition.X, ActorPosition.Y, ActorPosition.Z);
+
+	UPPFloatingTextUserWidget* DamageUI = CreateWidget<UPPFloatingTextUserWidget>(this, DamageUIClass);
+	if (DamageUI)
+	{
+		DamageUI->SetTextWidget(Damage, ActorPosition);
+		DamageUI->AddToViewport();
+	}
 }
 
 void APPPlayerController::BeginPlay()

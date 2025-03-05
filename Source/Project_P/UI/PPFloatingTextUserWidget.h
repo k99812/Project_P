@@ -28,6 +28,8 @@ public:
 
 	FEndLifeTime EndLifeTime;
 
+	FWidgetAnimationDynamicEvent AnimFinishedDelegate;
+
 //Widget Property
 protected:
 	UPROPERTY(meta = (BindWidget))
@@ -38,7 +40,12 @@ protected:
 
 //Location
 protected:
-	FVector FirstLocation;
+	FVector2D FirstLocation;
 
-	FVector LastLocation;
+	FVector2D LastLocation;
+
+//Animation
+protected:
+	UFUNCTION()
+	void AnimationFinished();
 };

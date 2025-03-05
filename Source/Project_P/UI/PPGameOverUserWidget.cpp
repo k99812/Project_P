@@ -14,6 +14,8 @@ UPPGameOverUserWidget::UPPGameOverUserWidget(const FObjectInitializer& ObjectIni
 
 void UPPGameOverUserWidget::NativeConstruct()
 {
+	Super::NativeConstruct();
+
 	//BtnRestart->OnClicked.AddDynamic(this, &UPPGameOverUserWidget::BtnEventGameRestart);
 }
 
@@ -35,7 +37,7 @@ void UPPGameOverUserWidget::BtnEventGameRestart()
 		OwingPlayerController->SetShowMouseCursor(false);
 		OwingPlayerController->DisableInput(OwingPlayerController);
 
-		//재시작시 해당 위젯 제거
+		//함수실행시 해당 위젯 제거
 		RemoveFromParent();
 	}
 }
