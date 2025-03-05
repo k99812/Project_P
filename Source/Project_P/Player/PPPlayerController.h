@@ -50,6 +50,9 @@ protected:
 
 //Damage UI
 protected:
+	UPROPERTY(EditAnywhere, Category = "HUD")
+	TSubclassOf<class UUserWidget> DamageUIClass;
+
 	//UPROPERTY(VisibleAnywhere, Category = "HUD")
 	//TQueue<>
 };

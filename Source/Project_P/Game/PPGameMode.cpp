@@ -55,8 +55,6 @@ void APPGameMode::OnPlayerDead()
 
 void APPGameMode::OnTakeDamage(const float& Damage, const FVector& ActorPosition)
 {
-	UE_LOG(LogTemp, Log, TEXT("GameMode::OnTakedDamage Location : %f:%f:%f"), ActorPosition.X, ActorPosition.Y, ActorPosition.Z);
-
 	APPPlayerController* PlayerController = Cast<APPPlayerController>(GetWorld()->GetFirstPlayerController());
 	if (PlayerController)
 	{

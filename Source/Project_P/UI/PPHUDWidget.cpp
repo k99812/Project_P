@@ -11,5 +11,5 @@ UPPHUDWidget::UPPHUDWidget(const FObjectInitializer& ObjectInitializer) : Super(
 
 void UPPHUDWidget::NativeConstruct()
 {
-
+	Super::NativeConstruct();
 }
