@@ -46,5 +46,5 @@ void UPPFloatingTextUserWidget::AnimationFinished()
 {
 	UE_LOG(LogTemp, Log, TEXT("DamageUI Remove To Viewport"));
 	EndLifeTime.ExecuteIfBound();
-	RemoveFromParent();
+	//RemoveFromParent();
 }

@@ -43,11 +43,22 @@ void APPPlayerController::ActorTakedDamage(const float& Damage, const FVector& A
 {
 	UE_LOG(LogTemp, Log, TEXT("PlayerController Location : %f:%f:%f"), ActorPosition.X, ActorPosition.Y, ActorPosition.Z);
 
-	UPPFloatingTextUserWidget* DamageUI = CreateWidget<UPPFloatingTextUserWidget>(this, DamageUIClass);
-	if (DamageUI)
+	DamageUIArray.Emplace(CreateWidget<UPPFloatingTextUserWidget>(this, DamageUIClass));
+	if (DamageUIArray.Last())
 	{
-		DamageUI->SetTextWidget(Damage, ActorPosition);
-		DamageUI->AddToViewport();
+		DamageUIArray.Last()->EndLifeTime.BindLambda([&]()
+		{
+			UPPFloatingTextUserWidget* TempDamageUI = DamageUIArray.Last();
+
+			if (TempDamageUI)
+			{
+				TempDamageUI->RemoveFromParent();
+				DamageUIArray.Pop();
+			}
+		});
+
+		DamageUIArray.Last()->SetTextWidget(Damage, ActorPosition);
+		DamageUIArray.Last()->AddToViewport();
 	}
 }
 
