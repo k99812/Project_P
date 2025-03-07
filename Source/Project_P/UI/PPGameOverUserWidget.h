@@ -32,4 +32,9 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UTextBlock> TxtRetry;
+
+//Animation
+protected:
+	UPROPERTY(Transient, meta = (BindWidgetAnim))
+	TObjectPtr<class UWidgetAnimation> Color;
 };

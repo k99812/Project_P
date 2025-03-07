@@ -5,6 +5,7 @@
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"
+#include "Animation/WidgetAnimation.h"
 
 
 UPPGameOverUserWidget::UPPGameOverUserWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -17,6 +18,8 @@ void UPPGameOverUserWidget::NativeConstruct()
 	Super::NativeConstruct();
 
 	//BtnRestart->OnClicked.AddDynamic(this, &UPPGameOverUserWidget::BtnEventGameRestart);
+
+	PlayAnimation(Color);
 }
 
 void UPPGameOverUserWidget::BtnEventGameRestart()
@@ -40,4 +43,9 @@ void UPPGameOverUserWidget::BtnEventGameRestart()
 		//함수실행시 해당 위젯 제거
 		RemoveFromParent();
 	}
+}
+
+void UPPGameOverUserWidget::AnimationEnd()
+{
+	UE_LOG(LogTemp, Log, TEXT("Gameover Aniamtion End"));
 }
