@@ -14,12 +14,12 @@ void UPPFloatingTextUserWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	UE_LOG(LogTemp, Log, TEXT("DamageUI Add To Viewport"));
+	UE_LOG(LogTemp, Log, TEXT("DamageUI NativeConstruct"));
 
 	AnimFinishedDelegate.BindDynamic(this, &UPPFloatingTextUserWidget::AnimationFinished);
 	BindToAnimationFinished(FadeOut, AnimFinishedDelegate);
 
-	SetPositionInViewport(FirstLocation);
+	//SetPositionInViewport(FirstLocation);
 	PlayAnimation(FadeOut);
 }
 
@@ -27,7 +27,7 @@ void UPPFloatingTextUserWidget::NativeTick(const FGeometry& MyGeometry, float In
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	SetPositionInViewport(FMath::Vector2DInterpConstantTo(FirstLocation, LastLocation, InDeltaTime, 1.f));
+	//SetPositionInViewport(FMath::Vector2DInterpConstantTo(FirstLocation, LastLocation, InDeltaTime, 1.f));
 }
 
 void UPPFloatingTextUserWidget::SetTextWidget(const float& Damage, const FVector& ActorPosition)
