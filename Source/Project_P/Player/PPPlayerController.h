@@ -54,5 +54,5 @@ protected:
 	TSubclassOf<class UUserWidget> DamageUIClass;
 
 	UPROPERTY(VisibleAnywhere, Category = "HUD")
-	TArray<TObjectPtr<class UPPFloatingTextUserWidget>> DamageUIArray;
+	TArray<TWeakObjectPtr<class UPPFloatingTextUserWidget>> DamageUIArray;
 };

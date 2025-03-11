@@ -44,8 +44,3 @@ void UPPGameOverUserWidget::BtnEventGameRestart()
 		RemoveFromParent();
 	}
 }
-
-void UPPGameOverUserWidget::AnimationEnd()
-{
-	UE_LOG(LogTemp, Log, TEXT("Gameover Aniamtion End"));
-}
