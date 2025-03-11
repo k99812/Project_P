@@ -24,7 +24,7 @@ public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 public:
-	void SetTextWidget(const float& Damage, const FVector& ActorPosition);
+	bool SetTextWidget(const float& Damage, const FVector& ActorPosition);
 
 	FEndLifeTime EndLifeTime;
 
