@@ -297,7 +297,8 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 
 		//SightConfig 변수 초기화
   		SenseConfig_Sight->SightRadius = GruntAIData->SightRadius;
-		~~~ 생략 ~~~
+    
+		~~~
   
   		//시야 등록
 		AIPerceptionComp->ConfigureSense(*SenseConfig_Sight);
