@@ -21,8 +21,6 @@ public:
 
 	virtual void NativeConstruct() override;
 
-	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
-
 public:
 	bool SetTextWidget(const float& Damage, const FVector& ActorPosition);
 
@@ -38,11 +36,12 @@ protected:
 	UPROPERTY(Transient, meta = (BindWidgetAnim))
 	TObjectPtr<class UWidgetAnimation> FadeOut;
 
+	UPROPERTY(Transient, meta = (BindWidgetAnim))
+	TObjectPtr<class UWidgetAnimation> TextUp;
+
 //Location
 protected:
 	FVector2D FirstLocation;
-
-	FVector2D LastLocation;
 
 //Animation
 protected:
