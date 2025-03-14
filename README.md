@@ -463,11 +463,64 @@ FindTargetDelegate(콜백함수에서 몬스터의 HPBar 비활성화) 실행
 <a href="https://k99812.tistory.com/133" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
 
 1. 캐릭터 사망시 SetDead 함수가 실행
-2. GameMode를 가져와 인터페이스로 캐스팅하여 함수 실행
+2. GameMode를 가져와 상속받은 인터페이스로 캐스팅하여 함수 실행
 3. 게임모드에서 PlayerController 함수를 실행하여 UI 생성
 
+## Damage UI
+![image](https://github.com/user-attachments/assets/064dbf8b-7813-4201-8201-5f78d2bfd78a)
 
+1. 데미지 어트리뷰트가 바뀌면 게임모드를 가져와 상속받은 인터페이스로 캐스팅하여 함수실행
+2. 게임모드에서 플레이어컨트롤러 함수 실행
+3. 플레이어 컨트롤러에서 데미지 UI 생성 및 관리
+4. AddViewport 함수 실행전 SetTextWidget 함수를 실행하여 위젯의 위치, 텍스트를 설정
 
+<br/>
+
+![image](https://github.com/user-attachments/assets/2e8a7625-b844-487e-a0c8-468c2292e9b7)
+
+> APPPlayerController.h
+
+	//플레이어컨트롤러 헤더파일
+	UPROPERTY(EditAnywhere, Category = "HUD")
+	TSubclassOf<class UUserWidget> DamageUIClass;
+
+	UPROPERTY(VisibleAnywhere, Category = "HUD")
+	TArray<TWeakObjectPtr<class UPPFloatingTextUserWidget>> DamageUIArray;
+
+* DamageUIClass : 생성할 UI를 저장
+* DamageUIArray : 생성하고 일정시간후 파괴되는 DamgeUI 특성으로 참조하는 객체가 파괴되면 Null로 바뀌는 WeekPtr로 선언
+
+<br/>
+
+> APPPlayerController.cpp
+
+	//ActorTakedDamage 함수
+	TWeakObjectPtr<UPPFloatingTextUserWidget> DamageUI = CreateWidget<UPPFloatingTextUserWidget>(this, DamageUIClass);
+	if (DamageUI.IsValid())
+	{
+ 		//DamageUI의 델리게이트에 바인드되는 람다 함수
+		DamageUI.Get()->EndLifeTime.BindLambda([&]()
+		{
+			TWeakObjectPtr<UPPFloatingTextUserWidget> TempDamageUI = DamageUIArray.Last();
+
+			if (TempDamageUI.IsValid())
+			{
+				TempDamageUI->RemoveFromParent();
+			}
+		
+			DamageUIArray.Pop();
+		});
+
+		//SetTextWidget함수를 먼저 실행뒤 결과에 따라 함수 실행
+		if (DamageUI.Get()->SetTextWidget(Damage, ActorPosition))
+		{
+			DamageUIArray.Emplace(DamageUI.Get());
+			DamageUI.Get()->AddToViewport();
+		}	
+	}
+
+파괴되는 UI특성으로 TWeakObjectPtr을 사용
+ 
 <br/>
 
 
