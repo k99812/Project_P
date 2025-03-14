@@ -480,6 +480,7 @@ FindTargetDelegate(콜백함수에서 몬스터의 HPBar 비활성화) 실행
 5. 잡몹 HPBar, 체력 0 될시 죽는 몽타주 실행 및 Destroy
 6. 행동트리를 이용해 몬스터 AI 구현
 7. 캐릭터 사망시 재시작 및 UI 출력
+8. 몬스터 데미지 UI 제작
 
 ## 캐릭터 이동
 https://github.com/user-attachments/assets/d468b24e-221d-41f4-9882-67265ac3ae82
@@ -523,8 +524,11 @@ https://github.com/user-attachments/assets/304a73f8-e93c-4e49-8669-28b2bcbe6248
 https://github.com/user-attachments/assets/e9e4e0ee-f90a-4545-8b29-fa12db39658c
 
 
-
-
 <br/>
+
+## 몬스터 데미지 UI
+
+
+https://github.com/user-attachments/assets/65914366-7c68-4ea2-bbd9-7d60ea14e260
 
 
