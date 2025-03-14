@@ -39,6 +39,8 @@ protected:
 	UPROPERTY(Transient, meta = (BindWidgetAnim))
 	TObjectPtr<class UWidgetAnimation> TextUp;
 
+	FTimerHandle TimerHandle;
+
 //Location
 protected:
 	FVector2D FirstLocation;
