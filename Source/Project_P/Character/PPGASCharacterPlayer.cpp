@@ -132,6 +132,9 @@ APPGASCharacterPlayer::APPGASCharacterPlayer()
 	{
 		LevelStartMontage = LevelStartMontageRef.Object;
 	}
+
+//Team
+	SetGenericTeamId(FGenericTeamId(ETeamAttitude::Hostile));
 }
 
 UAbilitySystemComponent* APPGASCharacterPlayer::GetAbilitySystemComponent() const
