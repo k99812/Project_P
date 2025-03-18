@@ -52,7 +52,7 @@ void APPPlayerController::ActorTakedDamage(const float& Damage, const FVector& A
 
 			if (TempDamageUI.IsValid())
 			{
-				TempDamageUI->RemoveFromParent();
+				TempDamageUI.Get()->RemoveFromParent();
 			}
 			
 			DamageUIArray.Pop();
