@@ -66,3 +66,13 @@ void APPCharacterBase::PlayDeadAnimation()
 		AnimInstance->Montage_Play(DeadMontage, 1.0f);
 	}
 }
+
+void APPCharacterBase::SetGenericTeamId(const FGenericTeamId& TeamID)
+{
+	GenericTeamId = TeamID;
+}
+
+FGenericTeamId APPCharacterBase::GetGenericTeamId() const
+{
+	return GenericTeamId;
+}

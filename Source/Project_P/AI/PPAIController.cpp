@@ -62,8 +62,8 @@ APPAIController::APPAIController()
 	SenseConfig_Sight->AutoSuccessRangeFromLastSeenLocation = GruntAIData->AutoSuccessRange;
 
 	SenseConfig_Sight->DetectionByAffiliation.bDetectEnemies = true;
-	SenseConfig_Sight->DetectionByAffiliation.bDetectFriendlies = true;
-	SenseConfig_Sight->DetectionByAffiliation.bDetectNeutrals = true;
+	SenseConfig_Sight->DetectionByAffiliation.bDetectFriendlies = false;
+	SenseConfig_Sight->DetectionByAffiliation.bDetectNeutrals = false;
 
 	AIPerceptionComp->ConfigureSense(*SenseConfig_Sight);
 	AIPerceptionComp->SetDominantSense(SenseConfig_Sight->GetSenseImplementation());
@@ -75,9 +75,9 @@ APPAIController::APPAIController()
 	SenseConfig_Hearing->SetMaxAge(GruntAIData->AISenseAge);
 
 	SenseConfig_Hearing->DetectionByAffiliation.bDetectEnemies = true;
-	SenseConfig_Hearing->DetectionByAffiliation.bDetectFriendlies = true;
-	SenseConfig_Hearing->DetectionByAffiliation.bDetectNeutrals = true;
-
+	SenseConfig_Hearing->DetectionByAffiliation.bDetectFriendlies = false;
+	SenseConfig_Hearing->DetectionByAffiliation.bDetectNeutrals = false;
+	
 	AIPerceptionComp->ConfigureSense(*SenseConfig_Hearing);
 
 // Damage Config

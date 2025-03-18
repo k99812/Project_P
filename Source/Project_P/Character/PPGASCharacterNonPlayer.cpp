@@ -19,6 +19,9 @@ APPGASCharacterNonPlayer::APPGASCharacterNonPlayer()
 	}
 
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
+//Team
+	SetGenericTeamId(FGenericTeamId(ETeamAttitude::Friendly));
 }
 
 UAbilitySystemComponent* APPGASCharacterNonPlayer::GetAbilitySystemComponent() const
