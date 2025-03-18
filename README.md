@@ -505,7 +505,7 @@ FindTargetDelegate(콜백함수에서 몬스터의 HPBar 비활성화) 실행
 
 			if (TempDamageUI.IsValid())
 			{
-				TempDamageUI->RemoveFromParent();
+				TempDamageUI.Get()->RemoveFromParent();
 			}
 		
 			DamageUIArray.Pop();
@@ -519,7 +519,7 @@ FindTargetDelegate(콜백함수에서 몬스터의 HPBar 비활성화) 실행
 		}	
 	}
 
-파괴되는 UI특성으로 TWeakObjectPtr을 사용
+UI의 객체가 파괴될 수 있으므로 로우 포인터 대신 TWeakObjectPtr을 사용함
  
 <br/>
 
