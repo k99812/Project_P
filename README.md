@@ -1,15 +1,18 @@
 ## 언리얼 포트폴리오 제작
 
-해당 프로젝트를 실행하려면 마켓플레이스에서 **Paragon Countess, Paragon Minions**를 프로젝트에 추가해야 합니다.   
+해당 프로젝트를 실행하려면 언리얼 엔진 버전 5.3.2 그리고 마켓플레이스에서 **Paragon Countess, Paragon Minions**를 프로젝트에 추가해야 합니다.   
+
 <br/>
+
 아래 블로그 링크에서 코드 및 구현 일지를 볼 수 있습니다   
+
 <br/>
+
 <a href="https://k99812.tistory.com/category/%ED%8F%AC%ED%8A%B8%ED%8F%B4%EB%A6%AC%EC%98%A4%20%EC%A0%9C%EC%9E%91" height="5" width="10" target="_blank" >
 <img src="https://img.shields.io/badge/블로그링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
 </a>
 
 <br/>
-
 
 
 ## 기술 설명서
