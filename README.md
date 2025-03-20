@@ -479,7 +479,8 @@ FindTargetDelegate(콜백함수에서 몬스터의 HPBar 비활성화) 실행
 
 <br/>
 
-![image](https://github.com/user-attachments/assets/2e8a7625-b844-487e-a0c8-468c2292e9b7)
+![image](https://github.com/user-attachments/assets/babc0e7b-3652-427c-a102-69447ab77b35)
+
 
 > APPPlayerController.h
 
@@ -504,14 +505,14 @@ FindTargetDelegate(콜백함수에서 몬스터의 HPBar 비활성화) 실행
  		//DamageUI의 델리게이트에 바인드되는 람다 함수
 		DamageUI.Get()->EndLifeTime.BindLambda([&]()
 		{
-			TWeakObjectPtr<UPPFloatingTextUserWidget> TempDamageUI = DamageUIArray.Last();
+			TWeakObjectPtr<UPPFloatingTextUserWidget> TempDamageUI = DamageUIArray[0];
 
 			if (TempDamageUI.IsValid())
 			{
 				TempDamageUI.Get()->RemoveFromParent();
 			}
-		
-			DamageUIArray.Pop();
+			
+			DamageUIArray.RemoveAt(0);
 		});
 
 		//SetTextWidget함수를 먼저 실행뒤 결과에 따라 함수 실행
@@ -522,7 +523,8 @@ FindTargetDelegate(콜백함수에서 몬스터의 HPBar 비활성화) 실행
 		}	
 	}
 
-UI의 객체가 파괴될 수 있으므로 로우 포인터 대신 TWeakObjectPtr을 사용함
+* UI의 객체가 파괴될 수 있으므로 로우 포인터 대신 TWeakObjectPtr을 사용함
+* TQueue 컨테이너가 UPROPERTY를 지원하지 않아 TArray를 이용하여 TQueue를 대체함
  
 <br/>
 
