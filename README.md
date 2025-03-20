@@ -479,8 +479,7 @@ FindTargetDelegate(콜백함수에서 몬스터의 HPBar 비활성화) 실행
 
 <br/>
 
-![image](https://github.com/user-attachments/assets/babc0e7b-3652-427c-a102-69447ab77b35)
-
+![image](https://github.com/user-attachments/assets/75eb55e0-2fdf-4bd5-98e8-d61be0ff4eab)
 
 > APPPlayerController.h
 
