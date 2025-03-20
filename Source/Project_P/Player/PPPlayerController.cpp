@@ -48,14 +48,14 @@ void APPPlayerController::ActorTakedDamage(const float& Damage, const FVector& A
 	{
 		DamageUI.Get()->EndLifeTime.BindLambda([&]()
 		{
-			TWeakObjectPtr<UPPFloatingTextUserWidget> TempDamageUI = DamageUIArray.Last();
+			TWeakObjectPtr<UPPFloatingTextUserWidget> TempDamageUI = DamageUIArray[0];
 
 			if (TempDamageUI.IsValid())
 			{
 				TempDamageUI.Get()->RemoveFromParent();
 			}
 			
-			DamageUIArray.Pop();
+			DamageUIArray.RemoveAt(0);
 		});
 
 		if (DamageUI.Get()->SetTextWidget(Damage, ActorPosition))
