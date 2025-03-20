@@ -14,12 +14,10 @@ void UPPFloatingTextUserWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	/*델리게이트로 진행할시 한번에 여러개가 생성되면 델리게이트가 실행이 안될때가 있음
 	AnimFinishedDelegate.BindDynamic(this, &UPPFloatingTextUserWidget::AnimationFinished);
 	BindToAnimationFinished(FadeOut, AnimFinishedDelegate);
-	*/
-
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UPPFloatingTextUserWidget::AnimationFinished, FadeOut->GetEndTime(), false);
+	
+	//GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UPPFloatingTextUserWidget::AnimationFinished, FadeOut->GetEndTime(), false);
 
 	SetPositionInViewport(FirstLocation);
 	PlayAnimation(FadeOut);
