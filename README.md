@@ -55,7 +55,7 @@
 ![image](https://github.com/user-attachments/assets/8c7fb823-4e61-4d59-81b2-43ccdae2e110)
  
 EnhancedInput을 사용
-InputMappintContext에서 InputAction을 맵핑 후 저장
+* InputMappintContext에서 InputAction을 맵핑 후 저장
 
 ## GA(능력) 처리
 GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 진행됨
@@ -80,8 +80,8 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 
 <br/>
 
-실행에 입력이 필요없는 GA(Ex 공격판정)들은 TArray를 사용해 저장  
-캐릭터 블루프린트 클래스를 통해 TArray에 GA를 지정
+* 실행에 입력이 필요없는 GA(Ex 공격판정)들은 TArray를 사용해 저장  
+* 캐릭터 블루프린트 클래스를 통해 TArray에 GA를 지정
 
 <br/>
 
@@ -98,8 +98,8 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 		Skill UMETA(DisplayName = "Skill")
 	};
 
-입력 ID, TMap의 Key로 사용할 열거형 Key값을 INT로 사용할 때 보다 직관적임  
-별도의 헤더파일을 만들어 구현해 다른 클래스에서 GA를 사용할때 해당 열거형을 추가하여 사용 가능
+* 입력 ID, TMap의 Key로 사용할 열거형 Key값을 INT로 사용할 때 보다 직관적임  
+* 별도의 헤더파일을 만들어 구현해 다른 클래스에서 GA를 사용할때 해당 열거형을 추가하여 사용 가능
 
  <br/>
 
@@ -123,7 +123,7 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 
 <br/>
 
-입력을 통해서 발동되는 GA들은 TMap을 활용해 <열겨형, GA> Key값을 GA를 부여할때 InputID로 지정  
+* 입력을 통해서 발동되는 GA들은 TMap을 활용해 <열겨형, GA> Key값을 GA를 부여할때 InputID로 지정  
 
 <br/>
 
@@ -132,7 +132,7 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
  	//SetupGASPlayerInputComponent 함수
  	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::GASInputPressed, (int32)EInputAbility::Jump);
 
-인풋컴포넌트에서 함수를 바인드할 때 열거형을 활용하여 바인드된 함수에 키값을 매개변수로 전달
+* 인풋컴포넌트에서 함수를 바인드할 때 열거형을 활용하여 바인드된 함수에 키값을 매개변수로 전달
 
 > APPGASCharacterPlayer
 
@@ -166,8 +166,8 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
      		ASC->AbilitySpecInputReleased(*Spec);
      	}
 
-전달받은 열거형(키값)을 통해 어빌리티 시스템 컴포넌트(ASC)에서 등록된 GA의 스펙을 가져옴   
-어빌리티스펙을 통해 GA를 실행 및 취소 등 컨트롤할 수 있음
+* 전달받은 열거형(키값)을 통해 어빌리티 시스템 컴포넌트(ASC)에서 등록된 GA의 스펙을 가져옴   
+* 어빌리티스펙을 통해 GA를 실행 및 취소 등 컨트롤할 수 있음
 
 <br/>
 
@@ -175,13 +175,13 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 
 ## Combo Attack
 ![image](https://github.com/user-attachments/assets/360325b1-1141-4885-94fb-c94afd2047fb)
-GameAbility를 사용해 개발한 콤보공격 플로우 차트
+* GameAbility를 사용해 개발한 콤보공격 플로우 차트
 
 <br/>
 
 ## Attack Hit Check
 ![image](https://github.com/user-attachments/assets/49a357a4-081c-49bc-a447-edef2450c8d8)
-GameAbility, AbilityTask, TargetActor를 사용해 개발한 공격 히트 체크 플로우 차트
+* GameAbility, AbilityTask, TargetActor를 사용해 개발한 공격 히트 체크 플로우 차트
 
 
 
@@ -254,6 +254,9 @@ GameAbility, AbilityTask, TargetActor를 사용해 개발한 공격 히트 체�
    
 ### GroundLoco + JumpLoco
 ![image](https://github.com/user-attachments/assets/fd1f9363-7740-4631-9f4e-d5b65d4997f4)
+
+<br/>
+
 ### Loco + AimOffset
 ![image](https://github.com/user-attachments/assets/ec6ac10b-70c4-471b-8f8e-c997652cf305)  
 UPPAnimInstance 에서 AimRotation - ActorRotation으로 보고있는 방향의 로테이션을 계산하여 AimOffset을 적용
@@ -341,8 +344,8 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 		AIPerceptionComp->OnTargetPerceptionForgotten.AddDynamic(this, &APPAIController::ActorPerceptionForgetUpdated);
 	}
 
-bStartWithTickEnabled = false 로 틱함수를 비활성화   
-SetActorTickEnabled 함수를 이용하여 AI가 캐릭터를 인식하였을때만 틱함수 실행   
+* bStartWithTickEnabled = false 로 틱함수를 비활성화   
+* SetActorTickEnabled 함수를 이용하여 AI가 캐릭터를 인식하였을때만 틱함수 실행   
 
 <br/>
      
@@ -373,9 +376,9 @@ SetActorTickEnabled 함수를 이용하여 AI가 캐릭터를 인식하였을때
   		~~~
 	}
 
-ResetTarget 함수에선 캐릭터의 DeadTag를 확인하여 캐릭터의 죽음을 확인   
-틱함수 비활성화   
-FindTargetDelegate(콜백함수에서 몬스터의 HPBar 비활성화) 실행   
+* ResetTarget 함수에선 캐릭터의 DeadTag를 확인하여 캐릭터의 죽음을 확인   
+* 틱함수 비활성화   
+* FindTargetDelegate(콜백함수에서 몬스터의 HPBar 비활성화) 실행   
 
 <br/>
    
@@ -402,8 +405,8 @@ FindTargetDelegate(콜백함수에서 몬스터의 HPBar 비활성화) 실행
 		}
 	}
 
-Stimulus변수에 AI의 어떤 감각으로 함수가 호출됐는지 정보가 들어옴   
-GetSenseClass 함수로 클래스를 가져와 클래스에 맞는 함수를 호출   
+* Stimulus변수에 AI의 어떤 감각으로 함수가 호출됐는지 정보가 들어옴   
+* GetSenseClass 함수로 클래스를 가져와 클래스에 맞는 함수를 호출   
 
 <br/>
     
@@ -422,9 +425,9 @@ GetSenseClass 함수로 클래스를 가져와 클래스에 맞는 함수를 호
 		}
 	}
 
-BlackBoard의 타겟변수 업데이트  
-틱함수 활성화   
-FindTargetDelegate(콜백함수에서 몬스터의 HPBar 활성화) 실행   
+* BlackBoard의 타겟변수 업데이트  
+* 틱함수 활성화   
+* FindTargetDelegate(콜백함수에서 몬스터의 HPBar 활성화) 실행   
 
 <br/>
    
@@ -448,9 +451,9 @@ FindTargetDelegate(콜백함수에서 몬스터의 HPBar 활성화) 실행
 		}
 	}
 
-벗어난 액터가 블랙보드의 타겟인지 확인 후 타겟초기화   
-틱함수 비활성화   
-FindTargetDelegate(콜백함수에서 몬스터의 HPBar 비활성화) 실행   
+* 벗어난 액터가 블랙보드의 타겟인지 확인 후 타겟초기화   
+* 틱함수 비활성화   
+* FindTargetDelegate(콜백함수에서 몬스터의 HPBar 비활성화) 실행   
 
 <br/>
    
@@ -458,22 +461,60 @@ FindTargetDelegate(콜백함수에서 몬스터의 HPBar 비활성화) 실행
 ![image](https://github.com/user-attachments/assets/92f1224a-b851-48a2-9c5f-eff7578e503a)
 
 
-
-
-
 ## 몬스터 HP BAR
 ![image](https://github.com/user-attachments/assets/3b7bde60-6a59-44ea-86c5-f2f5b3741e28)
 <a href="https://k99812.tistory.com/119" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
 
 ### WidgetComponent
+> UPPGASWidgetComponent Cpp파일
+
+	//InitWidget 함수
+	UPPGASUserWidget* GASUserWidget = Cast<UPPGASUserWidget>(GetWidget());
+	if (GASUserWidget)
+	{
+		GASUserWidget->SetAbilitySystemComponent(GetOwner());
+	}
+
+* WidgetComponent에서 위젯 컴포넌트가 초기화 될때 SetAbilitySystemComponent 함수에 오너를 전달
 * InitWidget 함수에서 생성한 위젯을 가져와 오너를 넘겨줌
 
 ### PPGASUserWidget
-위젯 컴포넌트를 이용하여 위젯을 생성하면 GetOwningPlayer 함수를 사용할 수 없음 
-그래서 별도로 위젯 컴포넌트에서 오너를 받아올 수 있는 함수를 생성해야 됨
-* SetAbilitySystemComponent 가상함수를 선언하여 WidgetComponent에서 오너를 받음
+* 위젯 컴포넌트를 부모로 위젯을 생성하면 위젯에서 제공하는 GetOwningPlayer 함수를 사용할 수 없음   
+* 그러므로 부모 위젯 클래스를 생성하여 오너를 받아올 수 있는 함수를 생성해야 됨
+
+> UPPGASUserWidget 
+
+	//헤더파일
+	virtual void SetAbilitySystemComponent(AActor* Owner);
+ 
+	//Cpp파일
+	void UPPGASUserWidget::SetAbilitySystemComponent(AActor* Owner)
+	{
+	    if (IsValid(Owner))
+	    {
+	        ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Owner);
+	    }
+	}
+
+ * UPPGASUserWidget을 상속받는 클래스에서 재정의 할 수 있게 가상함수로 선언
 
 ### PPGASHPBarUserWidget
+> UPPGASHpBarUserWidget Cpp파일
+
+	Super::SetAbilitySystemComponent(Owner);
+
+	if (ASC)
+	{
+		//특정 어트리뷰트값이 바뀔때 마다 호출되는 델리게이트
+		ASC->GetGameplayAttributeValueChangeDelegate(UPPCharacterAttributeSet::GetHealthAttribute()).
+			AddUObject(this, &UPPGASHpBarUserWidget::OnHealthAttributeChange);
+		ASC->GetGameplayAttributeValueChangeDelegate(UPPCharacterAttributeSet::GetMaxHealthAttribute()).
+			AddUObject(this, &UPPGASHpBarUserWidget::OnMaxHealthAttributeChange);
+	
+		~~~ 생략 ~~~
+	}
+ 
+* 부모함수를 호출해 ASC를 가져옴
 * SetAbilitySystemComponent 함수에서 매개변수로 들어온 오너를 이용하여 ASC에 어트리뷰트 체인지 델리게이트에 함수 등록
 * 프로그래스바, 텍스트 박스 관리
 
