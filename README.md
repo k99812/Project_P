@@ -455,6 +455,9 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 	}
 
 * 인풋모드 관리
+* 플레이어 HUD 생성
+
+<br/>
 
 > APPPlayerController
 
@@ -484,6 +487,7 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 
 * DamageUIClass : 생성할 UI를 저장
 * DamageUIArray : 생성하고 일정시간후 파괴되는 DamgeUI 특성으로 참조하는 객체가 파괴되면 Null로 바뀌는 WeekPtr로 선언
+* TQueue 컨테이너가 UPROPERTY를 지원하지 않아 TArray를 이용하여 TQueue를 대체함
 
 <br/>
 
@@ -493,7 +497,10 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 	TWeakObjectPtr<UPPFloatingTextUserWidget> DamageUI = CreateWidget<UPPFloatingTextUserWidget>(this, DamageUIClass);
 	if (DamageUI.IsValid())
 	{
- 		~~~ 
+ 		DamageUI.Get()->EndLifeTime.BindLambda([&]()
+   		{
+   			~~~ 
+   		});
 
 		//SetTextWidget함수를 먼저 실행뒤 결과에 따라 함수 실행
 		if (DamageUI.Get()->SetTextWidget(Damage, ActorPosition))
@@ -503,8 +510,9 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 		}	
 	}
 
-* UI의 객체가 파괴될 수 있으므로 로우 포인터 대신 TWeakObjectPtr을 사용함
-* TQueue 컨테이너가 UPROPERTY를 지원하지 않아 TArray를 이용하여 TQueue를 대체함
+* DamageUI 생성 후 SetTextWidget 함수 실행
+* 생성한 UI를 Array에 추가 후 뷰포트에 추가
+
 
 <br/>
 
@@ -611,6 +619,13 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 			
 		DamageUIArray.RemoveAt(0);
 	});
+
+1. 플레이어컨트롤러에서 SetTextWidget 함수 실행
+2. DamageUI에서 플레이어 컨트롤러를 가져와 3D좌표를 뷰표트 좌표로 변환 후 데미지 텍스트 설정
+3. 플레이어컨트롤러에서 DamageUI 생성후 뷰포트에 추가되면 NativeConstruct 실행
+4. Fade 애니메이션 Finished 델리게이트에 AnimationFinished 함수 바인드 후 UI 포지션 설정 및 애니메이션 재생
+5. AnimationFinished 함수 호출이 되면 바인드된 람다 함수 실행
+
  
 <br/>
 
