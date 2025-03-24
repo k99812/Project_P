@@ -474,6 +474,8 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 
 * 게임모드로 부터 GameOver 함수가 호출되면 UI 생성 및 뷰포트 추가
 
+<br/>
+
 > APPPlayerController.h
 
 	//플레이어컨트롤러 헤더파일
@@ -494,18 +496,7 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 	TWeakObjectPtr<UPPFloatingTextUserWidget> DamageUI = CreateWidget<UPPFloatingTextUserWidget>(this, DamageUIClass);
 	if (DamageUI.IsValid())
 	{
- 		//DamageUI의 델리게이트에 바인드되는 람다 함수
-		DamageUI.Get()->EndLifeTime.BindLambda([&]()
-		{
-			TWeakObjectPtr<UPPFloatingTextUserWidget> TempDamageUI = DamageUIArray[0];
-
-			if (TempDamageUI.IsValid())
-			{
-				TempDamageUI.Get()->RemoveFromParent();
-			}
-			
-			DamageUIArray.RemoveAt(0);
-		});
+ 		~~~ 
 
 		//SetTextWidget함수를 먼저 실행뒤 결과에 따라 함수 실행
 		if (DamageUI.Get()->SetTextWidget(Damage, ActorPosition))
@@ -518,13 +509,15 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 * UI의 객체가 파괴될 수 있으므로 로우 포인터 대신 TWeakObjectPtr을 사용함
 * TQueue 컨테이너가 UPROPERTY를 지원하지 않아 TArray를 이용하여 TQueue를 대체함
 
+<br/>
+
 ## UI
 ### 몬스터 HP BAR
 ![image](https://github.com/user-attachments/assets/3b7bde60-6a59-44ea-86c5-f2f5b3741e28)
 <a href="https://k99812.tistory.com/119" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
 
 ### WidgetComponent
-> UPPGASWidgetComponent Cpp파일
+> UPPGASWidgetComponent.cpp
 
 	//InitWidget 함수
 	UPPGASUserWidget* GASUserWidget = Cast<UPPGASUserWidget>(GetWidget());
@@ -556,7 +549,7 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 * UPPGASUserWidget을 상속받는 클래스에서 재정의 할 수 있게 가상함수로 선언
 
 ### PPGASHPBarUserWidget
-> UPPGASHpBarUserWidget Cpp파일
+> UPPGASHpBarUserWidget.cpp
 
 	Super::SetAbilitySystemComponent(Owner);
 
@@ -605,9 +598,24 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 <br/>
 
 ![image](https://github.com/user-attachments/assets/833e316f-0f92-4484-b664-8a816dc02c2f)
+
+>APPPlayerController.cpp
+
+	//ActorTakedDamage 함수
+	//DamageUI의 델리게이트에 바인드되는 람다 함수
+	DamageUI.Get()->EndLifeTime.BindLambda([&]()
+	{
+		TWeakObjectPtr<UPPFloatingTextUserWidget> TempDamageUI = DamageUIArray[0];
+
+		if (TempDamageUI.IsValid())
+		{
+			TempDamageUI.Get()->RemoveFromParent();
+		}
+			
+		DamageUIArray.RemoveAt(0);
+	});
  
 <br/>
-
 
 
 ## 진행상황
