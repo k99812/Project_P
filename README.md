@@ -218,9 +218,10 @@ GameAbility, AbilityTask, TargetActor를 사용해 개발한 공격 히트 체�
 		InputReleasedDelegate.BindUObject(InAnimInstance, &UPPAnimInstance::SaveLastDirection);
 	}
 
-움직이는 방향에 맞는 StopAnimation을 실행하기 위해 플레이어 캐릭터에 델리게이트를 생성함  
-플레이어의 입력이 끝나면 델리게이트를 실행하여 마지막으로 움직인 방향을 계산  
-의존성을 낮추기 위해 인터페이스를 통해 캐릭터의 델리게이트에 AnimInstance 클래스의 함수를 바인드
+* 움직이는 방향에 맞는 StopAnimation을 실행하기 위해 플레이어 캐릭터에 델리게이트를 생성함
+* 플레이어의 입력이 끝나면 델리게이트를 실행하여 마지막으로 움직인 방향을 계산
+* AnimInstance 클래스에서 인터페이스를 이용해 캐릭터의 델리게이트에 AnimInstance 클래스의 함수를 바인드
+
 
 <br/>
 
@@ -243,11 +244,11 @@ GameAbility, AbilityTask, TargetActor를 사용해 개발한 공격 히트 체�
 		LastDirection = CalculateDirection(Velocity , Movement->GetLastUpdateRotation());
 	}
    
-NativeInitializeAnimation 함수에서 인터페이스를 통해    
-자기자신(AnimInstance)을 넘겨 델리게이트에 콜백함수를 바인드  
+* NativeInitializeAnimation 함수에서 인터페이스를 통해    
+* 자기자신(AnimInstance)을 넘겨 델리게이트에 콜백함수를 바인드  
    
-SaveLastDirection함수가 델리게이트로 호출되면 CalculateDirection함수로  
-Velocity(캐릭터가 움직이는 방향), GetLastUpdateRotation을 넘겨 Direction을 계산
+* SaveLastDirection함수가 델리게이트로 호출되면 CalculateDirection함수로  
+* Velocity(캐릭터가 움직이는 방향), GetLastUpdateRotation을 넘겨 Direction을 계산
 
 <br/>
    
