@@ -33,7 +33,7 @@
 * 캐릭터의 능력 및 스탯을 관리 해주는 ASC를 생성
 * Dead 관련 함수들을 Override
 * 사용자 입력처리
-* GA 생성 
+* GA 관리 
 * 어트리뷰트셋 적용
 
 
@@ -134,6 +134,8 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 
 * 인풋컴포넌트에서 함수를 바인드할 때 열거형을 활용하여 바인드된 함수에 키값을 매개변수로 전달
 
+<br/>
+
 > APPGASCharacterPlayer
 
 	//GASInputPressed 함수
@@ -172,7 +174,6 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 <br/>
 
 
-
 ## Combo Attack
 ![image](https://github.com/user-attachments/assets/360325b1-1141-4885-94fb-c94afd2047fb)
 * GameAbility를 사용해 개발한 콤보공격 플로우 차트
@@ -184,11 +185,7 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 * GameAbility, AbilityTask, TargetActor를 사용해 개발한 공격 히트 체크 플로우 차트
 
 
-
-
 <br/>
-
-
 
 
 ## Animation
