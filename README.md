@@ -275,7 +275,63 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 
 <br/>
 
+## Controller
+### GameMode
+![image](https://github.com/user-attachments/assets/b17e3b4c-0ee7-4d25-a189-1965e5df05b7)
+* 인터페이스를 통해 상속받은 함수들이 실행되면 플레이어 컨트롤러에 전달해 UI를 생성
 
+> OnPlayerDead 호출
+
+	void APPGASCharacterPlayer::SetDead()
+	{
+		Super::SetDead();
+
+		~~~
+
+		IPPGameInterface* IPPGameMode = Cast<IPPGameInterface>(GetWorld()->GetAuthGameMode());
+		if (IPPGameMode)
+		{
+			IPPGameMode->OnPlayerDead();
+		}
+	}
+ 
+* 플레이어의 SetDead 함수가 호출
+* GameMode를 인터페이스로 변환해 게임모드를 직접 참조하지 않고 인터페이스를 통해 간접 참조함
+* 인터페이스의 OnPlayerDead 함수를 실행
+
+> OnTakeDamage 호출
+
+	//APPGASCharacterNonPlayer 클래스(Grunt 부모클래스)
+	void APPGASCharacterNonPlayer::PossessedBy(AController* NewController)
+	{
+		Super::PossessedBy(NewController);
+
+		~~~
+
+		ASC->GetGameplayAttributeValueChangeDelegate(UPPGruntAttributeSet::GetDamageAttribute()).
+			AddUObject(this, &APPGASCharacterNonPlayer::TakeDamage);
+	}
+
+	//APPGASCharacterGrunt 클래스
+	void APPGASCharacterGrunt::TakeDamage()
+	{
+		Super::TakeDamage(ChangeData);
+
+		if (ChangeData.NewValue > 0)
+		{
+			IPPGameInterface* IPPGameMode = Cast<IPPGameInterface>(GetWorld()->GetAuthGameMode());
+			if (IPPGameMode)
+			{
+				IPPGameMode->OnTakeDamage(ChangeData.NewValue, GetActorLocation());
+			}
+		}
+	}
+
+* Grunt 부모클래스(다른 몬스터들이 사용할 경우를 고려)의 PossessedBy 함수에서 Damage 어트리뷰트 체인지 델리게이트에 함수 바인드
+* Grunt의 TakeDamage에서 데미지가 바뀌면 게임모드를 인터페이스로 변환
+* OnTakeDamage 함수에 매개변수로 받은 데미지 값, 몬스터의 위치를 전달
+
+<br/>
 
 ## Controller
 ### AIController
