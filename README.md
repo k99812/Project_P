@@ -279,25 +279,6 @@ UPPAnimInstance 에서 AimRotation - ActorRotation으로 보고있는 방향의 
 
 
 ## Controller
-### PlayerController
-* HUD 관리
-* 인풋모드 관리
-> APPPlayerController
-
-	void APPPlayerController::BeginPlay()
-	{
-		Super::BeginPlay();
-
-		SetInputMode(FInputModeGameOnly());
-
-		HUDWidget = CreateWidget<UPPHUDWidget>(this, HUDWidgetClass);
-			if (HUDWidget)
-		{
-			HUDWidget->AddToViewport();
-		}
-	}
-
-
 ### AIController
 ![image](https://github.com/user-attachments/assets/37c90fd0-c08d-4018-9a61-3e35d7d1be04)  
 <a href="https://k99812.tistory.com/123" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>  
@@ -309,7 +290,7 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 
 <br/>
 
-> APPPlayerController
+> APPAIController
 
 	//생성자
  	APPAIController::APPAIController()
@@ -349,7 +330,7 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 
 <br/>
      
-> APPPlayerController
+> APPAIController
 
 	//Tick
 	void APPAIController::Tick(float DeltaTime)
@@ -382,7 +363,7 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 
 <br/>
    
-> APPPlayerController
+> APPAIController
 
 	//AI 인식 업데이트
 	void APPAIController::ActorPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
@@ -410,7 +391,7 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 
 <br/>
     
-> APPPlayerController
+> APPAIController
 
 	//PerceptionSensedSight
 	//AI가 시야를 통해 인식했을때 실행
@@ -431,7 +412,7 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 
 <br/>
    
-> APPPlayerController
+> APPAIController
 
 	//ActorPerceptionForgetUpdated
 	//타겟이 시야범위를 벗어나고 일정시간이 지났을때 실행
@@ -454,14 +435,91 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 * 벗어난 액터가 블랙보드의 타겟인지 확인 후 타겟초기화   
 * 틱함수 비활성화   
 * FindTargetDelegate(콜백함수에서 몬스터의 HPBar 비활성화) 실행   
-
-<br/>
    
 ### 행동트리
 ![image](https://github.com/user-attachments/assets/92f1224a-b851-48a2-9c5f-eff7578e503a)
 
+<br/>
 
-## 몬스터 HP BAR
+### PlayerController
+> APPPlayerController
+
+	void APPPlayerController::BeginPlay()
+	{
+		Super::BeginPlay();
+
+		SetInputMode(FInputModeGameOnly());
+
+		HUDWidget = CreateWidget<UPPHUDWidget>(this, HUDWidgetClass);
+			if (HUDWidget)
+		{
+			HUDWidget->AddToViewport();
+		}
+	}
+
+* 인풋모드 관리
+
+> APPPlayerController
+
+	void APPPlayerController::GameOver()
+	{
+		GameOverUIWidget = CreateWidget<UPPGameOverUserWidget>(this, GameOverUIClass);
+		if (GameOverUIWidget)
+		{
+			GameOverUIWidget->AddToViewport();
+			EnableInput(this);
+			SetShowMouseCursor(true);
+		}
+	}
+
+* 게임모드로 부터 GameOver 함수가 호출되면 UI 생성 및 뷰포트 추가
+
+> APPPlayerController.h
+
+	//플레이어컨트롤러 헤더파일
+	UPROPERTY(EditAnywhere, Category = "HUD")
+	TSubclassOf<class UUserWidget> DamageUIClass;
+
+	UPROPERTY(VisibleAnywhere, Category = "HUD")
+	TArray<TWeakObjectPtr<class UPPFloatingTextUserWidget>> DamageUIArray;
+
+* DamageUIClass : 생성할 UI를 저장
+* DamageUIArray : 생성하고 일정시간후 파괴되는 DamgeUI 특성으로 참조하는 객체가 파괴되면 Null로 바뀌는 WeekPtr로 선언
+
+<br/>
+
+> APPPlayerController.cpp
+
+	//ActorTakedDamage 함수
+	TWeakObjectPtr<UPPFloatingTextUserWidget> DamageUI = CreateWidget<UPPFloatingTextUserWidget>(this, DamageUIClass);
+	if (DamageUI.IsValid())
+	{
+ 		//DamageUI의 델리게이트에 바인드되는 람다 함수
+		DamageUI.Get()->EndLifeTime.BindLambda([&]()
+		{
+			TWeakObjectPtr<UPPFloatingTextUserWidget> TempDamageUI = DamageUIArray[0];
+
+			if (TempDamageUI.IsValid())
+			{
+				TempDamageUI.Get()->RemoveFromParent();
+			}
+			
+			DamageUIArray.RemoveAt(0);
+		});
+
+		//SetTextWidget함수를 먼저 실행뒤 결과에 따라 함수 실행
+		if (DamageUI.Get()->SetTextWidget(Damage, ActorPosition))
+		{
+			DamageUIArray.Emplace(DamageUI.Get());
+			DamageUI.Get()->AddToViewport();
+		}	
+	}
+
+* UI의 객체가 파괴될 수 있으므로 로우 포인터 대신 TWeakObjectPtr을 사용함
+* TQueue 컨테이너가 UPROPERTY를 지원하지 않아 TArray를 이용하여 TQueue를 대체함
+
+## UI
+### 몬스터 HP BAR
 ![image](https://github.com/user-attachments/assets/3b7bde60-6a59-44ea-86c5-f2f5b3741e28)
 <a href="https://k99812.tistory.com/119" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
 
@@ -517,7 +575,7 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 * SetAbilitySystemComponent 함수에서 매개변수로 들어온 오너를 이용하여 ASC에 어트리뷰트 체인지 델리게이트에 함수 등록
 * 프로그래스바, 텍스트 박스 관리
 
-## Player HUD
+### Player HUD
 ![image](https://github.com/user-attachments/assets/e31c1aba-8d31-4b98-bb7d-23700a240a32)
 <a href="https://k99812.tistory.com/126" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
 
@@ -547,50 +605,6 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 <br/>
 
 ![image](https://github.com/user-attachments/assets/833e316f-0f92-4484-b664-8a816dc02c2f)
-
-> APPPlayerController.h
-
-	//플레이어컨트롤러 헤더파일
-	UPROPERTY(EditAnywhere, Category = "HUD")
-	TSubclassOf<class UUserWidget> DamageUIClass;
-
-	UPROPERTY(VisibleAnywhere, Category = "HUD")
-	TArray<TWeakObjectPtr<class UPPFloatingTextUserWidget>> DamageUIArray;
-
-* DamageUIClass : 생성할 UI를 저장
-* DamageUIArray : 생성하고 일정시간후 파괴되는 DamgeUI 특성으로 참조하는 객체가 파괴되면 Null로 바뀌는 WeekPtr로 선언
-
-<br/>
-
-> APPPlayerController.cpp
-
-	//ActorTakedDamage 함수
-	TWeakObjectPtr<UPPFloatingTextUserWidget> DamageUI = CreateWidget<UPPFloatingTextUserWidget>(this, DamageUIClass);
-	if (DamageUI.IsValid())
-	{
- 		//DamageUI의 델리게이트에 바인드되는 람다 함수
-		DamageUI.Get()->EndLifeTime.BindLambda([&]()
-		{
-			TWeakObjectPtr<UPPFloatingTextUserWidget> TempDamageUI = DamageUIArray[0];
-
-			if (TempDamageUI.IsValid())
-			{
-				TempDamageUI.Get()->RemoveFromParent();
-			}
-			
-			DamageUIArray.RemoveAt(0);
-		});
-
-		//SetTextWidget함수를 먼저 실행뒤 결과에 따라 함수 실행
-		if (DamageUI.Get()->SetTextWidget(Damage, ActorPosition))
-		{
-			DamageUIArray.Emplace(DamageUI.Get());
-			DamageUI.Get()->AddToViewport();
-		}	
-	}
-
-* UI의 객체가 파괴될 수 있으므로 로우 포인터 대신 TWeakObjectPtr을 사용함
-* TQueue 컨테이너가 UPROPERTY를 지원하지 않아 TArray를 이용하여 TQueue를 대체함
  
 <br/>
 
