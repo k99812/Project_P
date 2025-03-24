@@ -140,8 +140,8 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 		FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(InputID);
   	}
 
-전달받은 열거형을 통해 어빌리티 시스템 컴포넌트(ASC)에서 등록된 GA의 스펙을 가져옴
-스펙을 통해 GA를 실행 및 취소 등 컨트롤할 수 있음
+전달받은 열거형(키값)을 통해 어빌리티 시스템 컴포넌트(ASC)에서 등록된 GA의 스펙을 가져옴
+어빌리티스펙을 통해 GA를 실행 및 취소 등 컨트롤할 수 있음
 
 <br/>
 
