@@ -131,7 +131,7 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 
  	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::GASInputPressed, (int32)EInputAbility::Jump);
 
-인풋컴포넌트에서 함수를 바인드할 때 열거형을 활용하여 바이된 함수에 매개변수로 전달
+인풋컴포넌트에서 함수를 바인드할 때 열거형을 활용하여 바인드된 함수에 키값을 매개변수로 전달
 
 > GASInputPressed
 
