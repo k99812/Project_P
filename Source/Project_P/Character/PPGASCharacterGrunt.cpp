@@ -124,7 +124,7 @@ void APPGASCharacterGrunt::TakeDamage(const FOnAttributeChangeData& ChangeData)
 {
 	Super::TakeDamage(ChangeData);
 
-	if (ChangeData.NewValue)
+	if (ChangeData.NewValue > 0)
 	{
 		IPPGameInterface* IPPGameMode = Cast<IPPGameInterface>(GetWorld()->GetAuthGameMode());
 		if (IPPGameMode)

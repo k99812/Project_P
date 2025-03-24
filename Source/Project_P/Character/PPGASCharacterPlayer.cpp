@@ -326,7 +326,6 @@ void APPGASCharacterPlayer::SetDead()
 	IPPGameInterface* IPPGameMode = Cast<IPPGameInterface>(GetWorld()->GetAuthGameMode());
 	if (IPPGameMode)
 	{
-		UE_LOG(LogTemp, Log, TEXT("APPGASCharacterPlayer::SetDead Call PPGameMode->OnPlayerDead"));
 		IPPGameMode->OnPlayerDead();
 	}
 }
