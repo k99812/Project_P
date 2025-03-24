@@ -560,17 +560,20 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 ### PPGASHPBarUserWidget
 > UPPGASHpBarUserWidget.cpp
 
-	Super::SetAbilitySystemComponent(Owner);
-
-	if (ASC)
+	void UPPGASHpBarUserWidget::SetAbilitySystemComponent(AActor* Owner)
 	{
-		//특정 어트리뷰트값이 바뀔때 마다 호출되는 델리게이트
-		ASC->GetGameplayAttributeValueChangeDelegate(UPPCharacterAttributeSet::GetHealthAttribute()).
-			AddUObject(this, &UPPGASHpBarUserWidget::OnHealthAttributeChange);
-		ASC->GetGameplayAttributeValueChangeDelegate(UPPCharacterAttributeSet::GetMaxHealthAttribute()).
-			AddUObject(this, &UPPGASHpBarUserWidget::OnMaxHealthAttributeChange);
+		Super::SetAbilitySystemComponent(Owner);
+
+		if (ASC)
+		{
+			//특정 어트리뷰트값이 바뀔때 마다 호출되는 델리게이트
+			ASC->GetGameplayAttributeValueChangeDelegate(UPPCharacterAttributeSet::GetHealthAttribute()).
+				AddUObject(this, &UPPGASHpBarUserWidget::OnHealthAttributeChange);
+			ASC->GetGameplayAttributeValueChangeDelegate(UPPCharacterAttributeSet::GetMaxHealthAttribute()).
+				AddUObject(this, &UPPGASHpBarUserWidget::OnMaxHealthAttributeChange);
 	
-		~~~ 생략 ~~~
+			~~~
+		}
 	}
  
 * 부모함수를 호출해 ASC를 가져옴
