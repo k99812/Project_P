@@ -275,8 +275,7 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 
 <br/>
 
-## Controller
-### GameMode
+## GameMode
 ![image](https://github.com/user-attachments/assets/b17e3b4c-0ee7-4d25-a189-1965e5df05b7)
 * 인터페이스를 통해 상속받은 함수들이 실행되면 플레이어 컨트롤러에 전달해 UI를 생성
 
