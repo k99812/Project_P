@@ -479,9 +479,6 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 * InitWidget 함수에서 생성한 위젯을 가져와 오너를 넘겨줌
 
 ### PPGASUserWidget
-* 위젯 컴포넌트를 부모로 위젯을 생성하면 위젯에서 제공하는 GetOwningPlayer 함수를 사용할 수 없음   
-* 그러므로 부모 위젯 클래스를 생성하여 오너를 받아올 수 있는 함수를 생성해야 됨
-
 > UPPGASUserWidget 
 
 	//헤더파일
@@ -496,7 +493,9 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 	    }
 	}
 
- * UPPGASUserWidget을 상속받는 클래스에서 재정의 할 수 있게 가상함수로 선언
+* 위젯 컴포넌트를 부모로 위젯을 생성하면 위젯에서 제공하는 GetOwningPlayer 함수를 사용할 수 없음   
+* 그러므로 부모 위젯 클래스를 생성하여 오너를 받아올 수 있는 함수를 생성해야 됨
+* UPPGASUserWidget을 상속받는 클래스에서 재정의 할 수 있게 가상함수로 선언
 
 ### PPGASHPBarUserWidget
 > UPPGASHpBarUserWidget Cpp파일
