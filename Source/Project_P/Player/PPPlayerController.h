@@ -25,10 +25,6 @@ public:
 
 	void GameOver();
 
-//d Damage Section
-public:
-	void ActorTakedDamage(const float& Damage, const FVector& ActorPosition);
-
 protected:
 	virtual void BeginPlay() override;
 
@@ -48,11 +44,16 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "HUD")
 	TObjectPtr<class UPPGameOverUserWidget> GameOverUIWidget;
 
-//Damage UI
+//Damage UI Section
+public:
+	void ActorTakedDamage(const float& Damage, const FVector& ActorPosition);
+
 protected:
 	UPROPERTY(EditAnywhere, Category = "HUD")
 	TSubclassOf<class UUserWidget> DamageUIClass;
 
 	UPROPERTY(VisibleAnywhere, Category = "HUD")
 	TArray<TWeakObjectPtr<class UPPFloatingTextUserWidget>> DamageUIArray;
+
+
 };
