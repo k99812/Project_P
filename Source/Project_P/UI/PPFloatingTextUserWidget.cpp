@@ -16,10 +16,8 @@ void UPPFloatingTextUserWidget::NativeConstruct()
 
 	AnimFinishedDelegate.BindDynamic(this, &UPPFloatingTextUserWidget::AnimationFinished);
 	BindToAnimationFinished(FadeOut, AnimFinishedDelegate);
-	
-	//GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UPPFloatingTextUserWidget::AnimationFinished, FadeOut->GetEndTime(), false);
 
-	SetPositionInViewport(FirstLocation);
+	SetPositionInViewport(WidgetLocation);
 	PlayAnimation(FadeOut);
 	PlayAnimation(TextUp);
 }
@@ -33,7 +31,7 @@ bool UPPFloatingTextUserWidget::SetTextWidget(const float& Damage, const FVector
 		return false;
 	}
 
-	if (!PlayerController->ProjectWorldLocationToScreen(ActorPosition, FirstLocation))
+	if (!PlayerController->ProjectWorldLocationToScreen(ActorPosition, WidgetLocation))
 	{
 		return false;
 	}
@@ -45,6 +43,5 @@ bool UPPFloatingTextUserWidget::SetTextWidget(const float& Damage, const FVector
 
 void UPPFloatingTextUserWidget::AnimationFinished()
 {
-	TimerHandle.Invalidate();
 	EndLifeTime.ExecuteIfBound();
 }
