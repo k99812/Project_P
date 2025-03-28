@@ -245,7 +245,7 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 * 자기자신(AnimInstance)을 넘겨 델리게이트에 콜백함수를 바인드  
    
 * SaveLastDirection함수가 델리게이트로 호출되면 CalculateDirection함수로  
-* Velocity(캐릭터가 움직이는 방향), GetLastUpdateRotation을 넘겨 Direction을 계산
+  Velocity(캐릭터가 움직이는 방향), GetLastUpdateRotation을 넘겨 Direction을 계산
 
 <br/>
    
