@@ -548,7 +548,7 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 
 * DamageUI 관리
 * DamageUIClass : 생성할 UI를 저장
-* DamageUIArray : 생성하고 일정시간후 파괴되는 DamgeUI 특성으로 참조하는 객체가 파괴되면 Null로 바뀌는 WeekPtr로 선언
+* DamageUIArray : 생성하고 일정시간후 파괴되는 DamgeUI 특성으로 약참조하는 WeekObjectPtr로 선언
 * TQueue 컨테이너가 UPROPERTY를 지원하지 않아 TArray를 이용하여 TQueue를 대체함
 
 <br/>
