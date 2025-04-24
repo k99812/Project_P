@@ -16,7 +16,7 @@
 
 ## 목차
    
-1. [캐릭터 구조](#Character구조)
+1. [캐릭터 구조](#Character)
 2. [입력 처리](#입력 처리)
 3. [콤보 공격](#Combo Attack)
 4. [애니메이션](#Animation)
