@@ -18,7 +18,7 @@
    
 1. [캐릭터 구조](#Character-구조)
 2. [입력 처리](#입력처리)
-3. [콤보 공격](#ComboAttack)
+3. [콤보 공격](#Combo-Attack)
 4. [애니메이션](#Animation)
 5. [AI](#AIController)
 6. [GameMode](#GameMode)
@@ -187,7 +187,7 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 <br/>
 
 
-## ComboAttack
+## Combo Attack
 ![image](https://github.com/user-attachments/assets/360325b1-1141-4885-94fb-c94afd2047fb)
 * GameAbility를 사용해 개발한 콤보공격 플로우 차트
 
