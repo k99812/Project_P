@@ -16,7 +16,7 @@
 
 ## 목차
    
-1. [캐릭터 구조](#Character구조)
+1. [캐릭터 구조](#Character-구조)
 2. [입력 처리](#입력처리)
 3. [콤보 공격](#ComboAttack)
 4. [애니메이션](#Animation)
@@ -30,7 +30,7 @@
 
 ## 기술 설명서
 
-## Character구조
+## Character 구조
 ![image](https://github.com/user-attachments/assets/7e81a2ac-d643-4896-a3df-c9fcce9a7544)
 
 
