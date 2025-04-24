@@ -16,14 +16,14 @@
 
 ## 목차
    
-1. [캐릭터 구조](Character 구조)
-2. [입력 처리](입력 처리)
-3. [콤보 공격](Combo Attack)
-4. [애니메이션](Animation)
-5. [AI](AIController)
-6. [GameMode](GameMode)
-7. [PlayerController](PlayerController)
-8. [UI](UI)
+1. [캐릭터 구조](#Character 구조)
+2. [입력 처리](#입력 처리)
+3. [콤보 공격](#Combo Attack)
+4. [애니메이션](#Animation)
+5. [AI](#AIController)
+6. [GameMode](#GameMode)
+7. [PlayerController](#PlayerController)
+8. [UI](#UI)
 
 <br/>
 
