@@ -16,9 +16,9 @@
 
 ## 목차
    
-1. [캐릭터 구조](#Character)
-2. [입력 처리](#입력 처리)
-3. [콤보 공격](#Combo Attack)
+1. [캐릭터 구조](#Character구조)
+2. [입력 처리](#입력처리)
+3. [콤보 공격](#ComboAttack)
 4. [애니메이션](#Animation)
 5. [AI](#AIController)
 6. [GameMode](#GameMode)
@@ -30,7 +30,7 @@
 
 ## 기술 설명서
 
-## Character 구조
+## Character구조
 ![image](https://github.com/user-attachments/assets/7e81a2ac-d643-4896-a3df-c9fcce9a7544)
 
 
@@ -64,7 +64,7 @@
 
 
 
-## 입력 처리
+## 입력처리
 ![image](https://github.com/user-attachments/assets/8c7fb823-4e61-4d59-81b2-43ccdae2e110)
  
 EnhancedInput을 사용
@@ -187,7 +187,7 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 <br/>
 
 
-## Combo Attack
+## ComboAttack
 ![image](https://github.com/user-attachments/assets/360325b1-1141-4885-94fb-c94afd2047fb)
 * GameAbility를 사용해 개발한 콤보공격 플로우 차트
 
