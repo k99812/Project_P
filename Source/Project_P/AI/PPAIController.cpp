@@ -83,6 +83,10 @@ APPAIController::APPAIController()
 // Damage Config
 	SenseConfig_Damage = CreateDefaultSubobject<UAISenseConfig_Damage>(TEXT("SenseConfig_Damage"));
 
+	SenseConfig_Damage->SetMaxAge(GruntAIData->AISenseAge);
+	AIPerceptionComp->ConfigureSense(*SenseConfig_Damage);
+
+// AI인식 이벤트 델리게이트 바인드
 	AIPerceptionComp->OnTargetPerceptionUpdated.AddDynamic(this, &APPAIController::ActorPerceptionUpdated);
 	AIPerceptionComp->OnTargetPerceptionForgotten.AddDynamic(this, &APPAIController::ActorPerceptionForgetUpdated);
 }
@@ -148,6 +152,11 @@ void APPAIController::ActorPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus
 		{
 			PerceptionSensedHearing(PerceptionedPawn);
 		}
+
+		if (SensedStimulsClass == UAISense_Damage::StaticClass())
+		{
+			PerceptionSensedDamage(PerceptionedPawn);
+		}
 	}
 }
 
@@ -173,8 +182,7 @@ void APPAIController::PerceptionSensedSight(APawn* PerceptionedPawn)
 {
 	UE_LOG(LogTemp, Log, TEXT("ActorPerceptionUpdated : %s"), *PerceptionedPawn->GetName());
 
-	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(PerceptionedPawn);
-	if (ASC)
+	if (IsValid(PerceptionedPawn))
 	{
 		GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, PerceptionedPawn);
 		AActor::SetActorTickEnabled(true);
@@ -184,11 +192,19 @@ void APPAIController::PerceptionSensedSight(APawn* PerceptionedPawn)
 
 void APPAIController::PerceptionSensedHearing(APawn* PerceptionedPawn)
 {
-	UE_LOG(LogTemp, Log, TEXT("Perception Sensed Hearing : %s"), *PerceptionedPawn->GetName())
+	UE_LOG(LogTemp, Log, TEXT("Perception Sensed by Hearing : %s"), *PerceptionedPawn->GetName())
 }
 
 void APPAIController::PerceptionSensedDamage(APawn* PerceptionedPawn)
 {
+	UE_LOG(LogTemp, Log, TEXT("Perception Sensed by Damage : %s"), *PerceptionedPawn->GetName())
+
+	if (IsValid(PerceptionedPawn))
+	{
+		GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, PerceptionedPawn);
+		AActor::SetActorTickEnabled(true);
+		FindTargetDelegate.ExecuteIfBound(true);
+	}
 }
 
 void APPAIController::ResetTarget()

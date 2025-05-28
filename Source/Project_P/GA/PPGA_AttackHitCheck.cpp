@@ -7,6 +7,9 @@
 #include "GA/TA/PPTA_Trace.h"
 #include "Project_P.h"
 #include "Attribute/PPCharacterAttributeSet.h"
+#include "Tag/PPGameplayTag.h"
+#include "GameplayTagAssetInterface.h"
+#include "Perception/AISense_Damage.h"
 
 UPPGA_AttackHitCheck::UPPGA_AttackHitCheck()
 {
@@ -58,6 +61,17 @@ void UPPGA_AttackHitCheck::TraceResultCallback(const FGameplayAbilityTargetDataH
 		if (SpecHandle.IsValid())
 		{
 			ApplyGameplayEffectSpecToTarget(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, SpecHandle, DataHandle);
+		}
+
+		//타겟이 몬스터일 경우 AI 데미지 센스 발동
+		IGameplayTagAssetInterface* TargetActor = Cast<IGameplayTagAssetInterface>(HitResult.GetActor());
+		if (TargetActor)
+		{
+			if (TargetActor->HasMatchingGameplayTag(PPTAG_CHARACTER_MONSTER))
+			{
+				UAISense_Damage::ReportDamageEvent(this, HitResult.GetActor(), OwnerASC->GetAvatarActor(),
+					OwnerAttributeSet->GetAttackRate(), HitResult.GetActor()->GetActorLocation(), HitResult.Location);
+			}
 		}
 	}
 
