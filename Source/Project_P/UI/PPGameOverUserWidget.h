@@ -33,9 +33,6 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UTextBlock> TxtRetry;
 
-	UPROPERTY(EditAnywhere, Category = "Level")
-	TObjectPtr<class UWorld> RestartLevel;
-
 //Animation
 protected:
 	UPROPERTY(Transient, meta = (BindWidgetAnim))
