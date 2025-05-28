@@ -34,7 +34,8 @@ void UPPGameOverUserWidget::BtnEventGameRestart()
 
 		//#include "Kismet/GameplayStatics.h" 추가
 		//OpenLevel을 이용해 레벨 재시작
-		UGameplayStatics::OpenLevel(GetWorld(), FName(TEXT("Level_1")));
+		//UGameplayStatics::OpenLevel(GetWorld(), FName(TEXT("Level_1")));
+		UGameplayStatics::OpenLevel(GetWorld(), GetWorld()->GetFName());
 
 		//사용자 입력 비활성화
 		OwingPlayerController->SetShowMouseCursor(false);
