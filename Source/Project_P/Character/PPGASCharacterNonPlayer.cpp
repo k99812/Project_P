@@ -35,6 +35,8 @@ void APPGASCharacterNonPlayer::PossessedBy(AController* NewController)
 
 	ASC->InitAbilityActorInfo(this, this);
 	AttributeSet->ActorIsDead.AddDynamic(this, &APPGASCharacterNonPlayer::ActorIsDead);
+	ASC->GetGameplayAttributeValueChangeDelegate(UPPGruntAttributeSet::GetDamageAttribute()).
+		AddUObject(this, &APPGASCharacterNonPlayer::TakeDamage);
 
 	for (const TSubclassOf<UGameplayAbility>& StartAbility : StartAbilites)
 	{
@@ -53,9 +55,6 @@ void APPGASCharacterNonPlayer::PossessedBy(AController* NewController)
 
 		ASC->GiveAbility(Spec);
 	}
-
-	ASC->GetGameplayAttributeValueChangeDelegate(UPPGruntAttributeSet::GetDamageAttribute()).
-		AddUObject(this, &APPGASCharacterNonPlayer::TakeDamage);
 }
 
 void APPGASCharacterNonPlayer::ActorIsDead()

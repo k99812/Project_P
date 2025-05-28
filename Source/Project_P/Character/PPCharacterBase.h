@@ -21,7 +21,7 @@ public:
 	FORCEINLINE TObjectPtr<UAnimMontage> GetComboAttackMontage() { return ComboAttackMontage; }
 	FORCEINLINE TObjectPtr<class UPPComboActionData> GetComboActionData() { return ComboActionData; }
 
-	UFUNCTION(BlueprintCallable, Category = GameplayTags)
+	UFUNCTION(BlueprintCallable, Category = "Tags")
 	virtual void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const override;
 
 protected:
@@ -34,7 +34,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dead", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UAnimMontage> DeadMontage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tags", Meta = (AllowPrivateAccess = "true"))
 	FGameplayTagContainer GameplayTags;
 
 // Dead Section
