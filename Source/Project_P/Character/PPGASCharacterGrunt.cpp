@@ -15,6 +15,15 @@
 
 APPGASCharacterGrunt::APPGASCharacterGrunt()
 {
+//AI
+	static ConstructorHelpers::FClassFinder<AController> AIControllerRef(TEXT("/Game/Project_P/Blueprint/BP_PPAIController.BP_PPAIController_C"));
+	if (AIControllerRef.Class)
+	{
+		AIControllerClass = AIControllerRef.Class;
+	}
+
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+	
 //½ºÄ¶·¹Å» ¸Þ½¬ ¼³Á¤
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SkeletalMeshRef(TEXT("/Script/Engine.SkeletalMesh'/Game/ParagonMinions/Characters/Minions/Dusk_Minions/Meshes/Minion_Lane_Melee_Dusk.Minion_Lane_Melee_Dusk'"));
 	if (SkeletalMeshRef.Object)
