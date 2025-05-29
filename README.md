@@ -763,30 +763,6 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 7. 캐릭터 사망시 재시작 및 UI 출력
 8. 몬스터 데미지 UI 제작
 
-## 캐릭터 이동
-https://github.com/user-attachments/assets/d468b24e-221d-41f4-9882-67265ac3ae82
-
-<br/>
-
-## 점프, 달리기, 공격
-https://github.com/user-attachments/assets/70242ec3-3067-40f8-95a6-00b82769add8
-
-<br/>
-
-## 공격 판정, 몬스터 체력 감소
-https://github.com/user-attachments/assets/bac2ceb7-010f-45d1-8f28-6b4412a1e1af
-
-<br/>
-<div align="center">
-  <img src="https://github.com/user-attachments/assets/18b56d25-2973-482a-85bd-7e7d1ae492ed" width="150" height="200" title="px(픽셀) 크기 설정" alt="Attribute"></img>
-  <img src="https://github.com/user-attachments/assets/fb611ded-5cc0-442d-a126-93809ab896df" width="150" height="200" title="px(픽셀) 크기 설정" alt="Attribute"></img>
-</div>
-
-<br/>
-
-## 체력바, 0이 될시 죽는 몽타주 실행
-https://github.com/user-attachments/assets/6e2dce8e-3aff-4ead-a0e2-844e4ce36ef4
-
 <br/>
 
 ## 몬스터 AI
