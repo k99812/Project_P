@@ -3,14 +3,13 @@
 
 #include "AI/BTTask/BTTask_TurnTo.h"
 #include "AI/PPAIController.h"
-#include "AbilitySystemComponent.h"
-#include "AbilitySystemBlueprintLibrary.h"
-#include "Attribute/PPGruntAttributeSet.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "AI/PPAI.h"
 
 UBTTask_TurnTo::UBTTask_TurnTo()
 {
-	NodeName = TEXT("TurnToController");
+	bNotifyTick = true;
+	NodeName = TEXT("Turn");
 }
 
 EBTNodeResult::Type UBTTask_TurnTo::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -23,25 +22,36 @@ EBTNodeResult::Type UBTTask_TurnTo::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 		return EBTNodeResult::Type::Failed;
 	}
 
-	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(ControllingPawn);
-	if (!IsValid(ASC))
-	{
-		return EBTNodeResult::Type::Failed;
-	}
-
-	const UPPGruntAttributeSet* AttributeSet = ASC->GetSet<UPPGruntAttributeSet>();
-	if (!IsValid(AttributeSet))
-	{
-		return EBTNodeResult::Type::Failed;
-	}
-
 	FVector TargetPos = OwnerComp.GetBlackboardComponent()->GetValueAsVector(GetSelectedBlackboardKey());
 	FVector NowPos = ControllingPawn->GetActorLocation();
 	FVector LookVector = TargetPos - NowPos;
-	FRotator LookRotation = LookVector.Rotation();
+	FRotator LookRotation = FRotationMatrix::MakeFromX(LookVector).Rotator(); 
+	OwnerComp.GetBlackboardComponent()->SetValueAsRotator(BBKEY_TARGETROT, LookRotation);
 
-	OwnerComp.GetAIOwner()->SetControlRotation(LookRotation);
-	Retsult = EBTNodeResult::Type::Succeeded;
+	Retsult = EBTNodeResult::Type::InProgress;
 
 	return Retsult;
+}
+
+void UBTTask_TurnTo::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+{
+	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
+
+	APawn* ControllingPawn = OwnerComp.GetAIOwner()->GetPawn();
+	if (!IsValid(ControllingPawn))
+	{
+		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
+		return;
+	}
+
+	FRotator CurrentRot = ControllingPawn->GetActorRotation();
+	FRotator TargetRot = OwnerComp.GetBlackboardComponent()->GetValueAsRotator(BBKEY_TARGETROT);
+	FRotator NewRot = FMath::RInterpTo(CurrentRot, TargetRot, DeltaSeconds, TurnSpeed);
+	OwnerComp.GetAIOwner()->SetControlRotation(NewRot);
+
+	float YawDiff = FMath::Abs(FRotator::NormalizeAxis(NewRot.Yaw - TargetRot.Yaw));
+	if (YawDiff < AcceptableRedius)
+	{
+		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+	}
 }

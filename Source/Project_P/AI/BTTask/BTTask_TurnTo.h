@@ -17,5 +17,15 @@ class PROJECT_P_API UBTTask_TurnTo : public UBTTask_BlackboardBase
 public:
 	UBTTask_TurnTo();
 
+protected:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+
+	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
+
+private:
+	UPROPERTY(EditAnywhere, Category = "Turn")
+	float AcceptableRedius;
+
+	UPROPERTY(EditAnywhere, Category = "Turn")
+	float TurnSpeed;
 };
