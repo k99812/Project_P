@@ -18,6 +18,18 @@
 
 <br/>
 
+## 개선 사항
+
+* AnimInstance에서 캐릭터 무브먼트를 PPGASCharacterPlayer 클래스를 직접참조로 가져오는 로직을 ACharacter로 변경하였음
+* AnimInstance에서 PPGASCharacterPlayer를 직접참조하여 델리게이트에 연결하는 로직을 인터페이스로 이용하여 연결하도록 변경
+<a href="https://k99812.tistory.com/130" height="5" width="10" target="_blank" >
+<img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
+</a>
+
+* 
+
+<br/>
+
 ## 목차
    
 1. [캐릭터 구조](#Character-구조)
