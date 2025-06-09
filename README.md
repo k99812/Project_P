@@ -5,11 +5,15 @@
 <br/>
 
 아래 블로그 링크에서 코드 및 구현 일지를 볼 수 있습니다   
+또한 차트링크에선 플로우차트와 클래스 구조도를 볼 수 있습니다.   
 
 <br/>
 
 <a href="https://k99812.tistory.com/category/%ED%8F%AC%ED%8A%B8%ED%8F%B4%EB%A6%AC%EC%98%A4%20%EC%A0%9C%EC%9E%91" height="5" width="10" target="_blank" >
 <img src="https://img.shields.io/badge/블로그링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
+</a>
+<a href="https://www.figma.com/board/mI7YbWfbptJudhKcpAZP3U/Project-P-System-flow?node-id=0-1&t=OYhRpfOBPwjB6KUq-1" height="5" width="10" target="_blank" >
+<img src="https://img.shields.io/badge/차트링크-000000?style=for-the-badge&logo=figma&logoColor=white">
 </a>
 
 <br/>
@@ -703,7 +707,7 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 
 ## 재시작 UI
 ![image](https://github.com/user-attachments/assets/796bd9f7-2586-4520-bc19-a23bb26e9eab)
-<a href="https://k99812.tistory.com/133" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
+<br/>
 
 1. 캐릭터 사망시 SetDead 함수가 실행
 2. GameMode를 가져와 상속받은 인터페이스로 캐스팅하여 함수 실행
