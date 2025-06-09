@@ -313,7 +313,7 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 
 ## AIController
 ![image](https://github.com/user-attachments/assets/37c90fd0-c08d-4018-9a61-3e35d7d1be04)  
-<a href="https://k99812.tistory.com/123" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>  
+<br/>
 AI컨트롤러에서 AI Perception 기능을 이용해 적을 인식 하여 블랙보드에 저장합니다   
 AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 컨트롤 합니다   
 * AISense 관리
@@ -632,8 +632,8 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 
 ## UI
 ### 몬스터 HP BAR
-![image](https://github.com/user-attachments/assets/3b7bde60-6a59-44ea-86c5-f2f5b3741e28)
-<a href="https://k99812.tistory.com/119" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
+![image](https://github.com/user-attachments/assets/e2bf30e5-bd5e-44be-a264-ae9723ed376a)
+<br/>
 
 ### WidgetComponent
 > UPPGASWidgetComponent.cpp
@@ -691,8 +691,8 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 * 프로그래스바, 텍스트 박스 관리
 
 ### Player HUD
-![image](https://github.com/user-attachments/assets/e31c1aba-8d31-4b98-bb7d-23700a240a32)
-<a href="https://k99812.tistory.com/126" height="5" width="10" target="_blank" ><img src="https://img.shields.io/badge/코드링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white"></a>
+![image](https://github.com/user-attachments/assets/bd804c33-c2a1-4105-b9d7-aad5f35e5fa1)
+<br/>
 
 ### PPHUDWidget
 * 생성한 위젯들을 관리할 클래스
