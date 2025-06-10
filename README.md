@@ -781,10 +781,11 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 
 ### PPHUDWidget
 * 생성한 위젯들을 관리할 클래스
+* PPPlayerStatBarUserWidget 생성
 
 ### PPPlayerStatBarUserWidget
 * ASC를 통해 어트리뷰트 체인지 델리게이트를 통해 콜백함수 연결
-* 프로그래스바, 텍스트박스 관리
+* 프로그래스바, 텍스트박스 생성
 
 ## 재시작 UI
 ![image](https://github.com/user-attachments/assets/796bd9f7-2586-4520-bc19-a23bb26e9eab)
@@ -793,6 +794,45 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 1. 캐릭터 사망시 SetDead 함수가 실행
 2. GameMode를 가져와 상속받은 인터페이스로 캐스팅하여 함수 실행
 3. 게임모드에서 PlayerController 함수를 실행하여 UI 생성
+
+<br/>
+
+> UPPGameOverUserWidget
+
+ 	//헤더파일
+  	UFUNCTION(BlueprintCallable, Meta = (DisplayName = "BtnEventGameRestartCpp"))
+	void BtnEventGameRestart();
+
+![image](https://github.com/user-attachments/assets/7a643519-adc4-44aa-b12b-abd0c138ba32)
+
+ * 버튼 OnClicked 이벤트 콜백 함수를 BluprintCallable 설정을 해 블루프린트에서 함수 바인드
+
+> UPPGameOverUserWidget
+	
+  	//cpp파일
+   	//BtnEventGameRestart
+	void UPPGameOverUserWidget::BtnEventGameRestart()
+	{
+		APlayerController* OwingPlayerController = GetOwningPlayer();
+	
+		if (OwingPlayerController)
+		{
+			//Level restart
+			UGameplayStatics::OpenLevel(GetWorld(), GetWorld()->GetFName());
+	
+			//사용자 입력 비활성화
+			OwingPlayerController->SetShowMouseCursor(false);
+			OwingPlayerController->DisableInput(OwingPlayerController);
+	
+			//함수실행시 해당 위젯 제거
+			RemoveFromParent();
+		}
+	}
+
+ * 플레이어 컨트롤러를 통해 입력을 비활성화 및 현재 레벨 재시작
+ * RemoveFromParent를 호출해 위젯 제거
+
+<br/>
 
 ## Damage UI
 ![image](https://github.com/user-attachments/assets/064dbf8b-7813-4201-8201-5f78d2bfd78a)
