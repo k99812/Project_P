@@ -251,7 +251,12 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 ![image](https://github.com/user-attachments/assets/49a357a4-081c-49bc-a447-edef2450c8d8)
 * GameAbility, AbilityTask, TargetActor를 사용해 개발한 공격 히트 체크 플로우 차트
 
+<br/>
+
 ### 데미지 이벤트 실행
+HitCheck 과정에서 데미지를 주는 액터(가해자) 데미지를 받는 액터(피해자)를 둘다 쉽게   
+알 수 있어서 해당 함수에서 데미지 이벤트를 실행시킴
+
 > UPPGA_AttackHitCheck
 
 	//TraceResultCallback
