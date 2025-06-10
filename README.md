@@ -292,8 +292,9 @@ HitCheck 과정에서 데미지를 주는 액터(가해자) 데미지를 받는 
 
 	//APPGASCharacterPlayer.h
  	DECLARE_DELEGATE(FInputReleasedDelegate);
-  
  	FInputReleasedDelegate InputReleasedDelegate;
+
+  	//인터페이스를 통해 AnimInstance를 넘겨 받음
   	virtual void BindInputReleasedDelegate(class UPPAnimInstance* InAnimInstance) override;
 
  	//APPGASCharacterPlayer.cpp
