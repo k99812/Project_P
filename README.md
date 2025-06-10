@@ -921,7 +921,7 @@ https://github.com/user-attachments/assets/e9e4e0ee-f90a-4545-8b29-fa12db39658c
 
 ## 몬스터 데미지 UI
 
-https://github.com/user-attachments/assets/65914366-7c68-4ea2-bbd9-7d60ea14e260
+https://github.com/user-attachments/assets/7e05d46d-074b-4ccf-9e8e-c709ea7f9647
 
 <div align="right">
   
