@@ -19,14 +19,25 @@
 <br/>
 
 ## 개선 사항
+아래의 링크를 클릭하면 더 자세한 내용을 볼 수 있습니다.
+<br/>
 
-* AnimInstance에서 캐릭터 무브먼트를 PPGASCharacterPlayer 클래스를 직접참조로 가져오는 로직을 ACharacter로 변경하였음
+### AnimInstance
+* AnimInstance에서 Owner 변수를 PPGASCharacterPlayer에서 ACharacter로 변경 
 * AnimInstance에서 PPGASCharacterPlayer를 직접참조하여 델리게이트에 연결하는 로직을 인터페이스로 이용하여 연결하도록 변경
 <a href="https://k99812.tistory.com/130" height="5" width="10" target="_blank" >
 <img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
 </a>
 
-* 
+<br/>
+
+### Monster AI
+* 몬스터의 이동방향으로 회전을 Orient Rotation to Movement로 구현
+* 이로인해 몬스터가 정찰할 때 AI의 시야가 몬스터가 바라보는 곳과 일치하지 않음
+* 행동트리에 몬스터가 이동 전 목표방향으로 회전하는 테스크를 구현해 해결
+<a href="https://k99812.tistory.com/155" height="5" width="10" target="_blank" >
+<img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
+</a>
 
 <br/>
 
@@ -222,6 +233,21 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 ## Attack Hit Check
 ![image](https://github.com/user-attachments/assets/49a357a4-081c-49bc-a447-edef2450c8d8)
 * GameAbility, AbilityTask, TargetActor를 사용해 개발한 공격 히트 체크 플로우 차트
+
+### 데미지 이벤트 실행
+> UPPGA_AttackHitCheck
+
+	//TraceResultCallback
+	//Trace콜백 함수에서 GameEffect 타겟이 몬스터일 경우 실행
+	IGameplayTagAssetInterface* TargetActor = Cast<IGameplayTagAssetInterface>(HitResult.GetActor());
+	if (TargetActor && TargetActor->HasMatchingGameplayTag(PPTAG_CHARACTER_MONSTER))
+	{
+		UAISense_Damage::ReportDamageEvent(this, HitResult.GetActor(), OwnerASC->GetAvatarActor(),
+			OwnerAttributeSet->GetAttackRate(), HitResult.GetActor()->GetActorLocation(), HitResult.Location);
+	}
+
+* IGameplayTagAssetInterface를 통하여 액터가 몬스터(몬스터 태그)인지 확인
+* 몬스터인 경우 UAISense_Damage::ReportDamageEvent 함수를 실행하여 데미지 이벤트 실행
 
 <div align="right">
   
@@ -434,6 +460,7 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 		}
 	}
 
+* Actor 변수는 AI가 감각을 통해 인식한 액터
 * Stimulus변수에 AI의 어떤 감각으로 함수가 호출됐는지 정보가 들어옴   
 * GetSenseClass 함수로 클래스를 가져와 클래스에 맞는 함수를 호출   
 
@@ -457,6 +484,25 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 * BlackBoard의 타겟변수 업데이트  
 * 틱함수 활성화   
 * FindTargetDelegate(콜백함수에서 몬스터의 HPBar 활성화) 실행   
+
+<br/>
+
+> APPAIController
+
+	//PerceptionSensedDamage
+	//AI가 데미지를 통해 인식했을때 실행
+	void APPAIController::PerceptionSensedDamage(APawn* PerceptionedPawn)
+	{
+		if (IsValid(PerceptionedPawn))
+		{
+			GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, PerceptionedPawn);
+			AActor::SetActorTickEnabled(true);
+			FindTargetDelegate.ExecuteIfBound(true);
+		}
+	}
+
+* 데미지를 준 액터(가해자)가 매개변수로 전달됨
+* 변수가 유효한지 확인 후 블랙보드에 저장 및 기타 로직 실행
 
 <br/>
    
@@ -485,7 +531,7 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 * FindTargetDelegate(콜백함수에서 몬스터의 HPBar 비활성화) 실행   
    
 ### 행동트리
-![image](https://github.com/user-attachments/assets/92f1224a-b851-48a2-9c5f-eff7578e503a)
+![image](https://github.com/user-attachments/assets/949de752-ae9d-4bd9-a897-88b2f072c0cc)
 
 <div align="right">
   
@@ -782,25 +828,37 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 <br/>
 
 ## 몬스터 AI
+
+https://github.com/user-attachments/assets/03e28172-f83d-4ee7-a1cf-95480447eeb4
+몬스터 정찰
+
+<br/>
+
 https://github.com/user-attachments/assets/2d78aa19-0131-4055-b490-936a8b35c4de
 
 초록색 범위 : 몬스터 시야 인식 범위
 빨강색 범위 : 몬스터가 인식한 경우 해당 범위를 벗어나야 잊혀짐
 노랑색 범위 : 노이즈 이벤트 범위
 
+<br/>
 
 https://github.com/user-attachments/assets/304a73f8-e93c-4e49-8669-28b2bcbe6248
+몬스터 시야 감지
+
+<br/>
+
+https://github.com/user-attachments/assets/e814d45d-6242-4d1b-b56a-287e2291645a
+데미지 감지
+
+<br/>
 
 ## 캐릭터 사망시 재시작 및 UI 출력
 
-
 https://github.com/user-attachments/assets/e9e4e0ee-f90a-4545-8b29-fa12db39658c
-
 
 <br/>
 
 ## 몬스터 데미지 UI
-
 
 https://github.com/user-attachments/assets/65914366-7c68-4ea2-bbd9-7d60ea14e260
 
