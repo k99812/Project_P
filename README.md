@@ -894,14 +894,9 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 
 https://github.com/user-attachments/assets/03e28172-f83d-4ee7-a1cf-95480447eeb4
 
-몬스터 정찰
-
-<br/>
-
-https://github.com/user-attachments/assets/2d78aa19-0131-4055-b490-936a8b35c4de
-
-초록색 범위 : 몬스터 시야 인식 범위
-빨강색 범위 : 몬스터가 인식한 경우 해당 범위를 벗어나야 잊혀짐
+몬스터 정찰   
+초록색 범위 : 몬스터 시야 인식 범위   
+빨강색 범위 : 몬스터가 인식한 경우 해당 범위를 벗어나야 잊혀짐   
 노랑색 범위 : 노이즈 이벤트 범위
 
 <br/>
