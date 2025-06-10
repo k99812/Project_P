@@ -379,8 +379,8 @@ HitCheck 과정에서 데미지를 주는 액터(가해자) 데미지를 받는 
 ## AIController
 ![image](https://github.com/user-attachments/assets/37c90fd0-c08d-4018-9a61-3e35d7d1be04)  
 <br/>
-AI컨트롤러에서 AI Perception 기능을 이용해 적을 인식 하여 블랙보드에 저장합니다   
-AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 컨트롤 합니다   
+AI컨트롤러에서 AI Perception 기능을 이용해 적을 인식 하여 블랙보드에 저장 
+AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 컨트롤
 * AISense 관리
 * 블랙보드, 행동트리 관리
 * AIPerception 이벤트 처리
