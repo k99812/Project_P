@@ -18,6 +18,20 @@
 
 <br/>
 
+## 목차
+   
+* [개선 사항](#개선-사항)
+* [캐릭터 구조](#Character-구조)
+* [입력 처리](#입력처리)
+* [콤보 공격](#Combo-Attack)
+* [애니메이션](#Animation)
+* [AI](#AIController)
+* [GameMode](#GameMode)
+* [PlayerController](#PlayerController)
+* [UI](#UI)
+
+<br/>
+
 ## 개선 사항
 아래의 링크를 클릭하면 더 자세한 내용을 볼 수 있습니다.
 <br/>
@@ -38,19 +52,6 @@
 <a href="https://k99812.tistory.com/155" height="5" width="10" target="_blank" >
 <img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
 </a>
-
-<br/>
-
-## 목차
-   
-1. [캐릭터 구조](#Character-구조)
-2. [입력 처리](#입력처리)
-3. [콤보 공격](#Combo-Attack)
-4. [애니메이션](#Animation)
-5. [AI](#AIController)
-6. [GameMode](#GameMode)
-7. [PlayerController](#PlayerController)
-8. [UI](#UI)
 
 <br/>
 
