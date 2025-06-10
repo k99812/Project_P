@@ -36,7 +36,7 @@
 ## 개요
 | 항목 | 내용 | 비고 |
 |------|------|------|
-| 기간 | 2024 ~ |
+| 기간 | 2024 ~ 진행중 |
 | 역할 | 전체적인 프로젝트 구현 |
 | 핵심 기술 | GAS, AIPerception을 활용 |
 
@@ -62,6 +62,12 @@
 <a href="https://k99812.tistory.com/155" height="5" width="10" target="_blank" >
 <img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
 </a>
+
+<div align="right">
+  
+[목차로](#언리얼-포트폴리오-제작)
+
+</div>
 
 <br/>
 
