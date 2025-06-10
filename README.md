@@ -318,7 +318,7 @@ HitCheck 과정에서 데미지를 주는 액터(가해자) 데미지를 받는 
 > UPPAnimInstance
 
 	//NativeInitializeAnimation
-	Owner = Cast<APPCharacterBase>(GetOwningActor());
+	Owner = Cast<ACharacter>(GetOwningActor());
 	if (Owner)
 	{
 		IPPAnimInterface* OwnerInter = Cast<IPPAnimInterface>(Owner);
