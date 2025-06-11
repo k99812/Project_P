@@ -40,6 +40,28 @@
 | 역할 | 전체적인 프로젝트 구현 |
 | 핵심 기술 | GAS, AIPerception을 활용 |
 
+### GAS를 활용한 전투 시스템 구현
+- 어빌리티, 어트리뷰트셋 기반의 콤보 공격, 공격 판정 설계 및 구현
+- 게임 플레이 태그를 활용한 제어 및 상태 관리
+- Trace 기반의 공격 판정, 타격 시 GE를 통한 데미지 처리
+
+### 애니메이션 시스템 구성
+- Locomotion, Jump, AimOffset, UpperBody Layer 블렌딩 구성
+- Montage, AnimNotify 기반 콤보 연계 및 타격 타이밍 처리
+
+### UI 연동
+- HP Bar, 데미지 플로팅 텍스트, 플레이어 HUD, 사망/재시작 UI 구현
+- Attribute 연동을 통한 UI 실시간 갱신 (Delegate 활용)
+
+### AI 시스템
+- Behavior Tree, AIController 기반 추적, 공격, 인식 AI 구현
+- AI Perception을 통한 시야, 데미지 기반 인식 로직 설계
+
+### 입력 처리
+- Enhanced Input System 기반 입력 및 바인딩
+- ENUM을 활용한 유지보수 용이한 설계
+
+
 <br/>
 
 ## 개선 사항
