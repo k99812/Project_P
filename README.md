@@ -10,10 +10,10 @@
 <br/>
 
 <a href="https://k99812.tistory.com/category/%ED%8F%AC%ED%8A%B8%ED%8F%B4%EB%A6%AC%EC%98%A4%20%EC%A0%9C%EC%9E%91" height="5" width="10" target="_blank" >
-<img src="https://img.shields.io/badge/블로그링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
+<img src="https://img.shields.io/badge/블로그 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
 </a>
 <a href="https://www.figma.com/board/mI7YbWfbptJudhKcpAZP3U/Project-P-System-flow?node-id=0-1&t=OYhRpfOBPwjB6KUq-1" height="5" width="10" target="_blank" >
-<img src="https://img.shields.io/badge/차트링크-000000?style=for-the-badge&logo=figma&logoColor=white">
+<img src="https://img.shields.io/badge/플로우 차트 (Figma)-000000?style=for-the-badge&logo=figma&logoColor=white">
 </a>
 
 <br/>
@@ -62,7 +62,6 @@
 ### 입력 처리
 - Enhanced Input System 기반 입력 및 바인딩
 - ENUM을 활용한 유지보수 용이한 설계
-- [입력 처리](#입력처리)
 
 <div align="right">
   
