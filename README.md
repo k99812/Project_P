@@ -77,7 +77,7 @@
 
 ### AnimInstance
 * AnimInstance에서 Owner 변수를 PPGASCharacterPlayer에서 ACharacter로 변경 
-* AnimInstance에서 PPGASCharacterPlayer를 직접참조하여 델리게이트에 연결하는 로직을 인터페이스로 이용하여 연결하도록 변경
+* AnimInstance에서 PPGASCharacterPlayer를 직접참조하여 델리게이트에 연결하는 로직을 인터페이스를 이용하여 연결하도록 변경
 <a href="https://k99812.tistory.com/130" height="5" width="10" target="_blank" >
 <img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
 </a>
