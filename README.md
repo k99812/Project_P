@@ -440,10 +440,16 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
     
 		~~~
   
-  		//시야 등록
+  		//시야 센스 등록
+    		SenseConfig_Sight = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SenseConfig_Sight"));
 		AIPerceptionComp->ConfigureSense(*SenseConfig_Sight);
 		AIPerceptionComp->SetDominantSense(SenseConfig_Sight->GetSenseImplementation());
-  
+
+    		//데미지 센스 등록
+		SenseConfig_Damage = CreateDefaultSubobject<UAISenseConfig_Damage>(TEXT("SenseConfig_Damage"));
+		SenseConfig_Damage->SetMaxAge(GruntAIData->AISenseAge);
+		AIPerceptionComp->ConfigureSense(*SenseConfig_Damage);
+
 		~~~
 
 		//AI 인식, 잊힘 이벤트 델리게이트에 콜백함수 바인드
@@ -622,6 +628,22 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 
 <br/>
 
+> GameMode::OnPlayerDead
+
+	void APPGameMode::OnPlayerDead()
+	{
+		APPPlayerController* PlayerController = Cast<APPPlayerController>(GetWorld()->GetFirstPlayerController());
+		if (PlayerController)
+		{
+			PlayerController->GameOver();
+		}
+	}
+
+* 플레이어 컨트롤러를 가져옴
+* 컨트롤러의 GameOver함수를 실행하여 UI 생성
+
+<br/>
+
 > OnTakeDamage 호출
 
 	//APPGASCharacterNonPlayer 클래스(Grunt 부모클래스)
@@ -653,6 +675,21 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 * Grunt 부모클래스(다른 몬스터들이 사용할 경우를 고려)의 PossessedBy 함수에서 Damage 어트리뷰트 체인지 델리게이트에 함수 바인드
 * TakeDamage 함수가 호출되면 게임모드를 인터페이스로 변환
 * OnTakeDamage 함수를 호출하여 매개변수로 받은 데미지 값, 몬스터의 위치를 전달
+
+<br/>
+
+> GameMode::OnTakeDamage
+
+	void APPGameMode::OnTakeDamage(const float& Damage, const FVector& ActorPosition)
+	{
+		APPPlayerController* PlayerController = Cast<APPPlayerController>(GetWorld()->GetFirstPlayerController());
+		if (PlayerController)
+		{
+			PlayerController->ActorTakedDamage(Damage, ActorPosition);
+		}
+	}
+
+* 플레이어 컨트롤러를 가져와 Damage, ActorPosition을 넘겨 데미지 UI생성
 
 <br/>
 
