@@ -440,12 +440,12 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
     
 		~~~
   
-  		//시야 센스 등록
-    		SenseConfig_Sight = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SenseConfig_Sight"));
+		//시야 센스 등록
+		SenseConfig_Sight = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SenseConfig_Sight"));
 		AIPerceptionComp->ConfigureSense(*SenseConfig_Sight);
 		AIPerceptionComp->SetDominantSense(SenseConfig_Sight->GetSenseImplementation());
 
-    		//데미지 센스 등록
+		//데미지 센스 등록
 		SenseConfig_Damage = CreateDefaultSubobject<UAISenseConfig_Damage>(TEXT("SenseConfig_Damage"));
 		SenseConfig_Damage->SetMaxAge(GruntAIData->AISenseAge);
 		AIPerceptionComp->ConfigureSense(*SenseConfig_Damage);
