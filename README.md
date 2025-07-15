@@ -101,7 +101,7 @@
 <br/>
 
 
-## 기술 설명서
+# 기술 설명서
 
 ## Character 구조
 ![image](https://github.com/user-attachments/assets/7e81a2ac-d643-4896-a3df-c9fcce9a7544)
