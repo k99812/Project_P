@@ -2,7 +2,7 @@
 
 
 #include "Game/PPGameMode.h"
-#include "Player/PPGASPlayerState.h"
+#include "GameFramework/PlayerState.h"
 #include "Player/PPPlayerController.h"
 
 APPGameMode::APPGameMode()
@@ -21,15 +21,11 @@ APPGameMode::APPGameMode()
 		PlayerControllerClass = PlayerControllerClassRef.Class;
 	}
 	
-	/*
-	* APlayerState클래스를 ConstructorHelpers로 불러오면 오류 발생
-	* static ConstructorHelpers::FClassFinder<APlayerState> PlayerStateClassRef(TEXT("/Script/CoreUObject.Class'/Script/Project_P.PPGASPlayerState'"));
-	* if (PlayerStateClassRef.Class)
-	* {
-	* 	PlayerStateClass = PlayerStateClassRef.Class;
-	* }
-	*/
-	PlayerStateClass = APPGASPlayerState::StaticClass();
+	static ConstructorHelpers::FClassFinder<APlayerState> PlayerStateClassRef(TEXT("/Script/CoreUObject.Class'/Script/Project_P.PPGASPlayerState'"));
+	if (PlayerStateClassRef.Class)
+	{
+		PlayerStateClass = PlayerStateClassRef.Class;
+	}
 }
 
 void APPGameMode::OnPlayerDead()
