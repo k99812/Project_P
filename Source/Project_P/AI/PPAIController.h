@@ -47,6 +47,8 @@ protected:
 
 	virtual void PerceptionSensedDamage(APawn* Pawn_);
 
+	virtual void BlackboardTargetUpdate(APawn* Target);
+
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<class UAIPerceptionComponent> AIPerceptionComp;
 
