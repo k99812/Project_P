@@ -171,7 +171,7 @@ void APPAIController::ActorPerceptionForgetUpdated(AActor* Actor)
 		APawn* Target = Cast<APawn>(GetBlackboardComponent()->GetValueAsObject(BBKEY_TARGET));
 		if (PerceptionedPawn == Target)
 		{
-			GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, nullptr);
+			Blackboard->SetValueAsObject(BBKEY_TARGET, nullptr);
 			AActor::SetActorTickEnabled(false);
 			FindTargetDelegate.ExecuteIfBound(false);
 		}
@@ -184,9 +184,7 @@ void APPAIController::PerceptionSensedSight(APawn* PerceptionedPawn)
 
 	if (IsValid(PerceptionedPawn))
 	{
-		GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, PerceptionedPawn);
-		AActor::SetActorTickEnabled(true);
-		FindTargetDelegate.ExecuteIfBound(true);
+		BlackboardTargetUpdate(PerceptionedPawn);
 	}
 }
 
@@ -201,7 +199,15 @@ void APPAIController::PerceptionSensedDamage(APawn* PerceptionedPawn)
 
 	if (IsValid(PerceptionedPawn))
 	{
-		GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, PerceptionedPawn);
+		BlackboardTargetUpdate(PerceptionedPawn);
+	}
+}
+
+void APPAIController::BlackboardTargetUpdate(APawn* Target)
+{
+	if (IsValid(Target) && !IsValid(Blackboard->GetValueAsObject(BBKEY_TARGET)))
+	{
+		Blackboard->SetValueAsObject(BBKEY_TARGET, Target);
 		AActor::SetActorTickEnabled(true);
 		FindTargetDelegate.ExecuteIfBound(true);
 	}
