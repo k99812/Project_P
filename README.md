@@ -1,6 +1,7 @@
 ## 언리얼 포트폴리오 제작
 
-해당 프로젝트를 실행하려면 언리얼 엔진 버전 5.3.2, 마켓플레이스에서 **Paragon Countess, Paragon Minions**를 프로젝트에 추가해야 합니다.   
+해당 프로젝트를 실행하려면 언리얼 엔진 버전 5.3.2, 마켓플레이스에서   
+**Paragon Countess, Paragon Minions**를 프로젝트에 추가해야 합니다.   
 
 <br/>
 
