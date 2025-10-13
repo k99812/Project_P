@@ -6,6 +6,7 @@
 #define PPTAG_ABILITY_JUMP FGameplayTag::RequestGameplayTag(FName("Ability.Jump"))
 #define PPTAG_ABILITY_ATTACK FGameplayTag::RequestGameplayTag(FName("Ability.Attack"))
 #define PPTAG_ABILITY_SPRINT FGameplayTag::RequestGameplayTag(FName("Ability.Sprint"))
+#define PPTAG_ABILITY_HIT FGameplayTag::RequestGameplayTag(FName("Ability.Hit"))
 
 #define PPTAG_CHARACTER_MONSTER FGameplayTag::RequestGameplayTag(FName("Character.Monster"))
 #define PPTAG_CHARACTER_PLAYER FGameplayTag::RequestGameplayTag(FName("Character.Player"))
