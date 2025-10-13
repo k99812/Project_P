@@ -63,6 +63,12 @@ void UPPGA_AttackHitCheck::TraceResultCallback(const FGameplayAbilityTargetDataH
 			ApplyGameplayEffectSpecToTarget(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, SpecHandle, DataHandle);
 		}
 
+		//Hit 이벤트 발생
+		FGameplayEventData PayLoadData;
+		PayLoadData.Instigator = OwnerASC->GetAvatarActor();
+		PayLoadData.Target = TargetASC->GetAvatarActor();
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OwnerASC->GetAvatarActor(), PPTAG_ABILITY_HIT, PayLoadData);
+
 		//타겟이 몬스터일 경우 AI 데미지 센스 발동
 		IGameplayTagAssetInterface* TargetActor = Cast<IGameplayTagAssetInterface>(HitResult.GetActor());
 		if (TargetActor && TargetActor->HasMatchingGameplayTag(PPTAG_CHARACTER_MONSTER))
