@@ -65,6 +65,8 @@ void UPPGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGa
 	{
 		ASC->RemoveLooseGameplayTag(EventInputOpenTag);
 		ASC->RemoveLooseGameplayTag(EventInputReceiveTag);
+		//ASC->RemoveReplicatedLooseGameplayTag(EventInputOpenTag);
+		//ASC->RemoveReplicatedLooseGameplayTag(EventInputReceiveTag);
 	}
 
 	ComboActionData = nullptr;
@@ -104,6 +106,7 @@ void UPPGA_Attack::HandleInputReceive()
 		if (!ASC->HasMatchingGameplayTag(EventInputReceiveTag))
 		{
 			ASC->AddLooseGameplayTag(EventInputReceiveTag);
+			//ASC->AddReplicatedLooseGameplayTag(EventInputReceiveTag);
 		}
 
 		if (ASC->HasMatchingGameplayTag(EventInputOpenTag))
@@ -172,6 +175,8 @@ void UPPGA_Attack::AdvanceComboAttack(UAbilitySystemComponent* ASC)
 {
 	ASC->RemoveLooseGameplayTag(EventInputOpenTag);
 	ASC->RemoveLooseGameplayTag(EventInputReceiveTag);
+	//ASC->RemoveReplicatedLooseGameplayTag(EventInputOpenTag);
+	//ASC->RemoveReplicatedLooseGameplayTag(EventInputReceiveTag);
 
 	if (MontageTask.IsValid())
 	{
