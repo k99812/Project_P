@@ -67,7 +67,8 @@ void UPPGA_AttackHitCheck::TraceResultCallback(const FGameplayAbilityTargetDataH
 		FGameplayEventData PayLoadData;
 		PayLoadData.Instigator = OwnerASC->GetAvatarActor();
 		PayLoadData.Target = TargetASC->GetAvatarActor();
-		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OwnerASC->GetAvatarActor(), PPTAG_ABILITY_HIT, PayLoadData);
+		OwnerASC->HandleGameplayEvent(PPTAG_ABILITY_HIT, &PayLoadData);
+		//UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OwnerASC->GetAvatarActor(), PPTAG_ABILITY_HIT, PayLoadData);
 
 		//타겟이 몬스터일 경우 AI 데미지 센스 발동
 		IGameplayTagAssetInterface* TargetActor = Cast<IGameplayTagAssetInterface>(HitResult.GetActor());

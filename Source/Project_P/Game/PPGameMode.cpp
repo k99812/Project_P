@@ -30,7 +30,7 @@ APPGameMode::APPGameMode()
 
 void APPGameMode::OnPlayerDead()
 {
-	/* 멀티플레이 기준 플레이어 컨트롤러 가져오기
+	// 멀티플레이 기준 플레이어 컨트롤러 가져오기
 	for (FConstPlayerControllerIterator itr = GetWorld()->GetPlayerControllerIterator(); itr; itr++)
 	{
 		APPPlayerController* PlayerController = Cast<APPPlayerController>(itr->Get());
@@ -39,14 +39,16 @@ void APPGameMode::OnPlayerDead()
 			PlayerController->GameOver();
 		}
 	}
-	*/
+	
 
 	//싱글플레이는 first플레이어 컨트롤러를 가져오면 됨
+	/*
 	APPPlayerController* PlayerController = Cast<APPPlayerController>(GetWorld()->GetFirstPlayerController());
 	if (PlayerController)
 	{
 		PlayerController->GameOver();
 	}
+	*/
 }
 
 void APPGameMode::OnTakeDamage(const float& Damage, const FVector& ActorPosition)

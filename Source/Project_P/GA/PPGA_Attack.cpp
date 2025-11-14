@@ -6,10 +6,18 @@
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Data/PPComboActionData.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Tag/PPGameplayTag.h"
+#include "AbilitySystemComponent.h"
+#include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
+#include "GameplayTagContainer.h"
 
 UPPGA_Attack::UPPGA_Attack()
 {
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
+	//클라이언트 예측
+	NetExecutionPolicy = EGameplayAbilityNetExecutionPolicy::LocalPredicted;
+	//리플리케이션 정책
+	ReplicationPolicy = EGameplayAbilityReplicationPolicy::ReplicateYes;
 }
 
 void UPPGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
@@ -20,17 +28,11 @@ void UPPGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, cons
 	ComboAttackMontage = PPCharacter->GetComboAttackMontage();
 	ComboActionData = PPCharacter->GetComboActionData();
 
-//Movement Mode 설정
-	//PPCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
-
 	if (IsValid(ComboAttackMontage))
 	{
-		UAbilityTask_PlayMontageAndWait* PlayAttackTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayAttack"), ComboAttackMontage, 1.0f, GetNextSection());
-		PlayAttackTask->OnCompleted.AddDynamic(this, &UPPGA_Attack::OnCompletedCallback);
-		PlayAttackTask->OnInterrupted.AddDynamic(this, &UPPGA_Attack::OnInterruptedCallback);
-		PlayAttackTask->ReadyForActivation();
+		CurrentCombo = 1;
 
-		StartTimer();
+		HandleCombo();
 	}
 }
 
@@ -45,27 +47,41 @@ void UPPGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGa
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
-	APPCharacterBase* PPCharacter = CastChecked<APPCharacterBase>(ActorInfo->AvatarActor.Get());
+	if (MontageTask.IsValid())
+	{
+		MontageTask.Get()->EndTask();
+	}
 
-//Movement Mode 설정
-	PPCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+	if (WaitInputEventTask.IsValid())
+	{
+		WaitInputEventTask.Get()->EndTask();
+	}
+
+	if (WaitInputOpenTask.IsValid())
+	{
+		WaitInputOpenTask.Get()->EndTask();
+	}
+
+	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo_Checked();
+
+	if (ASC)
+	{
+		ASC->RemoveLooseGameplayTag(EventInputOpenTag);
+		ASC->RemoveLooseGameplayTag(EventInputReceiveTag);
+	}
 
 	ComboActionData = nullptr;
 	CurrentCombo = 0;
-	HasNextAttackInput = false;
 }
 
 void UPPGA_Attack::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
-	//UE_LOG(LogTemp, Log, TEXT("attack input pressed"));
-	
-	if (!ComboTimerHandle.IsValid())
+	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo_Checked();
+
+	if (ASC)
 	{
-		HasNextAttackInput = false;
-	}
-	else
-	{
-		HasNextAttackInput = true;
+		FGameplayEventData Payload;
+		ASC->HandleGameplayEvent(PPTAG_EVENT_INPUTRECEIVE, &Payload);
 	}
 }
 
@@ -83,33 +99,100 @@ void UPPGA_Attack::OnInterruptedCallback()
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
+void UPPGA_Attack::OnInputOpen(FGameplayEventData Payload)
+{
+	if (WaitInputOpenTask.IsValid())
+	{
+		WaitInputOpenTask.Get()->EndTask();
+	}
+
+	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo_Checked();
+
+	if (ASC)
+	{
+		ASC->AddLooseGameplayTag(EventInputOpenTag);
+		//ASC->AddReplicatedLooseGameplayTag(EventInputOpenTag);
+
+		if (ASC->HasMatchingGameplayTag(EventInputReceiveTag))
+		{
+			AdvanceComboAttack(ASC);
+		}
+	}
+}
+
+void UPPGA_Attack::OnInputReceived(FGameplayEventData Payload)
+{
+	if (WaitInputEventTask.IsValid())
+	{
+		WaitInputEventTask.Get()->EndTask();
+	}
+
+	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo_Checked();
+
+	if (ASC)
+	{
+		ASC->AddLooseGameplayTag(EventInputReceiveTag);
+		//ASC->AddReplicatedLooseGameplayTag(EventInputReceiveTag);
+
+		if (ASC->HasMatchingGameplayTag(EventInputOpenTag))
+		{
+			AdvanceComboAttack(ASC);
+		}
+	}
+}
+
+void UPPGA_Attack::HandleCombo()
+{
+	FName NextSection = GetNextSection();
+
+	UAbilityTask_PlayMontageAndWait* PlayMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayAttack"), ComboAttackMontage, 1.0f, NextSection);
+	PlayMontageTask->OnCompleted.AddDynamic(this, &UPPGA_Attack::OnCompletedCallback);
+	PlayMontageTask->OnInterrupted.AddDynamic(this, &UPPGA_Attack::OnInterruptedCallback);
+	MontageTask = PlayMontageTask;
+	
+	if (CurrentCombo < ComboActionData->MaxComboCount)
+	{
+		UAbilityTask_WaitGameplayEvent* WaitInputOpen = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, PPTAG_EVENT_INPUTOPEN);
+		WaitInputOpen->EventReceived.AddDynamic(this, &UPPGA_Attack::OnInputOpen);
+		WaitInputOpen->ReadyForActivation();
+		WaitInputOpenTask = WaitInputOpen;
+
+		UAbilityTask_WaitGameplayEvent* WaitInputEvent = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, PPTAG_EVENT_INPUTRECEIVE);
+		WaitInputEvent->EventReceived.AddDynamic(this, &UPPGA_Attack::OnInputReceived);
+		WaitInputEvent->ReadyForActivation();
+		WaitInputEventTask = WaitInputEvent;
+	}
+
+	PlayMontageTask->ReadyForActivation();
+}
+
+void UPPGA_Attack::AdvanceComboAttack(UAbilitySystemComponent* ASC)
+{
+	ASC->RemoveLooseGameplayTag(EventInputOpenTag);
+	ASC->RemoveLooseGameplayTag(EventInputReceiveTag);
+
+	if (MontageTask.IsValid())
+	{
+		MontageTask.Get()->EndTask();
+	}
+
+	if (WaitInputEventTask.IsValid())
+	{
+		WaitInputEventTask.Get()->EndTask();
+	}
+
+	if (WaitInputOpenTask.IsValid())
+	{
+		WaitInputOpenTask.Get()->EndTask();
+	}
+
+	CurrentCombo = FMath::Clamp(CurrentCombo + 1, 1, ComboActionData->MaxComboCount);
+
+	HandleCombo();
+}
+
 FName UPPGA_Attack::GetNextSection()
 {
-	CurrentCombo = FMath::Clamp(CurrentCombo + 1, 1, ComboActionData->MaxComboCount);
 	FName NextSection = *FString::Printf(TEXT("%s%d"), *ComboActionData->MontageSectionNamePrefix, CurrentCombo);
 	return NextSection;
-}
-
-void UPPGA_Attack::StartTimer()
-{
-	int32 ComboIndex = CurrentCombo - 1;
-	ensure(ComboActionData->EffectiveFrameCount.IsValidIndex(ComboIndex));
-
-	const float ComboEffectiveTime = ComboActionData->EffectiveFrameCount[ComboIndex] / ComboActionData->FrameRate;
-	if (ComboEffectiveTime > 0.0f)
-	{
-		GetWorld()->GetTimerManager().SetTimer(ComboTimerHandle, this, &UPPGA_Attack::CheckComboInput, ComboEffectiveTime, false);
-	}
-}
-
-void UPPGA_Attack::CheckComboInput()
-{
-	//타이머 종료
-	ComboTimerHandle.Invalidate();
-	if (HasNextAttackInput)
-	{
-		MontageJumpToSection(GetNextSection());
-		StartTimer();
-		HasNextAttackInput = false;
-	}
 }

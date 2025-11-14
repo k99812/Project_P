@@ -27,6 +27,8 @@ public:
 	
 	virtual void PossessedBy(AController* NewController) override;
 
+	virtual void OnRep_PlayerState() override;
+
 	virtual void PostInitializeComponents() override;
 
 	virtual void BeginPlay() override;
@@ -42,6 +44,8 @@ public:
 // GAS Section
 protected:
 	virtual void SetupGASPlayerInputComponent();
+
+	void GASInit();
 
 	void GASInputPressed(int32 InputID);
 

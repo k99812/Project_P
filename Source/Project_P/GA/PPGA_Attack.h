@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
+#include "GameplayTagContainer.h"
+#include "Tag/PPGameplayTag.h"
 #include "PPGA_Attack.generated.h"
 
 /**
@@ -32,6 +34,14 @@ protected:
 	UFUNCTION()
 	void OnInterruptedCallback();
 
+	UFUNCTION()
+	void OnInputOpen(FGameplayEventData Payload);
+
+	UFUNCTION()
+	void OnInputReceived(FGameplayEventData Payload);
+
+	void AdvanceComboAttack(UAbilitySystemComponent* ASC);
+
 //ÄÞº¸ ¼½¼Ç
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Animation")
@@ -40,12 +50,16 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Data")
 	TObjectPtr<class UPPComboActionData> ComboActionData;
 
+	TWeakObjectPtr<class UAbilityTask_PlayMontageAndWait> MontageTask;
+	TWeakObjectPtr<class UAbilityTask_WaitGameplayEvent> WaitInputEventTask;
+	TWeakObjectPtr<class UAbilityTask_WaitGameplayEvent> WaitInputOpenTask;
+
+	FGameplayTag EventInputOpenTag = PPTAG_CHARACTER_EVENT_INPUTOPEN;
+	FGameplayTag EventInputReceiveTag = PPTAG_CHARACTER_EVENT_INPUTRECEVIE;
+
 	uint8 CurrentCombo = 0;
-	bool HasNextAttackInput = false;
-	FTimerHandle ComboTimerHandle;
 
 protected:
+	void HandleCombo();
 	FName GetNextSection();
-	void StartTimer();
-	void CheckComboInput();
 };

@@ -31,19 +31,24 @@ void APPPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//게임 시작하면 마우스 가두기
-	SetInputMode(FInputModeGameOnly());
-
-	HUDWidget = CreateWidget<UPPHUDWidget>(this, HUDWidgetClass);
-	if (HUDWidget)
+	if (IsLocalPlayerController())
 	{
-		HUDWidget->AddToViewport();
+		//게임 시작하면 마우스 가두기
+		SetInputMode(FInputModeGameOnly());
+
+		HUDWidget = CreateWidget<UPPHUDWidget>(this, HUDWidgetClass);
+		if (HUDWidget)
+		{
+			HUDWidget->AddToViewport();
+		}
 	}
 }
 
 void APPPlayerController::GameOver()
 {
 	//K2_OnGameOver();
+	if (!IsLocalPlayerController()) return;
+
 	GameOverUIWidget = CreateWidget<UPPGameOverUserWidget>(this, GameOverUIClass);
 	if (GameOverUIWidget)
 	{
@@ -55,6 +60,8 @@ void APPPlayerController::GameOver()
 
 void APPPlayerController::ActorTakedDamage(const float& Damage, const FVector& ActorPosition)
 {
+	if (!IsLocalPlayerController()) return;
+
 	TWeakObjectPtr<UPPFloatingTextUserWidget> DamageUI = CreateWidget<UPPFloatingTextUserWidget>(this, DamageUIClass);
 	if (DamageUI.IsValid())
 	{
