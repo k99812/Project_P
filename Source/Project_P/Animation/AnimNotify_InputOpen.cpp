@@ -3,6 +3,7 @@
 
 #include "Animation/AnimNotify_InputOpen.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "Project_P.h"
 
 UAnimNotify_InputOpen::UAnimNotify_InputOpen()
 {
@@ -22,7 +23,8 @@ void UAnimNotify_InputOpen::Notify(USkeletalMeshComponent* MeshComp, UAnimSequen
 	{
 		AActor* OwerActor = MeshComp->GetOwner();
 		if (OwerActor)
-		{
+		{			
+			PPNET_ANIMLOG(LogGAS, Log, TEXT("Begin"));
 			FGameplayEventData PayLoadData;
 
 			//#include "AbilitySystemBlueprintLibrary.h" Ãß°¡

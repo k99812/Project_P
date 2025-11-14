@@ -172,6 +172,7 @@ void APPGASCharacterPlayer::GASInit()
 		if (ASC)
 		{
 			ASC->InitAbilityActorInfo(GASPlayerState, this);
+			ASC->SetIsReplicated(true);
 
 			const UPPCharacterAttributeSet* AttributeSet = ASC->GetSet<UPPCharacterAttributeSet>();
 			if (AttributeSet)
@@ -296,10 +297,8 @@ void APPGASCharacterPlayer::GASInputPressed(int32 InputID)
 
 		if (Spec->IsActive())
 		{
-			PPNET_LOG(LogGAS, Log, TEXT("InputPressed"));
-
 			//어빌리티가 실행중이면 GA의 InputPressed 함수 실행
-			ASC->AbilitySpecInputPressed(*Spec);
+			ASC->AbilitySpecInputPressed(*Spec); 
 		}
 		else
 		{
