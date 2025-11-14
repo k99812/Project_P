@@ -10,6 +10,8 @@
 #include "AbilitySystemComponent.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "GameplayTagContainer.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "Project_P.h"
 
 UPPGA_Attack::UPPGA_Attack()
 {
@@ -52,11 +54,6 @@ void UPPGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGa
 		MontageTask.Get()->EndTask();
 	}
 
-	if (WaitInputEventTask.IsValid())
-	{
-		WaitInputEventTask.Get()->EndTask();
-	}
-
 	if (WaitInputOpenTask.IsValid())
 	{
 		WaitInputOpenTask.Get()->EndTask();
@@ -76,12 +73,43 @@ void UPPGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGa
 
 void UPPGA_Attack::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
+	if (ActorInfo->IsNetAuthority())
+	{
+		PPNET_SUBLOG(LogGAS, Log, TEXT("Listhen Begin"));
+		HandleInputReceive();
+	}
+	else
+	{
+		PPNET_SUBLOG(LogGAS, Log, TEXT("Listhen Begin"));
+		ServerRPC_InputReceived();
+		HandleInputReceive();
+	}
+}
+
+void UPPGA_Attack::ServerRPC_InputReceived_Implementation()
+{
+	PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
+
+	HandleInputReceive();
+}
+
+void UPPGA_Attack::HandleInputReceive()
+{
+	PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
+
 	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo_Checked();
 
 	if (ASC)
 	{
-		FGameplayEventData Payload;
-		ASC->HandleGameplayEvent(PPTAG_EVENT_INPUTRECEIVE, &Payload);
+		if (!ASC->HasMatchingGameplayTag(EventInputReceiveTag))
+		{
+			ASC->AddLooseGameplayTag(EventInputReceiveTag);
+		}
+
+		if (ASC->HasMatchingGameplayTag(EventInputOpenTag))
+		{
+			AdvanceComboAttack(ASC);
+		}
 	}
 }
 
@@ -120,27 +148,6 @@ void UPPGA_Attack::OnInputOpen(FGameplayEventData Payload)
 	}
 }
 
-void UPPGA_Attack::OnInputReceived(FGameplayEventData Payload)
-{
-	if (WaitInputEventTask.IsValid())
-	{
-		WaitInputEventTask.Get()->EndTask();
-	}
-
-	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo_Checked();
-
-	if (ASC)
-	{
-		ASC->AddLooseGameplayTag(EventInputReceiveTag);
-		//ASC->AddReplicatedLooseGameplayTag(EventInputReceiveTag);
-
-		if (ASC->HasMatchingGameplayTag(EventInputOpenTag))
-		{
-			AdvanceComboAttack(ASC);
-		}
-	}
-}
-
 void UPPGA_Attack::HandleCombo()
 {
 	FName NextSection = GetNextSection();
@@ -156,11 +163,6 @@ void UPPGA_Attack::HandleCombo()
 		WaitInputOpen->EventReceived.AddDynamic(this, &UPPGA_Attack::OnInputOpen);
 		WaitInputOpen->ReadyForActivation();
 		WaitInputOpenTask = WaitInputOpen;
-
-		UAbilityTask_WaitGameplayEvent* WaitInputEvent = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, PPTAG_EVENT_INPUTRECEIVE);
-		WaitInputEvent->EventReceived.AddDynamic(this, &UPPGA_Attack::OnInputReceived);
-		WaitInputEvent->ReadyForActivation();
-		WaitInputEventTask = WaitInputEvent;
 	}
 
 	PlayMontageTask->ReadyForActivation();
@@ -174,11 +176,6 @@ void UPPGA_Attack::AdvanceComboAttack(UAbilitySystemComponent* ASC)
 	if (MontageTask.IsValid())
 	{
 		MontageTask.Get()->EndTask();
-	}
-
-	if (WaitInputEventTask.IsValid())
-	{
-		WaitInputEventTask.Get()->EndTask();
 	}
 
 	if (WaitInputOpenTask.IsValid())

@@ -37,8 +37,8 @@ protected:
 	UFUNCTION()
 	void OnInputOpen(FGameplayEventData Payload);
 
-	UFUNCTION()
-	void OnInputReceived(FGameplayEventData Payload);
+	UFUNCTION(Server, Reliable)
+	void ServerRPC_InputReceived();
 
 	void AdvanceComboAttack(UAbilitySystemComponent* ASC);
 
@@ -51,7 +51,6 @@ protected:
 	TObjectPtr<class UPPComboActionData> ComboActionData;
 
 	TWeakObjectPtr<class UAbilityTask_PlayMontageAndWait> MontageTask;
-	TWeakObjectPtr<class UAbilityTask_WaitGameplayEvent> WaitInputEventTask;
 	TWeakObjectPtr<class UAbilityTask_WaitGameplayEvent> WaitInputOpenTask;
 
 	FGameplayTag EventInputOpenTag = PPTAG_CHARACTER_EVENT_INPUTOPEN;
@@ -61,5 +60,6 @@ protected:
 
 protected:
 	void HandleCombo();
+	void HandleInputReceive();
 	FName GetNextSection();
 };

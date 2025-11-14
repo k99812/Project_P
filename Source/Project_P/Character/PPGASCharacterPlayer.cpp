@@ -24,6 +24,8 @@
 #include "UI/PPGASWidgetComponent.h"
 #include "Interface/PPGameInterface.h"
 #include "GameFramework/GameModeBase.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "Project_P.h"
 
 APPGASCharacterPlayer::APPGASCharacterPlayer()
 {
@@ -161,6 +163,50 @@ void APPGASCharacterPlayer::OnRep_PlayerState()
 	GASInit();
 }
 
+void APPGASCharacterPlayer::GASInit()
+{
+	APPGASPlayerState* GASPlayerState = GetPlayerState<APPGASPlayerState>();
+	if (GASPlayerState)
+	{
+		ASC = GASPlayerState->GetAbilitySystemComponent();
+		if (ASC)
+		{
+			ASC->InitAbilityActorInfo(GASPlayerState, this);
+
+			const UPPCharacterAttributeSet* AttributeSet = ASC->GetSet<UPPCharacterAttributeSet>();
+			if (AttributeSet)
+			{
+				AttributeSet->ActorIsDead.AddDynamic(this, &APPGASCharacterPlayer::ActorIsDead);
+			}
+
+			//ASC에 특정태그가 생기거나 제거되면 호출하는 델리게이트에 콜백함수 연결
+			ASC->RegisterGameplayTagEvent(PPTAG_CHARACTER_ISCC, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &APPGASCharacterPlayer::OnCCTagChanged);
+
+			if (HasAuthority())
+			{
+				for (const TSubclassOf<UGameplayAbility>& StartAbility : StartAbilites)
+				{
+					//ASC는 직접적으로 GA를 접근, 관리하는게 아닌
+					//FGameplayAbilitySpec 구조체를 통해 간접적으로 관리함
+					FGameplayAbilitySpec Spec(StartAbility);
+
+					ASC->GiveAbility(Spec);
+				}
+
+				for (const TPair<EInputAbility, TSubclassOf<class UGameplayAbility>>& StartInputAbility : StartInputAbilites)
+				{
+					FGameplayAbilitySpec Spec(StartInputAbility.Value);
+
+					Spec.InputID = (int32)StartInputAbility.Key;
+
+					ASC->GiveAbility(Spec);
+				}
+
+			}
+		}
+	}
+}
+
 void APPGASCharacterPlayer::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
@@ -238,46 +284,6 @@ void APPGASCharacterPlayer::SetupGASPlayerInputComponent()
 
 }
 
-void APPGASCharacterPlayer::GASInit()
-{
-	APPGASPlayerState* GASPlayerState = GetPlayerState<APPGASPlayerState>();
-	if (GASPlayerState)
-	{
-		ASC = GASPlayerState->GetAbilitySystemComponent();
-		if (ASC)
-		{
-			ASC->InitAbilityActorInfo(GASPlayerState, this);
-
-			const UPPCharacterAttributeSet* AttributeSet = ASC->GetSet<UPPCharacterAttributeSet>();
-			if (AttributeSet)
-			{
-				AttributeSet->ActorIsDead.AddDynamic(this, &APPGASCharacterPlayer::ActorIsDead);
-			}
-
-			//ASC에 특정태그가 생기거나 제거되면 호출하는 델리게이트에 콜백함수 연결
-			ASC->RegisterGameplayTagEvent(PPTAG_CHARACTER_ISCC, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &APPGASCharacterPlayer::OnCCTagChanged);
-
-			for (const TSubclassOf<UGameplayAbility>& StartAbility : StartAbilites)
-			{
-				//ASC는 직접적으로 GA를 접근, 관리하는게 아닌
-				//FGameplayAbilitySpec 구조체를 통해 간접적으로 관리함
-				FGameplayAbilitySpec Spec(StartAbility);
-
-				ASC->GiveAbility(Spec);
-			}
-
-			for (const TPair<EInputAbility, TSubclassOf<class UGameplayAbility>>& StartInputAbility : StartInputAbilites)
-			{
-				FGameplayAbilitySpec Spec(StartInputAbility.Value);
-
-				Spec.InputID = (int32)StartInputAbility.Key;
-
-				ASC->GiveAbility(Spec);
-			}
-		}
-	}
-}
-
 void APPGASCharacterPlayer::GASInputPressed(int32 InputID)
 {
 	//UAISense_Hearing::ReportNoiseEvent(this, this->GetActorLocation(), 1.f, this);
@@ -290,6 +296,8 @@ void APPGASCharacterPlayer::GASInputPressed(int32 InputID)
 
 		if (Spec->IsActive())
 		{
+			PPNET_LOG(LogGAS, Log, TEXT("InputPressed"));
+
 			//어빌리티가 실행중이면 GA의 InputPressed 함수 실행
 			ASC->AbilitySpecInputPressed(*Spec);
 		}

@@ -4,4 +4,7 @@
 #include "Modules/ModuleManager.h"
 
 DEFINE_LOG_CATEGORY(LogGAS);
-IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, Project_P, "Project_P" );
+
+IMPLEMENT_PRIMARY_GAME_MODULE(FDefaultGameModuleImpl, Project_P, "Project_P" );
+
+
