@@ -146,6 +146,100 @@ void APPGASCharacterPlayer::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
+	GASInit();
+
+	//콘솔 커멘드 코드로 입력하는 법
+	//ASC 디버그
+	APlayerController* PlayerController = CastChecked<APlayerController>(NewController);
+	PlayerController->ConsoleCommand(TEXT("showdebug abilitysystem"));
+}
+
+void APPGASCharacterPlayer::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+
+	GASInit();
+}
+
+void APPGASCharacterPlayer::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+}
+
+void APPGASCharacterPlayer::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	//레벨 시작 몽타주 실행
+	if (!GetMesh()->GetAnimInstance()->Montage_IsPlaying(LevelStartMontage))
+	{
+		GetMesh()->GetAnimInstance()->Montage_Play(LevelStartMontage, 1.0f);
+	}
+}
+
+void APPGASCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	//#include "EnhancedInputComponent.h" 추가
+	//#include "EnhancedInputSubsystems.h" 추가
+
+	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
+
+//Move
+	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::Move);
+	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::MoveInputReleased);
+//Look
+	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::Look);
+
+	//서브시스템을 가져오기 위해 GetSubsystem 함수를 사용
+	//ULocalPlayer* 는 APlayerController*에서 GetLocalPlayer()로 가져옴
+	APlayerController* PlayerController = CastChecked<APlayerController>(GetController());
+	if (PlayerController)
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			//서브시스템에서 인풋맵핑컨텍스트를 관리함
+			// 같은 입력맵핑컨택스트가 있을시 우선순위가 높은게 실행 됨
+			// 언제든지(인게임 라이브 중에도) 맵핑컨택스트를 추가, 제거가 가능함
+			//AddMappingContext(인풋맵핑컨택스트, 우선순위)
+			//Subsystem->RemoveMappingContext(DefaultMappingContext);
+			Subsystem->AddMappingContext(DefaultMappingContext, 0);
+		}
+	}
+
+	SetupGASPlayerInputComponent();
+}
+
+void APPGASCharacterPlayer::BindInputReleasedDelegate(UPPAnimInstance* InAnimInstance)
+{
+	InputReleasedDelegate.BindUObject(InAnimInstance, &UPPAnimInstance::SaveLastDirection);
+}
+
+void APPGASCharacterPlayer::SetupGASPlayerInputComponent()
+{
+	if (IsValid(ASC) && IsValid(InputComponent))
+	{
+		UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
+
+	//Jump
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::GASInputPressed, (int32)EInputAbility::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::GASInputReleased, (int32)EInputAbility::Jump);
+
+	//Sprint
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::GASInputPressed, (int32)EInputAbility::Sprint);
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::GASInputReleased, (int32)EInputAbility::Sprint);
+	
+	//Attack
+		EnhancedInputComponent->BindAction(LeftAttackAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::GASInputPressed, (int32)EInputAbility::LeftAttack);
+		EnhancedInputComponent->BindAction(LeftAttackAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::GASInputReleased, (int32)EInputAbility::LeftAttack);
+	}
+
+}
+
+void APPGASCharacterPlayer::GASInit()
+{
 	APPGASPlayerState* GASPlayerState = GetPlayerState<APPGASPlayerState>();
 	if (GASPlayerState)
 	{
@@ -180,90 +274,8 @@ void APPGASCharacterPlayer::PossessedBy(AController* NewController)
 
 				ASC->GiveAbility(Spec);
 			}
-
-			//서버에서도 GA바인드 함수가 실행되도록 실행
-			SetupGASPlayerInputComponent();
 		}
 	}
-
-	//콘솔 커멘드 코드로 입력하는 법
-	//ASC 디버그
-	APlayerController* PlayerController = CastChecked<APlayerController>(NewController);
-	PlayerController->ConsoleCommand(TEXT("showdebug abilitysystem"));
-}
-
-void APPGASCharacterPlayer::PostInitializeComponents()
-{
-	Super::PostInitializeComponents();
-
-}
-
-void APPGASCharacterPlayer::BeginPlay()
-{
-	Super::BeginPlay();
-
-	//서브시스템을 가져오기 위해 GetSubsystem 함수를 사용
-	//ULocalPlayer* 는 APlayerController*에서 GetLocalPlayer()로 가져옴
-	APlayerController* PlayerController = CastChecked<APlayerController>(GetController());
-	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-	{
-		//서브시스템에서 인풋맵핑컨텍스트를 관리함
-		// 같은 입력맵핑컨택스트가 있을시 우선순위가 높은게 실행 됨
-		// 언제든지(인게임 라이브 중에도) 맵핑컨택스트를 추가, 제거가 가능함
-		//AddMappingContext(인풋맵핑컨택스트, 우선순위)
-		//Subsystem->RemoveMappingContext(DefaultMappingContext);
-		Subsystem->AddMappingContext(DefaultMappingContext, 0);
-	}
-	
-	//레벨 시작 몽타주 실행
-	if (!GetMesh()->GetAnimInstance()->Montage_IsPlaying(LevelStartMontage))
-	{
-		GetMesh()->GetAnimInstance()->Montage_Play(LevelStartMontage, 1.0f);
-	}
-}
-
-void APPGASCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	//#include "EnhancedInputComponent.h" 추가
-	//#include "EnhancedInputSubsystems.h" 추가
-
-	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
-
-//Move
-	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::Move);
-	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::MoveInputReleased);
-//Look
-	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::Look);
-
-	SetupGASPlayerInputComponent();
-}
-
-void APPGASCharacterPlayer::BindInputReleasedDelegate(UPPAnimInstance* InAnimInstance)
-{
-	InputReleasedDelegate.BindUObject(InAnimInstance, &UPPAnimInstance::SaveLastDirection);
-}
-
-void APPGASCharacterPlayer::SetupGASPlayerInputComponent()
-{
-	if (IsValid(ASC) && IsValid(InputComponent))
-	{
-		UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
-
-	//Jump
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::GASInputPressed, (int32)EInputAbility::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::GASInputReleased, (int32)EInputAbility::Jump);
-
-	//Sprint
-		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::GASInputPressed, (int32)EInputAbility::Sprint);
-		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::GASInputReleased, (int32)EInputAbility::Sprint);
-	
-	//Attack
-		EnhancedInputComponent->BindAction(LeftAttackAction, ETriggerEvent::Triggered, this, &APPGASCharacterPlayer::GASInputPressed, (int32)EInputAbility::LeftAttack);
-		EnhancedInputComponent->BindAction(LeftAttackAction, ETriggerEvent::Completed, this, &APPGASCharacterPlayer::GASInputReleased, (int32)EInputAbility::LeftAttack);
-	}
-
 }
 
 void APPGASCharacterPlayer::GASInputPressed(int32 InputID)
