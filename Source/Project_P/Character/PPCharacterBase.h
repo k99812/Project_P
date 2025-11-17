@@ -7,10 +7,11 @@
 #include "GameplayTagAssetInterface.h"
 #include "Input/PPInputEnum.h"
 #include "GenericTeamAgentInterface.h"
+#include "Interface/PPGASInterface.h"
 #include "PPCharacterBase.generated.h"
 
 UCLASS()
-class PROJECT_P_API APPCharacterBase : public ACharacter, public IGameplayTagAssetInterface, public IGenericTeamAgentInterface
+class PROJECT_P_API APPCharacterBase : public ACharacter, public IGameplayTagAssetInterface, public IGenericTeamAgentInterface, public IPPGASInterface
 {
 	GENERATED_BODY()
 
@@ -18,8 +19,12 @@ public:
 	// Sets default values for this character's properties
 	APPCharacterBase();
 
-	FORCEINLINE TObjectPtr<UAnimMontage> GetComboAttackMontage() { return ComboAttackMontage; }
-	FORCEINLINE TObjectPtr<class UPPComboActionData> GetComboActionData() { return ComboActionData; }
+	FORCEINLINE virtual TObjectPtr<UAnimMontage> GetComboAttackMontage() override { return ComboAttackMontage; }
+	FORCEINLINE virtual TObjectPtr<class UPPComboActionData> GetComboActionData() override { return ComboActionData; }
+	virtual void Multicast_SendPlayMontage(FName Section) override;
+
+	UFUNCTION(NetMulticast, Unreliable)
+	void Multicast_PlayMontage(FName Section);
 
 	UFUNCTION(BlueprintCallable, Category = "Tags")
 	virtual void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const override;

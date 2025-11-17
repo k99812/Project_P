@@ -52,6 +52,7 @@ protected:
 
 	TWeakObjectPtr<class UAbilityTask_PlayMontageAndWait> MontageTask;
 	TWeakObjectPtr<class UAbilityTask_WaitGameplayEvent> WaitInputOpenTask;
+	TScriptInterface<class IPPGASInterface> PPCharacter;
 
 	FGameplayTag EventInputOpenTag = PPTAG_CHARACTER_EVENT_INPUTOPEN;
 	FGameplayTag EventInputReceiveTag = PPTAG_CHARACTER_EVENT_INPUTRECEVIE;

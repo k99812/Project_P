@@ -22,4 +22,9 @@
 #define LOG_ANIMMODEINFO (MeshComp->GetOwner()->GetNetMode() == ENetMode::NM_Client ? *FString::Printf(TEXT("CLIENT:%d"), GPlayInEditorID) : MeshComp->GetOwner()->GetNetMode() == ENetMode::NM_Standalone ? TEXT("STANDALONE") : TEXT("SERVER"))
 #define PPNET_ANIMLOG(LogCat, Verbosity, Format, ...) UE_LOG(LogCat, Verbosity, TEXT("[%s][%s/%s] %s: %s"), LOG_ANIMMODEINFO, LOG_ANIMLOCALROLEINFO, LOG_ANIMREMOTEROLEINFO, LOG_CALLINFO, *FString::Printf(Format, ##__VA_ARGS__))
 
+#define LOG_ATLOCALROLEINFO *(UEnum::GetValueAsString(TEXT("Engine.ENetRole"), GetOwnerActor()->GetLocalRole()))
+#define LOG_ATREMOTEROLEINFO *(UEnum::GetValueAsString(TEXT("Engine.ENetRole"), GetOwnerActor()->GetRemoteRole()))
+#define LOG_ATMODEINFO (GetOwnerActor()->GetNetMode() == ENetMode::NM_Client ? *FString::Printf(TEXT("CLIENT:%d"), GPlayInEditorID) : GetOwnerActor()->GetNetMode() == ENetMode::NM_Standalone ? TEXT("STANDALONE") : TEXT("SERVER"))
+#define PPNET_ATLOG(LogCat, Verbosity, Format, ...) UE_LOG(LogCat, Verbosity, TEXT("[%s][%s/%s] %s: %s"), LOG_ATMODEINFO, LOG_ATLOCALROLEINFO, LOG_ATREMOTEROLEINFO, LOG_CALLINFO, *FString::Printf(Format, ##__VA_ARGS__))
+
 DECLARE_LOG_CATEGORY_EXTERN(LogGAS, Log, All);

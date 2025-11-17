@@ -45,6 +45,19 @@ APPCharacterBase::APPCharacterBase()
 	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
 }
 
+void APPCharacterBase::Multicast_SendPlayMontage(FName Section)
+{
+	Multicast_PlayMontage(Section);
+}
+
+void APPCharacterBase::Multicast_PlayMontage_Implementation(FName Section)
+{
+	if (!HasAuthority() && GetLocalRole() == ENetRole::ROLE_SimulatedProxy)
+	{
+		PlayAnimMontage(ComboAttackMontage, 1.0f, Section);
+	}
+}
+
 void APPCharacterBase::GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const
 {
 	TagContainer = GameplayTags;
