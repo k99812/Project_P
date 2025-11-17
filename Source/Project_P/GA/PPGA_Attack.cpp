@@ -2,7 +2,7 @@
 
 
 #include "GA/PPGA_Attack.h"
-#include "Character/PPCharacterBase.h"
+#include "Interface/PPGASInterface.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Data/PPComboActionData.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -26,14 +26,17 @@ void UPPGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, cons
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	APPCharacterBase* PPCharacter = CastChecked<APPCharacterBase>(ActorInfo->AvatarActor.Get());
-	ComboAttackMontage = PPCharacter->GetComboAttackMontage();
-	ComboActionData = PPCharacter->GetComboActionData();
+	PPCharacter = ActorInfo->AvatarActor.Get();
+	if (PPCharacter)
+	{
+		ComboAttackMontage = PPCharacter->GetComboAttackMontage();
+		ComboActionData = PPCharacter->GetComboActionData();
+	}
 
 	if (IsValid(ComboAttackMontage))
 	{
 		CurrentCombo = 1;
-
+		
 		HandleCombo();
 	}
 }
@@ -65,11 +68,13 @@ void UPPGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGa
 	{
 		ASC->RemoveLooseGameplayTag(EventInputOpenTag);
 		ASC->RemoveLooseGameplayTag(EventInputReceiveTag);
-		//ASC->RemoveReplicatedLooseGameplayTag(EventInputOpenTag);
-		//ASC->RemoveReplicatedLooseGameplayTag(EventInputReceiveTag);
 	}
 
+	ComboAttackMontage = nullptr;
 	ComboActionData = nullptr;
+	WaitInputOpenTask = nullptr;
+	MontageTask = nullptr;
+	PPCharacter = nullptr;
 	CurrentCombo = 0;
 }
 
@@ -77,12 +82,12 @@ void UPPGA_Attack::InputPressed(const FGameplayAbilitySpecHandle Handle, const F
 {
 	if (ActorInfo->IsNetAuthority())
 	{
-		PPNET_SUBLOG(LogGAS, Log, TEXT("Listhen Begin"));
+		//PPNET_SUBLOG(LogGAS, Log, TEXT("Listhen Begin"));
 		HandleInputReceive();
 	}
 	else
 	{
-		PPNET_SUBLOG(LogGAS, Log, TEXT("Listhen Begin"));
+		//PPNET_SUBLOG(LogGAS, Log, TEXT("Client Begin"));
 		ServerRPC_InputReceived();
 		HandleInputReceive();
 	}
@@ -90,14 +95,14 @@ void UPPGA_Attack::InputPressed(const FGameplayAbilitySpecHandle Handle, const F
 
 void UPPGA_Attack::ServerRPC_InputReceived_Implementation()
 {
-	PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
+	//PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
 
 	HandleInputReceive();
 }
 
 void UPPGA_Attack::HandleInputReceive()
 {
-	PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
+	//PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
 
 	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo_Checked();
 
@@ -106,7 +111,6 @@ void UPPGA_Attack::HandleInputReceive()
 		if (!ASC->HasMatchingGameplayTag(EventInputReceiveTag))
 		{
 			ASC->AddLooseGameplayTag(EventInputReceiveTag);
-			//ASC->AddReplicatedLooseGameplayTag(EventInputReceiveTag);
 		}
 
 		if (ASC->HasMatchingGameplayTag(EventInputOpenTag))
@@ -142,7 +146,6 @@ void UPPGA_Attack::OnInputOpen(FGameplayEventData Payload)
 	if (ASC)
 	{
 		ASC->AddLooseGameplayTag(EventInputOpenTag);
-		//ASC->AddReplicatedLooseGameplayTag(EventInputOpenTag);
 
 		if (ASC->HasMatchingGameplayTag(EventInputReceiveTag))
 		{
@@ -169,14 +172,13 @@ void UPPGA_Attack::HandleCombo()
 	}
 
 	PlayMontageTask->ReadyForActivation();
+	PPCharacter->Multicast_SendPlayMontage(NextSection);
 }
 
 void UPPGA_Attack::AdvanceComboAttack(UAbilitySystemComponent* ASC)
 {
 	ASC->RemoveLooseGameplayTag(EventInputOpenTag);
 	ASC->RemoveLooseGameplayTag(EventInputReceiveTag);
-	//ASC->RemoveReplicatedLooseGameplayTag(EventInputOpenTag);
-	//ASC->RemoveReplicatedLooseGameplayTag(EventInputReceiveTag);
 
 	if (MontageTask.IsValid())
 	{
