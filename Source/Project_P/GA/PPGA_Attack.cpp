@@ -26,6 +26,8 @@ void UPPGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, cons
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+	PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
+
 	PPCharacter = ActorInfo->AvatarActor.Get();
 	if (PPCharacter)
 	{
@@ -50,6 +52,8 @@ void UPPGA_Attack::CancelAbility(const FGameplayAbilitySpecHandle Handle, const 
 
 void UPPGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
+	PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
+
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
 	if (MontageTask.IsValid())
@@ -82,12 +86,12 @@ void UPPGA_Attack::InputPressed(const FGameplayAbilitySpecHandle Handle, const F
 {
 	if (ActorInfo->IsNetAuthority())
 	{
-		//PPNET_SUBLOG(LogGAS, Log, TEXT("Listhen Begin"));
+		PPNET_SUBLOG(LogGAS, Log, TEXT("Listhen Begin"));
 		HandleInputReceive();
 	}
 	else
 	{
-		//PPNET_SUBLOG(LogGAS, Log, TEXT("Client Begin"));
+		PPNET_SUBLOG(LogGAS, Log, TEXT("Client Begin"));
 		ServerRPC_InputReceived();
 		HandleInputReceive();
 	}
@@ -95,15 +99,13 @@ void UPPGA_Attack::InputPressed(const FGameplayAbilitySpecHandle Handle, const F
 
 void UPPGA_Attack::ServerRPC_InputReceived_Implementation()
 {
-	//PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
+	PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
 
 	HandleInputReceive();
 }
 
 void UPPGA_Attack::HandleInputReceive()
 {
-	//PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
-
 	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo_Checked();
 
 	if (ASC)
@@ -172,7 +174,11 @@ void UPPGA_Attack::HandleCombo()
 	}
 
 	PlayMontageTask->ReadyForActivation();
-	PPCharacter->Multicast_SendPlayMontage(NextSection);
+
+	if (HasAuthority(&CurrentActivationInfo)) 
+	{
+		PPCharacter->Multicast_SendPlayMontage(NextSection);
+	}
 }
 
 void UPPGA_Attack::AdvanceComboAttack(UAbilitySystemComponent* ASC)
