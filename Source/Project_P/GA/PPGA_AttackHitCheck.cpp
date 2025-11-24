@@ -20,6 +20,7 @@ void UPPGA_AttackHitCheck::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+	//PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
 	CurrentLevel = TriggerEventData->EventMagnitude;
 
 	//#include "GA/AT/PPAT_Trace.h" 추가
@@ -58,7 +59,7 @@ void UPPGA_AttackHitCheck::TraceResultCallback(const FGameplayAbilityTargetDataH
 		}
 
 		FGameplayEffectSpecHandle SpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect, CurrentLevel);
-		if (SpecHandle.IsValid())
+		if (SpecHandle.IsValid() && HasAuthority(&CurrentActivationInfo))
 		{
 			ApplyGameplayEffectSpecToTarget(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, SpecHandle, DataHandle);
 		}
@@ -67,7 +68,8 @@ void UPPGA_AttackHitCheck::TraceResultCallback(const FGameplayAbilityTargetDataH
 		FGameplayEventData PayLoadData;
 		PayLoadData.Instigator = OwnerASC->GetAvatarActor();
 		PayLoadData.Target = TargetASC->GetAvatarActor();
-		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OwnerASC->GetAvatarActor(), PPTAG_ABILITY_HIT, PayLoadData);
+		OwnerASC->HandleGameplayEvent(PPTAG_ABILITY_HIT, &PayLoadData);
+		//UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OwnerASC->GetAvatarActor(), PPTAG_ABILITY_HIT, PayLoadData);
 
 		//타겟이 몬스터일 경우 AI 데미지 센스 발동
 		IGameplayTagAssetInterface* TargetActor = Cast<IGameplayTagAssetInterface>(HitResult.GetActor());
