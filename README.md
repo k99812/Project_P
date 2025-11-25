@@ -305,7 +305,7 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 
 <img width="1540" height="998" alt="image" src="https://github.com/user-attachments/assets/8bf4f338-e735-4bd3-9560-e24f55018361" />
 <img width="1389" height="573" alt="image" src="https://github.com/user-attachments/assets/a2ad0ee4-041a-4c41-8b1d-6fe629d0c976" />
-<img width="1043" height="1089" alt="image" src="https://github.com/user-attachments/assets/1050dd57-b608-4957-805a-ef36108094eb" />
+<img width="1004" height="1082" alt="image" src="https://github.com/user-attachments/assets/de77e60f-0c3b-4af0-8d81-a115c6964730" />
 <a href="https://k99812.tistory.com/192" height="5" width="10" target="_blank" >
 <img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
 </a>
