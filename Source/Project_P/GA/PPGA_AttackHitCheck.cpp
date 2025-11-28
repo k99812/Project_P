@@ -14,13 +14,15 @@
 UPPGA_AttackHitCheck::UPPGA_AttackHitCheck()
 {
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
+	NetExecutionPolicy = EGameplayAbilityNetExecutionPolicy::LocalOnly;
+	ReplicationPolicy = EGameplayAbilityReplicationPolicy::ReplicateYes;
 }
 
 void UPPGA_AttackHitCheck::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	//PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
+	PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
 	CurrentLevel = TriggerEventData->EventMagnitude;
 
 	//#include "GA/AT/PPAT_Trace.h" Ãß°¡

@@ -18,16 +18,14 @@ void UAnimNotify_GASAttackHitCheck::Notify(USkeletalMeshComponent* MeshComp, UAn
 {
 	Super::Notify(MeshComp, Animation, EventReference);
 
-	if (MeshComp)
+	//AActor* OwerActor = MeshComp->GetOwner();
+	APawn* OwnerActor = Cast<APawn>(MeshComp->GetOwner());
+	if (OwnerActor && OwnerActor->IsLocallyControlled())
 	{
-		AActor* OwerActor = MeshComp->GetOwner();
-		if (OwerActor)
-		{
-			FGameplayEventData PayLoadData;
-			PayLoadData.EventMagnitude = ComboAttackLevel;
+		FGameplayEventData PayLoadData;
+		PayLoadData.EventMagnitude = ComboAttackLevel;
 
-			//#include "AbilitySystemBlueprintLibrary.h" 추가
-			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OwerActor, TriggerGameplayTag, PayLoadData);
-		}
+		//#include "AbilitySystemBlueprintLibrary.h" 추가
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OwnerActor, TriggerGameplayTag, PayLoadData);
 	}
 }
