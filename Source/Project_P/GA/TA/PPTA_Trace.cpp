@@ -14,6 +14,7 @@
 
 APPTA_Trace::APPTA_Trace()
 {
+	ShouldProduceTargetDataOnServer = false;
 }
 
 void APPTA_Trace::StartTargeting(UGameplayAbility* Ability)

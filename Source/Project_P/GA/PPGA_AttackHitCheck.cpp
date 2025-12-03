@@ -10,11 +10,12 @@
 #include "Tag/PPGameplayTag.h"
 #include "GameplayTagAssetInterface.h"
 #include "Perception/AISense_Damage.h"
+#include "Abilities/Tasks/AbilityTask_WaitTargetData.h"
 
 UPPGA_AttackHitCheck::UPPGA_AttackHitCheck()
 {
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
-	NetExecutionPolicy = EGameplayAbilityNetExecutionPolicy::LocalOnly;
+	NetExecutionPolicy = EGameplayAbilityNetExecutionPolicy::LocalPredicted;
 	ReplicationPolicy = EGameplayAbilityReplicationPolicy::ReplicateYes;
 }
 
@@ -32,6 +33,26 @@ void UPPGA_AttackHitCheck::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 	AttackTraceTask->OnComplete.AddDynamic(this, &UPPGA_AttackHitCheck::TraceResultCallback);
 
 	AttackTraceTask->ReadyForActivation();
+
+	/*
+	AGameplayAbilityTargetActor* SpawnedActor = nullptr;
+	UAbilityTask_WaitTargetData* WaitTargetData = UAbilityTask_WaitTargetData::WaitTargetData(this, FName("WaitTargetData"), EGameplayTargetingConfirmation::Instant, APPTA_Trace::StaticClass());
+
+	if (WaitTargetData->BeginSpawningActor(this, APPTA_Trace::StaticClass(), SpawnedActor))
+	{
+		APPTA_Trace* MyTrace = Cast<APPTA_Trace>(SpawnedActor);
+		if (MyTrace)
+		{
+			MyTrace->SetShowDebug(true);
+		}
+
+		WaitTargetData->FinishSpawningActor(this, SpawnedActor);
+	}
+
+	WaitTargetData->ValidData.AddDynamic(this, UPPGA_AttackHitCheck::TraceResultCallback);
+
+	WaitTargetData->ReadyForActivation();
+	*/
 }
 
 void UPPGA_AttackHitCheck::TraceResultCallback(const FGameplayAbilityTargetDataHandle& DataHandle)
