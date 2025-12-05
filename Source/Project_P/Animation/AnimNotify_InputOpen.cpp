@@ -24,7 +24,7 @@ void UAnimNotify_InputOpen::Notify(USkeletalMeshComponent* MeshComp, UAnimSequen
 		AActor* OwerActor = MeshComp->GetOwner();
 		if (OwerActor)
 		{			
-			PPNET_ANIMLOG(LogGAS, Log, TEXT("Begin"));
+			//PPNET_ANIMLOG(LogGAS, Log, TEXT("Begin"));
 			FGameplayEventData PayLoadData;
 
 			//#include "AbilitySystemBlueprintLibrary.h" Ãß°¡
