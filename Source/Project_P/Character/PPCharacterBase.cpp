@@ -45,12 +45,12 @@ APPCharacterBase::APPCharacterBase()
 	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
 }
 
-void APPCharacterBase::Multicast_SendPlayMontage(FName Section)
+void APPCharacterBase::Multicast_SendPlayMontage(const FName& Section)
 {
 	Multicast_PlayMontage(Section);
 }
 
-void APPCharacterBase::Multicast_PlayMontage_Implementation(FName Section)
+void APPCharacterBase::Multicast_PlayMontage_Implementation(const FName& Section)
 {
 	if (!HasAuthority() && GetLocalRole() == ENetRole::ROLE_SimulatedProxy)
 	{

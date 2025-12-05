@@ -15,6 +15,7 @@
 APPTA_Trace::APPTA_Trace()
 {
 	ShouldProduceTargetDataOnServer = false;
+	bReplicates = true;
 }
 
 void APPTA_Trace::StartTargeting(UGameplayAbility* Ability)
@@ -27,6 +28,7 @@ void APPTA_Trace::StartTargeting(UGameplayAbility* Ability)
 void APPTA_Trace::ConfirmTargetingAndContinue()
 {
 	//Super::ConfirmTargetingAndContinue();
+	PPNET_LOG(LogGAS, Log, TEXT("Begin"));
 
 	if (SourceActor && IsConfirmTargetingAllowed())
 	{

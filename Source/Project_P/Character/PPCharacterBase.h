@@ -21,10 +21,10 @@ public:
 
 	FORCEINLINE virtual TObjectPtr<UAnimMontage> GetComboAttackMontage() override { return ComboAttackMontage; }
 	FORCEINLINE virtual TObjectPtr<class UPPComboActionData> GetComboActionData() override { return ComboActionData; }
-	virtual void Multicast_SendPlayMontage(FName Section) override;
+	virtual void Multicast_SendPlayMontage(const FName& Section) override;
 
 	UFUNCTION(NetMulticast, Unreliable)
-	void Multicast_PlayMontage(FName Section);
+	void Multicast_PlayMontage(const FName& Section);
 
 	UFUNCTION(BlueprintCallable, Category = "Tags")
 	virtual void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const override;

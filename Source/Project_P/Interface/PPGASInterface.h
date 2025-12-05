@@ -26,5 +26,5 @@ public:
 
 	virtual TObjectPtr<class UPPComboActionData> GetComboActionData() = 0;
 
-	virtual void Multicast_SendPlayMontage(FName Section) = 0;
+	virtual void Multicast_SendPlayMontage(const FName& Section) = 0;
 };

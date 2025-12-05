@@ -26,7 +26,7 @@ void UPPGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, cons
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
+	//PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
 
 	PPCharacter = ActorInfo->AvatarActor.Get();
 	if (PPCharacter)
@@ -52,7 +52,7 @@ void UPPGA_Attack::CancelAbility(const FGameplayAbilitySpecHandle Handle, const 
 
 void UPPGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
-	PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
+	//PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
 
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
@@ -86,12 +86,12 @@ void UPPGA_Attack::InputPressed(const FGameplayAbilitySpecHandle Handle, const F
 {
 	if (ActorInfo->IsNetAuthority())
 	{
-		PPNET_SUBLOG(LogGAS, Log, TEXT("Listhen Begin"));
+		//PPNET_SUBLOG(LogGAS, Log, TEXT("Listhen Begin"));
 		HandleInputReceive();
 	}
 	else
 	{
-		PPNET_SUBLOG(LogGAS, Log, TEXT("Client Begin"));
+		//PPNET_SUBLOG(LogGAS, Log, TEXT("Client Begin"));
 		ServerRPC_InputReceived();
 		HandleInputReceive();
 	}
