@@ -111,9 +111,10 @@
 <br/>
 
 ### 콤보공격 개선 및 네트워크 지원
-* 기존 Timer를 이용한 공격로직은 몽타주 재생속도 조절, 네트워크 랙 및 프레임 드랍에서 문제발생 가능성이 있음
+* 기존 Timer를 이용한 공격로직은 클라이언트의 프레임이 불안정하거나 네트워크 렉이
+  발생할 경우 클라이언트가 입력을 해도 씹히는 현상 발생
 * 공격 로직을 GAS의 AbilityTask와 GameplayTag를 활용하는 GAS 이벤트를 활용하여 개선함
-* 또한 네트워크 지원을 위해 기존 초기화로직을 개선함
+* 또한 네트워크 지원을 위해 기존 GAS 초기화 로직을 개선함
 <a href="https://k99812.tistory.com/192" height="5" width="10" target="_blank" >
 <img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
 </a>
