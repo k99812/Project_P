@@ -106,10 +106,42 @@ void UPPGA_AttackHitCheck::ServerApplyHitLogic(const FGameplayAbilityTargetDataH
 		}
 
 		const UPPCharacterAttributeSet* OwnerAttributeSet = OwnerASC->GetSet<UPPCharacterAttributeSet>();
-		UPPCharacterAttributeSet* TargetAttributeSet = const_cast<UPPCharacterAttributeSet*>(TargetASC->GetSet<UPPCharacterAttributeSet>());
+		const UPPCharacterAttributeSet* TargetAttributeSet = TargetASC->GetSet<UPPCharacterAttributeSet>();
 		if (!OwnerAttributeSet || !TargetAttributeSet)
 		{
 			PPGAS_LOG(LogGAS, Error, TEXT("(Owner or Target)AttributeSet Not Found"));
+			return;
+		}
+
+		AActor* OwnerActor = GetAvatarActorFromActorInfo();
+		AActor* TargetActor = HitResult.GetActor();
+		if (!OwnerActor || !TargetActor)
+		{
+			PPGAS_LOG(LogGAS, Error, TEXT("(Owner or Target)Actor Not Found"));
+			return;
+		}
+
+		float AttackRange = OwnerAttributeSet->GetAttackRange();
+		float Tolerance = 50.0f;
+		float Distance = OwnerActor->GetSquaredDistanceTo(TargetActor);
+		if (Distance > (AttackRange + Tolerance) * (AttackRange + Tolerance))
+		{
+			PPGAS_LOG(LogGAS, Warning, TEXT("Validation Failed: Too Far (Dist: %.2f, Max: %.2f)"), FMath::Sqrt(Distance), AttackRange + Tolerance);
+			return;
+		}
+
+		FVector ForwardVec = OwnerActor->GetActorForwardVector();
+		FVector TargetVec = (TargetActor->GetActorLocation() - OwnerActor->GetActorLocation()).GetSafeNormal();
+		float DotResult = FVector::DotProduct(ForwardVec, TargetVec);
+		if (DotResult < 0.0f)
+		{
+			PPGAS_LOG(LogGAS, Warning, TEXT("Validation Failed: Target is Behind"));
+			return;
+		}
+
+		if (TargetASC->HasMatchingGameplayTag(PPTAG_CHARACTER_ISDEAD))
+		{
+			PPGAS_LOG(LogGAS, Log, TEXT("Validation Failed: Target Already Dead"));
 			return;
 		}
 
