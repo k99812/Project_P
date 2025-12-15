@@ -336,6 +336,7 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 <img width="2872" height="1240" alt="image" src="https://github.com/user-attachments/assets/ea3bb68b-a552-4e35-9fdf-21eada09b9c1" />
 <img width="1850" height="1343" alt="image" src="https://github.com/user-attachments/assets/a2ceaaec-1dd2-4e15-9b0e-e1b002341cca" />
 <img width="2326" height="717" alt="image" src="https://github.com/user-attachments/assets/2665c359-8563-415f-b4b0-9e1d0b5600cc" />
+
 * 기존 구현했던 어빌리티 테스크를 언리얼에서 제공하는   
   UAbilityTask_WaitTargetData 테스크로 변경
 * 개선 결과로 클라이언트 예측 구현,
