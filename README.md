@@ -25,7 +25,7 @@
 
 |프로젝트|프로젝트설명|기간|비고|
 |:---:|:---:|:---:|:---:|
-|<strong>[Project_P](https://github.com/k99812/Project_P)<strong>|언리얼 엔진 <br> 개인 포트폴리오|2024.06 ~ 2025.03| - |
+|<strong>[Project_P](https://github.com/k99812/Project_P)<strong>|언리얼 엔진 <br> 개인 포트폴리오|2024.06 ~ 2025.03 <br> 2025.11 ~ 진행중| 네트워크 리팩토링 |
 |<strong>[WKMetaverse](https://github.com/k99812/WKMetaverse)<strong>|유니티 멀티플레이 <br> 팀 프로젝트|2022.06 ~ 2023.02| - |
 |<strong>[Cpp](https://github.com/k99812/Cpp)<strong>|코딩테스트 <br> 알고리즘 문제 풀이|2023.05 ~ | - |
 |<strong>[k99812.github.io](https://github.com/k99812/k99812.github.io)<strong>|포트폴리오 <br> 사이트|2025.06 ~ | - |
@@ -52,10 +52,10 @@
 ## 개요
 | 항목 | 내용 | 비고 |
 |------|------|------|
-| 개발 기간 | 2024.06 ~ 진행중 |
+| 개발 기간 | 2024.06 ~ 2025.03 <br> 2025.11 ~ 진행중 |
 | 엔진 | Unreal Engine 5.3.2 |
 | 언어 | C++ / Blueprint |
-| 주요 시스템 | GAS / AI / UMG / <br/> Animation / Input |
+| 주요 시스템 | GAS / AI / UMG / Input <br/> Animation / Network |
 
 ## 주요 기능
 ### 전투 시스템 (GAS 기반)
@@ -116,6 +116,14 @@
 * 공격 로직을 GAS의 AbilityTask와 GameplayTag를 활용하는 GAS 이벤트를 활용하여 개선함
 * 또한 네트워크 지원을 위해 기존 GAS 초기화 로직을 개선함
 <a href="https://k99812.tistory.com/192" height="5" width="10" target="_blank" >
+<img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
+</a>
+
+### 공격판정 개선
+* 기존에 구현하여 사용하던 어빌리티 테스크를   
+  언리얼에서 네트워크를 고려하며 설계한 어빌리티 테스크로 교체
+* 개선결과로 클라이언트, 서버 두 곳 모두에서 사용할 수 있는 GA 구현
+<a href="https://k99812.tistory.com/196" height="5" width="10" target="_blank" >
 <img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
 </a>
 
@@ -321,6 +329,19 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 ## Attack Hit Check
 ![image](https://github.com/user-attachments/assets/49a357a4-081c-49bc-a447-edef2450c8d8)
 * GameAbility, AbilityTask, TargetActor를 사용해 개발한 공격 히트 체크 플로우 차트
+* 개선전 공격판정 로직
+
+<br/>
+
+<img width="2872" height="1240" alt="image" src="https://github.com/user-attachments/assets/ea3bb68b-a552-4e35-9fdf-21eada09b9c1" />
+<img width="1850" height="1343" alt="image" src="https://github.com/user-attachments/assets/a2ceaaec-1dd2-4e15-9b0e-e1b002341cca" />
+<img width="2326" height="717" alt="image" src="https://github.com/user-attachments/assets/2665c359-8563-415f-b4b0-9e1d0b5600cc" />
+
+* 기존 구현했던 어빌리티 테스크를 언리얼에서 제공하는   
+  UAbilityTask_WaitTargetData 테스크로 변경
+* 개선 결과로 클라이언트 예측 구현,
+  서버-클라 두 곳 모두에서 쓸 수 있는 GA 구현
+* 자세한 내용은 블로그 글을 통해 볼 수 있습니다.
 
 <br/>
 
@@ -1038,6 +1059,17 @@ https://github.com/user-attachments/assets/7e05d46d-074b-4ccf-9e8e-c709ea7f9647
 
 https://github.com/user-attachments/assets/a3cfa008-0c46-4d4e-8a13-b52bb8c2fbbd
 
+## 30 FPS, 100 pktLag 상황
+
+https://github.com/user-attachments/assets/069e524b-0c41-4e2f-8500-731cfae0d5d6
+
+## 10 FPS, 제한없음
+
+https://github.com/user-attachments/assets/7f20ad76-1a5a-4516-bb73-a703ea676fb4
+
+# 제한없음, 500 pktLag
+
+https://github.com/user-attachments/assets/c0b0fed6-6966-45b5-bd5b-dc073ae2f612
 
 <div align="right">
   
