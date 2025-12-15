@@ -113,9 +113,9 @@ void UPPGA_AttackHitCheck::ServerApplyHitLogic(const FGameplayAbilityTargetDataH
 			return;
 		}
 
-		AActor* OwnerActor = GetAvatarActorFromActorInfo();
-		AActor* TargetActor = HitResult.GetActor();
-		if (!OwnerActor || !TargetActor)
+		AActor* Owner = GetAvatarActorFromActorInfo();
+		AActor* Target = HitResult.GetActor();
+		if (!Owner || !Target)
 		{
 			PPGAS_LOG(LogGAS, Error, TEXT("(Owner or Target)Actor Not Found"));
 			return;
@@ -123,15 +123,15 @@ void UPPGA_AttackHitCheck::ServerApplyHitLogic(const FGameplayAbilityTargetDataH
 
 		float AttackRange = OwnerAttributeSet->GetAttackRange();
 		float Tolerance = 50.0f;
-		float Distance = OwnerActor->GetSquaredDistanceTo(TargetActor);
+		float Distance = Owner->GetSquaredDistanceTo(Target);
 		if (Distance > (AttackRange + Tolerance) * (AttackRange + Tolerance))
 		{
 			PPGAS_LOG(LogGAS, Warning, TEXT("Validation Failed: Too Far (Dist: %.2f, Max: %.2f)"), FMath::Sqrt(Distance), AttackRange + Tolerance);
 			return;
 		}
 
-		FVector ForwardVec = OwnerActor->GetActorForwardVector();
-		FVector TargetVec = (TargetActor->GetActorLocation() - OwnerActor->GetActorLocation()).GetSafeNormal();
+		FVector ForwardVec = Owner->GetActorForwardVector();
+		FVector TargetVec = (Target->GetActorLocation() - Owner->GetActorLocation()).GetSafeNormal();
 		float DotResult = FVector::DotProduct(ForwardVec, TargetVec);
 		if (DotResult < 0.0f)
 		{
