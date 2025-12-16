@@ -41,40 +41,43 @@ public:
 
 	mutable FIsDeadDelegate ActorIsDead;
 
+	virtual void GetLifetimeReplicatedProps(TArray< class FLifetimeProperty >& OutLifetimeProps) const override;
+
 protected:
-	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, Category = "Attack", ReplicatedUsing = OnRep_AttackRange, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData AttackRange;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, Category = "Attack", ReplicatedUsing = OnRep_MaxAttackRange, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxAttackRange;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, Category = "Attack", ReplicatedUsing = OnRep_AttackRadius, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData AttackRadius;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, Category = "Attack", ReplicatedUsing = OnRep_MaxAttackRadius, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxAttackRadius;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, Category = "Attack", ReplicatedUsing = OnRep_AttackRate, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData AttackRate;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, Category = "Attack", ReplicatedUsing = OnRep_MaxAttackRate, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxAttackRate;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Health", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, Category = "Health", ReplicatedUsing = OnRep_Health, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Health;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Health", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, Category = "Health", ReplicatedUsing = OnRep_MaxHealth, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxHealth;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Mana", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, Category = "Mana", ReplicatedUsing = OnRep_Mana, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Mana;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Mana", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, Category = "Mana", ReplicatedUsing = OnRep_MaxMana, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxMana;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Damage;
 
+	UPROPERTY(ReplicatedUsing = OnRep_IsDead)
 	bool bIsDead = false;
 
 protected:
@@ -83,4 +86,38 @@ protected:
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
 
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+
+protected:
+	UFUNCTION()
+	void OnRep_AttackRange(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	void OnRep_MaxAttackRange(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	void OnRep_AttackRadius(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	void OnRep_MaxAttackRadius(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	void OnRep_AttackRate(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	void OnRep_MaxAttackRate(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	void OnRep_Health(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	void OnRep_MaxHealth(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	void OnRep_Mana(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	void OnRep_MaxMana(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	void OnRep_IsDead();
 };
