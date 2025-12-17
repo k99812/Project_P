@@ -26,6 +26,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Project_P.h"
+#include "Interface/PPPlayerInterface.h"
 
 APPGASCharacterPlayer::APPGASCharacterPlayer()
 {
@@ -148,22 +149,34 @@ void APPGASCharacterPlayer::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	GASInit();
+	InitGAS();
 
 	//콘솔 커멘드 코드로 입력하는 법
 	//ASC 디버그
 	APlayerController* PlayerController = CastChecked<APlayerController>(NewController);
 	PlayerController->ConsoleCommand(TEXT("showdebug abilitysystem"));
+
+	IPPPlayerInterface* Player = Cast<IPPPlayerInterface>(PlayerController);
+	if (Player)
+	{
+		Player->InitHUD(ASC);
+	}
 }
 
 void APPGASCharacterPlayer::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 
-	GASInit();
+	InitGAS();
+
+	IPPPlayerInterface* Player = Cast<IPPPlayerInterface>(GetController());
+	if (Player)
+	{
+		Player->InitHUD(ASC);
+	}
 }
 
-void APPGASCharacterPlayer::GASInit()
+void APPGASCharacterPlayer::InitGAS()
 {
 	APPGASPlayerState* GASPlayerState = GetPlayerState<APPGASPlayerState>();
 	if (GASPlayerState)
@@ -178,6 +191,11 @@ void APPGASCharacterPlayer::GASInit()
 			if (AttributeSet)
 			{
 				AttributeSet->ActorIsDead.AddDynamic(this, &APPGASCharacterPlayer::ActorIsDead);
+
+				if (AttributeSet->GetIsDead())
+				{
+					ActorIsDead();
+				}
 			}
 
 			//ASC에 특정태그가 생기거나 제거되면 호출하는 델리게이트에 콜백함수 연결
@@ -203,7 +221,35 @@ void APPGASCharacterPlayer::GASInit()
 					ASC->GiveAbility(Spec);
 				}
 
+				InitializeAttributes();
 			}
+		}
+	}
+}
+
+void APPGASCharacterPlayer::InitializeAttributes()
+{
+	if (ASC && DefaultStatsEffect)
+	{
+		FGameplayEffectContextHandle ContextHandle = ASC->MakeEffectContext();
+		ContextHandle.AddSourceObject(this);
+
+		FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(DefaultStatsEffect, 1.0f, ContextHandle);
+
+		if (SpecHandle.IsValid())
+		{
+			ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+		}
+
+		if (ASC->HasMatchingGameplayTag(PPTAG_CHARACTER_ISDEAD))
+		{
+			ASC->RemoveLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
+		}
+
+		if (const UPPCharacterAttributeSet* Attribute = ASC->GetSet<UPPCharacterAttributeSet>())
+		{
+			UPPCharacterAttributeSet* MutableAttribute = const_cast<UPPCharacterAttributeSet*>(Attribute);
+			MutableAttribute->SetIsDead(false);
 		}
 	}
 }
@@ -342,10 +388,10 @@ void APPGASCharacterPlayer::SetDead()
 		GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_NOCOLLISION);
 	}
 
-	IPPGameInterface* IPPGameMode = Cast<IPPGameInterface>(GetWorld()->GetAuthGameMode());
-	if (IPPGameMode)
+	IPPPlayerInterface* Player = Cast<IPPPlayerInterface>(PlayerController);
+	if (Player)
 	{
-		IPPGameMode->OnPlayerDead();
+		Player->OnPlayerDead();
 	}
 }
 

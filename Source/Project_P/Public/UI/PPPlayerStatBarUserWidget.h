@@ -18,6 +18,8 @@ class PROJECT_P_API UPPPlayerStatBarUserWidget : public UUserWidget
 public:
 	UPPPlayerStatBarUserWidget(const FObjectInitializer& ObjectInitializer);
 
+	void BindAbilitySystem(class UAbilitySystemComponent* ASC);
+
 protected:
 	virtual void NativeConstruct() override;
 
@@ -29,6 +31,9 @@ protected:
 
 	void UpdateHpBar();
 	void UpdateMpBar();
+
+	void CheckShouldTick();
+	void UpdateStatBar();
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UProgressBar> PbHpBar;
@@ -43,9 +48,21 @@ protected:
 	TObjectPtr<class UTextBlock> TxtMpStat;
 
 private:
+	float TargetHealth = 0.0f;
+	float TargetMaxHealth = 0.0f;
+	float TargetMana = 0.0f;
+	float TargetMaxMana = 0.0f;
+
 	float CurrentHealth = 0.0f;
 	float CurrentMaxHealth = 0.0f;
-
 	float CurrentMana = 0.0f;
 	float CurrentMaxMana = 0.0f;
+
+	FTimerHandle InterpTimerHandle;
+
+	UPROPERTY(EditAnywhere, Category = "UI")
+	float BarInterpSpeed = 15.0f;
+
+	UPROPERTY(EditAnywhere, Category = "UI")
+	float TimerFrequency = 0.016f;
 };

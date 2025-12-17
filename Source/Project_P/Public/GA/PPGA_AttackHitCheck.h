@@ -29,7 +29,10 @@ protected:
 
 	void ClientPlayHitCue(const FGameplayAbilityTargetDataHandle& DataHandle);
 
+	void TriggerAbility(class UAbilitySystemComponent* OwnerASC, class UAbilitySystemComponent* TargetASC);
+
 //GE Section
+protected:
 	UPROPERTY(EditAnywhere, Category = "GAS")
 	TSubclassOf<class UGameplayEffect> AttackDamageEffect;
 

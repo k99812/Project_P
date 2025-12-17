@@ -13,3 +13,8 @@ void UPPHUDWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 }
+
+void UPPHUDWidget::BindAbilitySystem(UAbilitySystemComponent* ASC)
+{
+	PlayerStatBar->BindAbilitySystem(ASC);
+}

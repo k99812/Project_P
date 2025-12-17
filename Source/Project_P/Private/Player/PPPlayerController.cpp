@@ -5,6 +5,7 @@
 #include "UI/PPHUDWidget.h"
 #include "UI/PPGameOverUserWidget.h"
 #include "UI/PPFloatingTextUserWidget.h"
+#include "GameFramework/GameModeBase.h"
 
 APPPlayerController::APPPlayerController()
 {
@@ -40,8 +41,31 @@ void APPPlayerController::BeginPlay()
 		if (HUDWidget)
 		{
 			HUDWidget->AddToViewport();
+
+			if (ASC_Cache)
+			{
+				HUDWidget->BindAbilitySystem(ASC_Cache);
+				ASC_Cache = nullptr;
+			}
 		}
 	}
+}
+
+void APPPlayerController::InitHUD(UAbilitySystemComponent* ASC)
+{
+	if (HUDWidget && ASC)
+	{
+		HUDWidget->BindAbilitySystem(ASC);
+	}
+	else
+	{
+		ASC_Cache = ASC;
+	}
+}
+
+void APPPlayerController::OnPlayerDead()
+{
+	GameOver();
 }
 
 void APPPlayerController::GameOver()
@@ -55,6 +79,29 @@ void APPPlayerController::GameOver()
 		GameOverUIWidget->AddToViewport();
 		EnableInput(this);
 		SetShowMouseCursor(true);
+	}
+}
+
+void APPPlayerController::RequestRespawn()
+{
+	ServerRPC_RequestRespawn();
+}
+
+void APPPlayerController::ServerRPC_RequestRespawn_Implementation()
+{
+	APawn* ControlledPawn = GetPawn();
+
+	if (ControlledPawn)
+	{
+		UnPossess();
+
+		ControlledPawn->Destroy();
+	}
+
+	AGameModeBase* GameMode = GetWorld()->GetAuthGameMode();
+	if (GameMode)
+	{
+		GameMode->RestartPlayer(this);
 	}
 }
 

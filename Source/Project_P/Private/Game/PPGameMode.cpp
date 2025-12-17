@@ -34,7 +34,7 @@ void APPGameMode::OnPlayerDead()
 	for (FConstPlayerControllerIterator itr = GetWorld()->GetPlayerControllerIterator(); itr; itr++)
 	{
 		APPPlayerController* PlayerController = Cast<APPPlayerController>(itr->Get());
-		if(PlayerController)
+		if(PlayerController && PlayerController->IsLocalPlayerController())
 		{
 			PlayerController->GameOver();
 		}

@@ -45,11 +45,16 @@ public:
 protected:
 	virtual void SetupGASPlayerInputComponent();
 
-	void GASInit();
+	void InitGAS();
+
+	void InitializeAttributes();
 
 	void GASInputPressed(int32 InputID);
 
 	void GASInputReleased(int32 InputID);
+
+	UPROPERTY(EditAnywhere, Category = "GAS")
+	TSubclassOf<class UGameplayEffect> DefaultStatsEffect;
 
 	UPROPERTY(EditAnywhere, Category = "GAS")
 	TArray<TSubclassOf<class UGameplayAbility>> StartAbilites;
