@@ -57,12 +57,22 @@ void UPPCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 	{
 		PPGAS_LOG(LogGAS, Warning, TEXT("Direct Healt Accesss : %f"), GetHealth());
 		SetHealth(FMath::Clamp(GetHealth(), MinHealth, GetMaxHealth()));
+
+		if (AActor* Target = Data.Target.GetAvatarActor())
+		{
+			Target->ForceNetUpdate();
+		}
 	}
 	else if (Data.EvaluatedData.Attribute == GetDamageAttribute())
 	{
 		PPGAS_LOG(LogGAS, Log, TEXT("Direct Healt Accesss : %f"), GetHealth());
 		SetHealth(FMath::Clamp(GetHealth() - GetDamage(), MinHealth, GetMaxHealth()));
 		SetDamage(0.0f);
+
+		if (AActor* Target = Data.Target.GetAvatarActor())
+		{
+			Target->ForceNetUpdate();
+		}
 	}
 
 	if (GetHealth() <= 0.0f && !bIsDead)

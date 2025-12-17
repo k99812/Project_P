@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "Interface/PPPlayerInterface.h"
 #include "PPPlayerController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECT_P_API APPPlayerController : public APlayerController
+class PROJECT_P_API APPPlayerController : public APlayerController, public IPPPlayerInterface
 {
 	GENERATED_BODY()
 	
@@ -25,8 +26,13 @@ public:
 
 	void GameOver();
 
+	virtual void RequestRespawn() override;
+
 protected:
 	virtual void BeginPlay() override;
+
+	UFUNCTION(Server, Reliable)
+	void ServerRPC_RequestRespawn();
 
 // HUD
 protected:
@@ -36,6 +42,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "HUD")
 	TObjectPtr<class UPPHUDWidget> HUDWidget;
 
+	UPROPERTY()
+	TObjectPtr<class UAbilitySystemComponent> ASC_Cache;
+
+	virtual void InitHUD(class UAbilitySystemComponent* ASC) override;
+
 //GameOver UI
 protected:
 	UPROPERTY(EditAnywhere, Category = "HUD")
@@ -43,6 +54,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "HUD")
 	TObjectPtr<class UPPGameOverUserWidget> GameOverUIWidget;
+
+	virtual void OnPlayerDead() override;
 
 //Damage UI Section
 public:

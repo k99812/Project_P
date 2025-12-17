@@ -41,6 +41,9 @@ public:
 
 	mutable FIsDeadDelegate ActorIsDead;
 
+	FORCEINLINE bool GetIsDead() const { return bIsDead; }
+	FORCEINLINE void SetIsDead(bool NewIsDead) { bIsDead = NewIsDead; }
+
 	virtual void GetLifetimeReplicatedProps(TArray< class FLifetimeProperty >& OutLifetimeProps) const override;
 
 protected:

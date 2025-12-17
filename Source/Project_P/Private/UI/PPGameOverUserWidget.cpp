@@ -6,6 +6,7 @@
 #include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"
 #include "Animation/WidgetAnimation.h"
+#include "Interface/PPPlayerInterface.h"
 
 
 UPPGameOverUserWidget::UPPGameOverUserWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -25,7 +26,19 @@ void UPPGameOverUserWidget::NativeConstruct()
 void UPPGameOverUserWidget::BtnEventGameRestart()
 {
 	APlayerController* OwingPlayerController = GetOwningPlayer();
+	IPPPlayerInterface* Player = Cast<IPPPlayerInterface>(OwingPlayerController);
+	
+	if (OwingPlayerController && Player)
+	{
+		Player->RequestRespawn();
 
+		OwingPlayerController->SetShowMouseCursor(false);
+		OwingPlayerController->SetInputMode(FInputModeGameOnly());
+
+		RemoveFromParent();
+	}
+
+	/*
 	if (OwingPlayerController)
 	{
 		//커맨드로 레벨 재시작
@@ -44,4 +57,5 @@ void UPPGameOverUserWidget::BtnEventGameRestart()
 		//함수실행시 해당 위젯 제거
 		RemoveFromParent();
 	}
+	*/
 }

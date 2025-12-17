@@ -17,6 +17,8 @@ class PROJECT_P_API UPPHUDWidget : public UUserWidget
 public:
 	UPPHUDWidget(const FObjectInitializer& ObjectInitializer);
 
+	void BindAbilitySystem(class UAbilitySystemComponent* ASC);
+
 protected:
 	virtual void NativeConstruct() override;
 

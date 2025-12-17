@@ -122,7 +122,7 @@ void UPPGA_AttackHitCheck::ServerApplyHitLogic(const FGameplayAbilityTargetDataH
 		}
 
 		float AttackRange = OwnerAttributeSet->GetAttackRange();
-		float Tolerance = 50.0f;
+		float Tolerance = 200.0f;
 		float Distance = Owner->GetSquaredDistanceTo(Target);
 		if (Distance > (AttackRange + Tolerance) * (AttackRange + Tolerance))
 		{
@@ -158,6 +158,8 @@ void UPPGA_AttackHitCheck::ServerApplyHitLogic(const FGameplayAbilityTargetDataH
 			UAISense_Damage::ReportDamageEvent(this, HitResult.GetActor(), OwnerASC->GetAvatarActor(),
 				OwnerAttributeSet->GetAttackRate(), HitResult.GetActor()->GetActorLocation(), HitResult.Location);
 		}
+
+		TriggerAbility(OwnerASC, TargetASC);
 	}
 }
 
@@ -178,10 +180,15 @@ void UPPGA_AttackHitCheck::ClientPlayHitCue(const FGameplayAbilityTargetDataHand
 			return;
 		}
 
-		//Hit 이벤트 발생
-		FGameplayEventData PayLoadData;
-		PayLoadData.Instigator = OwnerASC->GetAvatarActor();
-		PayLoadData.Target = TargetASC->GetAvatarActor();
-		OwnerASC->HandleGameplayEvent(PPTAG_ABILITY_HIT, &PayLoadData);
+		TriggerAbility(OwnerASC, TargetASC);
 	}
+}
+
+void UPPGA_AttackHitCheck::TriggerAbility(class UAbilitySystemComponent* OwnerASC, class UAbilitySystemComponent* TargetASC)
+{
+	//Hit 이벤트 발생
+	FGameplayEventData PayLoadData;
+	PayLoadData.Instigator = OwnerASC->GetAvatarActor();
+	PayLoadData.Target = TargetASC->GetAvatarActor();
+	OwnerASC->HandleGameplayEvent(PPTAG_ABILITY_HIT, &PayLoadData);
 }
