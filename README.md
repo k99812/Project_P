@@ -470,7 +470,9 @@ HitCheck 과정에서 데미지를 주는 액터(가해자) 데미지를 받는 
 
 
 ## AIController
+
 https://github.com/user-attachments/assets/304a73f8-e93c-4e49-8669-28b2bcbe6248
+
 ![image](https://github.com/user-attachments/assets/37c90fd0-c08d-4018-9a61-3e35d7d1be04)  
 <br/>
 AI컨트롤러에서 AI Perception 기능을 이용해 적을 인식 하여 블랙보드에 저장   
@@ -588,8 +590,6 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 * GetSenseClass 함수로 클래스를 가져와 클래스에 맞는 함수를 호출   
 
 <br/>
-
-https://github.com/user-attachments/assets/03e28172-f83d-4ee7-a1cf-95480447eeb4
 	
 > APPAIController
 
@@ -606,13 +606,13 @@ https://github.com/user-attachments/assets/03e28172-f83d-4ee7-a1cf-95480447eeb4
 		}
 	}
 
+https://github.com/user-attachments/assets/03e28172-f83d-4ee7-a1cf-95480447eeb4
+
 * BlackBoard의 타겟변수 업데이트  
 * 틱함수 활성화   
 * FindTargetDelegate(콜백함수에서 몬스터의 HPBar 활성화) 실행   
 
 <br/>
-
-https://github.com/user-attachments/assets/e814d45d-6242-4d1b-b56a-287e2291645a
 
 > APPAIController
 
@@ -627,6 +627,8 @@ https://github.com/user-attachments/assets/e814d45d-6242-4d1b-b56a-287e2291645a
 			FindTargetDelegate.ExecuteIfBound(true);
 		}
 	}
+
+https://github.com/user-attachments/assets/e814d45d-6242-4d1b-b56a-287e2291645a
 
 * 데미지를 준 액터(가해자)가 매개변수로 전달됨
 * 변수가 유효한지 확인 후 블랙보드에 저장 및 기타 로직 실행
