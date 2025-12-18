@@ -2,7 +2,7 @@
 
 https://github.com/user-attachments/assets/069e524b-0c41-4e2f-8500-731cfae0d5d6
 
-30fps, 100pktLag 상황에서 동작입니다
+30fps, 100PktLag 상황에서 동작입니다
 
 <br/>
 
