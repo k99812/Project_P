@@ -72,7 +72,7 @@ https://github.com/user-attachments/assets/069e524b-0c41-4e2f-8500-731cfae0d5d6
 
 <div align="right">
   
-[목차로](#전체-프로젝트)
+[목차로](#목차)
 
 </div>
 
@@ -120,7 +120,7 @@ https://github.com/user-attachments/assets/069e524b-0c41-4e2f-8500-731cfae0d5d6
 
 <div align="right">
   
-[목차로](#전체-프로젝트)
+[목차로](#목차)
 
 </div>
 
@@ -289,7 +289,7 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 
 <div align="right">
   
-[목차로](#전체-프로젝트)
+[목차로](#목차)
 
 </div>
 
@@ -361,7 +361,7 @@ HitCheck 과정에서 데미지를 주는 액터(가해자) 데미지를 받는 
 
 <div align="right">
   
-[목차로](#전체-프로젝트)
+[목차로](#목차)
 
 </div>
 
@@ -456,7 +456,7 @@ HitCheck 과정에서 데미지를 주는 액터(가해자) 데미지를 받는 
 
 <div align="right">
   
-[목차로](#전체-프로젝트)
+[목차로](#목차)
 
 </div>
 
@@ -657,7 +657,7 @@ https://github.com/user-attachments/assets/e814d45d-6242-4d1b-b56a-287e2291645a
 
 <div align="right">
   
-[목차로](#전체-프로젝트)
+[목차로](#목차)
 
 </div>
 
@@ -837,7 +837,7 @@ https://github.com/user-attachments/assets/e814d45d-6242-4d1b-b56a-287e2291645a
 
 <div align="right">
   
-[목차로](#전체-프로젝트)
+[목차로](#목차)
 
 </div>
 
@@ -1006,7 +1006,7 @@ https://github.com/user-attachments/assets/7e05d46d-074b-4ccf-9e8e-c709ea7f9647
 
 <div align="right">
   
-[목차로](#전체-프로젝트)
+[목차로](#목차)
 
 </div>
 
@@ -1020,6 +1020,6 @@ https://github.com/user-attachments/assets/c0b0fed6-6966-45b5-bd5b-dc073ae2f612
 
 <div align="right">
   
-[목차로](#전체-프로젝트)
+[목차로](#목차)
 
 </div>
