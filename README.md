@@ -1,7 +1,8 @@
 ## 언리얼 포트폴리오 제작
 
-해당 프로젝트를 실행하려면 **언리얼 엔진 버전 5.3.2**, 마켓플레이스(팹)에서   
-**Paragon Countess, Paragon Minions**를 프로젝트에 추가해야 합니다.   
+https://github.com/user-attachments/assets/069e524b-0c41-4e2f-8500-731cfae0d5d6
+
+30fps, 100pktLag 상황에서 동작입니다
 
 <br/>
 
@@ -19,23 +20,11 @@
 
 <br/>
 
-## 전체 프로젝트
-
-<div align=center>
-
-|프로젝트|프로젝트설명|기간|비고|
-|:---:|:---:|:---:|:---:|
-|<strong>[Project_P](https://github.com/k99812/Project_P)<strong>|언리얼 엔진 <br> 개인 포트폴리오|2024.06 ~ 2025.03 <br> 2025.11 ~ 진행중| 네트워크 리팩토링 |
-|<strong>[WKMetaverse](https://github.com/k99812/WKMetaverse)<strong>|유니티 멀티플레이 <br> 팀 프로젝트|2022.06 ~ 2023.02| - |
-|<strong>[Cpp](https://github.com/k99812/Cpp)<strong>|코딩테스트 <br> 알고리즘 문제 풀이|2023.05 ~ | - |
-|<strong>[k99812.github.io](https://github.com/k99812/k99812.github.io)<strong>|포트폴리오 <br> 사이트|2025.06 ~ | - |
-
-</div>
-
-<br/>
-
 ## 목차
-   
+
+<details>
+<summary>📖 목차 보기 (Click to Expand)</summary>
+
 * [개요](#개요)
 * [개선 사항](#개선-사항)
 * [캐릭터 구조](#Character-구조)
@@ -47,12 +36,14 @@
 * [PlayerController](#PlayerController)
 * [UI](#UI)
 
+</details>
+
 <br/>
 
 ## 개요
 | 항목 | 내용 | 비고 |
 |------|------|------|
-| 개발 기간 | 2024.06 ~ 2025.03 <br> 2025.11 ~ 진행중 |
+| 개발 기간 | 2024.06 ~ 2025.03 <br> 2025.11 ~  |
 | 엔진 | Unreal Engine 5.3.2 |
 | 언어 | C++ / Blueprint |
 | 주요 시스템 | GAS / AI / UMG / Input <br/> Animation / Network |
@@ -304,8 +295,10 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 
 <br/>
 
-
 ## Combo Attack
+
+https://github.com/user-attachments/assets/a3cfa008-0c46-4d4e-8a13-b52bb8c2fbbd
+
 ![image](https://github.com/user-attachments/assets/360325b1-1141-4885-94fb-c94afd2047fb)
 * GameAbility를 사용해 개발한 콤보공격 플로우 차트
 * 개선전 콤보공격 로직
@@ -472,6 +465,7 @@ HitCheck 과정에서 데미지를 주는 액터(가해자) 데미지를 받는 
 
 
 ## AIController
+https://github.com/user-attachments/assets/304a73f8-e93c-4e49-8669-28b2bcbe6248
 ![image](https://github.com/user-attachments/assets/37c90fd0-c08d-4018-9a61-3e35d7d1be04)  
 <br/>
 AI컨트롤러에서 AI Perception 기능을 이용해 적을 인식 하여 블랙보드에 저장   
@@ -589,7 +583,9 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 * GetSenseClass 함수로 클래스를 가져와 클래스에 맞는 함수를 호출   
 
 <br/>
-    
+
+https://github.com/user-attachments/assets/03e28172-f83d-4ee7-a1cf-95480447eeb4
+	
 > APPAIController
 
 	//PerceptionSensedSight
@@ -610,6 +606,8 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 * FindTargetDelegate(콜백함수에서 몬스터의 HPBar 활성화) 실행   
 
 <br/>
+
+https://github.com/user-attachments/assets/e814d45d-6242-4d1b-b56a-287e2291645a
 
 > APPAIController
 
@@ -920,6 +918,9 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 * 프로그래스바, 텍스트박스 생성
 
 ## 재시작 UI
+
+https://github.com/user-attachments/assets/e9e4e0ee-f90a-4545-8b29-fa12db39658c
+
 ![image](https://github.com/user-attachments/assets/796bd9f7-2586-4520-bc19-a23bb26e9eab)
 <br/>
 
@@ -967,6 +968,9 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 <br/>
 
 ## Damage UI
+
+https://github.com/user-attachments/assets/7e05d46d-074b-4ccf-9e8e-c709ea7f9647
+
 ![image](https://github.com/user-attachments/assets/064dbf8b-7813-4201-8201-5f78d2bfd78a)
 
 1. 데미지 어트리뷰트가 바뀌면 게임모드를 가져와 상속받은 인터페이스로 캐스팅하여 함수실행
@@ -1005,66 +1009,6 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 [목차로](#전체-프로젝트)
 
 </div>
-
- 
-<br/>
-
-
-## 진행상황
-1. 캐릭터 이동 및 애니메이션
-2. GAS를 이용해 공격, 점프, 달리기 구현
-3. AttributeSet을 이용한 스탯 구현
-4. 공격 판정 및 데미지 구현
-5. 잡몹 HPBar, 체력 0 될시 죽는 몽타주 실행 및 Destroy
-6. 행동트리를 이용해 몬스터 AI 구현
-7. 캐릭터 사망시 재시작 및 UI 출력
-8. 몬스터 데미지 UI 제작
-9. 기존 콤보공격 로직 개선 및 네트워크 지원
-
-<br/>
-
-## 몬스터 AI
-
-https://github.com/user-attachments/assets/03e28172-f83d-4ee7-a1cf-95480447eeb4
-
-몬스터 정찰   
-초록색 범위 : 몬스터 시야 인식 범위   
-빨강색 범위 : 몬스터가 인식한 경우 해당 범위를 벗어나야 잊혀짐   
-노랑색 범위 : 노이즈 이벤트 범위
-
-<br/>
-
-https://github.com/user-attachments/assets/304a73f8-e93c-4e49-8669-28b2bcbe6248
-
-몬스터 시야 감지
-
-<br/>
-
-https://github.com/user-attachments/assets/e814d45d-6242-4d1b-b56a-287e2291645a
-
-데미지 감지
-
-<br/>
-
-## 캐릭터 사망시 재시작 및 UI 출력
-
-https://github.com/user-attachments/assets/e9e4e0ee-f90a-4545-8b29-fa12db39658c
-
-<br/>
-
-## 몬스터 데미지 UI
-
-https://github.com/user-attachments/assets/7e05d46d-074b-4ccf-9e8e-c709ea7f9647
-
-<br/>
-
-## 개선된 콤보공격
-
-https://github.com/user-attachments/assets/a3cfa008-0c46-4d4e-8a13-b52bb8c2fbbd
-
-## 30 FPS, 100 pktLag 상황
-
-https://github.com/user-attachments/assets/069e524b-0c41-4e2f-8500-731cfae0d5d6
 
 ## 10 FPS, 제한없음
 
