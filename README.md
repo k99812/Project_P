@@ -43,7 +43,7 @@ https://github.com/user-attachments/assets/069e524b-0c41-4e2f-8500-731cfae0d5d6
 ## 개요
 | 항목 | 내용 | 비고 |
 |------|------|------|
-| 개발 기간 | 2024.06 ~ 2025.03 <br> 2025.11 ~  |
+| 개발 기간 | 2024.06 ~ 2025.03 <br> 2025.11 ~ (진행 중) | 2025.03 (v1.0) <br/> 2025.12 (v2.0 Network Update)|
 | 엔진 | Unreal Engine 5.3.2 |
 | 언어 | C++ / Blueprint |
 | 주요 시스템 | GAS / AI / UMG / Input <br/> Animation / Network |
