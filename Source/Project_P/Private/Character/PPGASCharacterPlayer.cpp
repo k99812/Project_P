@@ -196,6 +196,10 @@ void APPGASCharacterPlayer::InitGAS()
 				{
 					ActorIsDead();
 				}
+				else
+				{
+					SetAlive();
+				}
 			}
 
 			//ASC에 특정태그가 생기거나 제거되면 호출하는 델리게이트에 콜백함수 연결
@@ -384,7 +388,10 @@ void APPGASCharacterPlayer::SetDead()
 	if (PlayerController)
 	{
 		DisableInput(PlayerController);
+	}
 
+	if (GetCapsuleComponent())
+	{
 		GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_NOCOLLISION);
 	}
 
@@ -392,6 +399,29 @@ void APPGASCharacterPlayer::SetDead()
 	if (Player)
 	{
 		Player->OnPlayerDead();
+	}
+}
+
+void APPGASCharacterPlayer::SetAlive()
+{
+	PPNET_LOG(LogGAS, Log, TEXT("Begin"));
+	if (GetCapsuleComponent())
+	{
+		GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_PPCAPSULE);
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		SetActorEnableCollision(true);
+	}
+
+	if (GetCharacterMovement())
+	{
+		GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+		GetCharacterMovement()->Activate();
+		GetCharacterMovement()->Velocity = FVector::ZeroVector;
+	}
+	
+	if (GetMesh() && GetMesh()->GetAnimInstance())
+	{
+		GetMesh()->GetAnimInstance()->StopAllMontages(0.0f);
 	}
 }
 

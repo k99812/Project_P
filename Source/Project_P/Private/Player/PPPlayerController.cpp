@@ -6,6 +6,12 @@
 #include "UI/PPGameOverUserWidget.h"
 #include "UI/PPFloatingTextUserWidget.h"
 #include "GameFramework/GameModeBase.h"
+#include "Player/PPGASPlayerState.h"
+#include "AbilitySystemComponent.h"
+#include "Attribute/PPCharacterAttributeSet.h"
+#include "Tag/PPGameplayTag.h"
+#include "Project_P.h"
+#include "GameFramework/Character.h"
 
 APPPlayerController::APPPlayerController()
 {
@@ -73,6 +79,8 @@ void APPPlayerController::GameOver()
 	//K2_OnGameOver();
 	if (!IsLocalPlayerController()) return;
 
+	if (GameOverUIWidget && GameOverUIWidget->IsInViewport()) return;
+
 	GameOverUIWidget = CreateWidget<UPPGameOverUserWidget>(this, GameOverUIClass);
 	if (GameOverUIWidget)
 	{
@@ -89,12 +97,40 @@ void APPPlayerController::RequestRespawn()
 
 void APPPlayerController::ServerRPC_RequestRespawn_Implementation()
 {
-	APawn* ControlledPawn = GetPawn();
+	APPGASPlayerState* PS = GetPlayerState<APPGASPlayerState>();
+	if (PS)
+	{
+		UAbilitySystemComponent* ASC = PS->GetAbilitySystemComponent();
 
+		if (ASC)
+		{
+			if (ASC->HasMatchingGameplayTag(PPTAG_CHARACTER_ISDEAD))
+			{
+				ASC->RemoveLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
+			}
+
+			ASC->CurrentMontageStop(0.0f);
+
+			if (const UPPCharacterAttributeSet* AttributeSet = ASC->GetSet<UPPCharacterAttributeSet>())
+			{
+				const_cast<UPPCharacterAttributeSet*>(AttributeSet)->SetIsDead(false);
+			}
+		}
+	}
+
+	APawn* ControlledPawn = GetPawn();
 	if (ControlledPawn)
 	{
-		UnPossess();
+		ACharacter* OldCharacter = Cast<ACharacter>(ControlledPawn);
+		if (OldCharacter)
+		{
+			if (OldCharacter->GetMesh() && OldCharacter->GetMesh()->GetAnimInstance())
+			{
+				OldCharacter->GetMesh()->GetAnimInstance()->StopAllMontages(0.0f);
+			}
+		}
 
+		UnPossess();
 		ControlledPawn->Destroy();
 	}
 
