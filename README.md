@@ -54,6 +54,11 @@ https://github.com/user-attachments/assets/069e524b-0c41-4e2f-8500-731cfae0d5d6
 - 게임 플레이 태그를 활용한 제어 및 상태 관리
 - Trace 기반의 공격 판정, 타격 시 GE를 통한 데미지 처리
 
+### 네트워크 및 동기화
+- 리슨서버 환경에서의 클라이언트-서버 구조 구현
+- WaitTargetData 분석을 통한 GAS 기반 클라이언트 예측 적용으로
+  네트워크 지연 극복
+
 ### 애니메이션 시스템
 - Locomotion, Jump, AimOffset, UpperBody Layer 블렌딩 구성
 - Montage, AnimNotify 기반 콤보 연계 및 타격 타이밍 처리
