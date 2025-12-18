@@ -6,6 +6,7 @@
 #include "Project_P.h"
 #include "Tag/PPGameplayTag.h"
 #include "Net/UnrealNetwork.h"
+#include "Character/PPGASCharacterPlayer.h"
 
 UPPCharacterAttributeSet::UPPCharacterAttributeSet() : 
 	AttackRange(100.0f), MaxAttackRange(300.0f),
@@ -96,6 +97,8 @@ void UPPCharacterAttributeSet::PreAttributeChange(const FGameplayAttribute& Attr
 
 void UPPCharacterAttributeSet::OnRep_IsDead()
 {
+	PPNET_ATTLOG(LogGAS, Log, TEXT("Begin"));
+
 	if (bIsDead)
 	{
 		ActorIsDead.Broadcast();
@@ -112,6 +115,19 @@ void UPPCharacterAttributeSet::OnRep_IsDead()
 		{
 			// 만약 부활 기능이 있다면 태그 제거도 필요
 			ASC->RemoveLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
+		}
+	}
+
+	APPGASCharacterPlayer* Player = Cast<APPGASCharacterPlayer>(GetOwningActor());
+	if (Player)
+	{
+		if (bIsDead)
+		{
+			Player->SetDead();
+		}
+		else
+		{
+			Player->SetAlive();
 		}
 	}
 }

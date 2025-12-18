@@ -67,7 +67,10 @@ protected:
 	UFUNCTION()
 	virtual void ActorIsDead();
 
+public:
 	virtual void SetDead() override;
+
+	void SetAlive();
 
 // Ability System Section
 protected:

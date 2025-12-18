@@ -7,6 +7,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "Animation/WidgetAnimation.h"
 #include "Interface/PPPlayerInterface.h"
+#include "Player/PPGASPlayerState.h"
+#include "AbilitySystemComponent.h"
+#include "Attribute/PPCharacterAttributeSet.h"
+#include "Tag/PPGameplayTag.h"
 
 
 UPPGameOverUserWidget::UPPGameOverUserWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -28,34 +32,35 @@ void UPPGameOverUserWidget::BtnEventGameRestart()
 	APlayerController* OwingPlayerController = GetOwningPlayer();
 	IPPPlayerInterface* Player = Cast<IPPPlayerInterface>(OwingPlayerController);
 	
+	if (!OwingPlayerController) UE_LOG(LogTemp, Error, TEXT("RestartBtn: PC is NULL"));
+	if (!Player) UE_LOG(LogTemp, Error, TEXT("RestartBtn: Interface Cast Failed"));
+
 	if (OwingPlayerController && Player)
 	{
+		APPGASPlayerState* PlayerState = OwingPlayerController->GetPlayerState<APPGASPlayerState>();
+		if (PlayerState)
+		{
+			UAbilitySystemComponent* ASC = PlayerState->GetAbilitySystemComponent();
+
+			if (ASC)
+			{
+				if (ASC->HasMatchingGameplayTag(PPTAG_CHARACTER_ISDEAD))
+				{
+					ASC->RemoveLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
+				}
+
+				if (const UPPCharacterAttributeSet* AttributeSet = ASC->GetSet<UPPCharacterAttributeSet>())
+				{
+					const_cast<UPPCharacterAttributeSet*>(AttributeSet)->SetIsDead(false);
+				}
+			}
+		}
+
 		Player->RequestRespawn();
 
 		OwingPlayerController->SetShowMouseCursor(false);
 		OwingPlayerController->SetInputMode(FInputModeGameOnly());
-
-		RemoveFromParent();
 	}
 
-	/*
-	if (OwingPlayerController)
-	{
-		//커맨드로 레벨 재시작
-		//GetWorld()->Exec(GetWorld(), TEXT("RestartLevel"));
-		//OwingPlayerController->ConsoleCommand(TEXT("RestartLevel"));
-
-		//#include "Kismet/GameplayStatics.h" 추가
-		//OpenLevel을 이용해 레벨 재시작
-		//UGameplayStatics::OpenLevel(GetWorld(), FName(TEXT("Level_1")));
-		UGameplayStatics::OpenLevel(GetWorld(), GetWorld()->GetFName());
-
-		//사용자 입력 비활성화
-		OwingPlayerController->SetShowMouseCursor(false);
-		OwingPlayerController->DisableInput(OwingPlayerController);
-
-		//함수실행시 해당 위젯 제거
-		RemoveFromParent();
-	}
-	*/
+	RemoveFromParent();
 }
