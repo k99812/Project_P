@@ -123,6 +123,16 @@ https://github.com/user-attachments/assets/069e524b-0c41-4e2f-8500-731cfae0d5d6
 <img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
 </a>
 
+### 10 FPS, 제한없음
+
+https://github.com/user-attachments/assets/7f20ad76-1a5a-4516-bb73-a703ea676fb4
+
+### 제한없음, 500 pktLag
+
+https://github.com/user-attachments/assets/c0b0fed6-6966-45b5-bd5b-dc073ae2f612
+
+<div align="right">
+
 <div align="right">
   
 [목차로](#목차)
@@ -1010,20 +1020,6 @@ https://github.com/user-attachments/assets/7e05d46d-074b-4ccf-9e8e-c709ea7f9647
 3. 플레이어컨트롤러에서 DamageUI 생성후 뷰포트에 추가되면 NativeConstruct 실행
 4. Fade 애니메이션 Finished 델리게이트에 AnimationFinished 함수 바인드 후 UI 포지션 설정 및 애니메이션 재생
 5. AnimationFinished 함수 호출이 되면 바인드된 람다 함수 실행
-
-<div align="right">
-  
-[목차로](#목차)
-
-</div>
-
-## 10 FPS, 제한없음
-
-https://github.com/user-attachments/assets/7f20ad76-1a5a-4516-bb73-a703ea676fb4
-
-# 제한없음, 500 pktLag
-
-https://github.com/user-attachments/assets/c0b0fed6-6966-45b5-bd5b-dc073ae2f612
 
 <div align="right">
   
