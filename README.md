@@ -321,14 +321,15 @@ https://github.com/user-attachments/assets/a3cfa008-0c46-4d4e-8a13-b52bb8c2fbbd
 <img width="1540" height="998" alt="image" src="https://github.com/user-attachments/assets/8bf4f338-e735-4bd3-9560-e24f55018361" />
 <img width="1389" height="573" alt="image" src="https://github.com/user-attachments/assets/a2ad0ee4-041a-4c41-8b1d-6fe629d0c976" />
 <img width="1004" height="1082" alt="image" src="https://github.com/user-attachments/assets/de77e60f-0c3b-4af0-8d81-a115c6964730" />
-<a href="https://k99812.tistory.com/192" height="5" width="10" target="_blank" >
-<img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
-</a>
 
 * 개선후 콤보공격 로직의 플로우 차트와 네트워크 흐름도
 * 네트워크 흐름도에서 (InputOpenEvent, OnInputOpen),   
   (Re-Input, InputPresseed)는 순서가 바뀔 수 있습니다.
 * 자세한 내용은 블로그 글을 통해 볼 수 있습니다.
+
+<a href="https://k99812.tistory.com/192" height="5" width="10" target="_blank" >
+<img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
+</a>
 
 <br/>
 
@@ -342,15 +343,16 @@ https://github.com/user-attachments/assets/a3cfa008-0c46-4d4e-8a13-b52bb8c2fbbd
 <img width="2872" height="1240" alt="image" src="https://github.com/user-attachments/assets/ea3bb68b-a552-4e35-9fdf-21eada09b9c1" />
 <img width="1850" height="1343" alt="image" src="https://github.com/user-attachments/assets/a2ceaaec-1dd2-4e15-9b0e-e1b002341cca" />
 <img width="2326" height="717" alt="image" src="https://github.com/user-attachments/assets/2665c359-8563-415f-b4b0-9e1d0b5600cc" />
-<a href="https://k99812.tistory.com/196" height="5" width="10" target="_blank" >
-<img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
-</a>
 
 * 기존 구현했던 어빌리티 테스크를 언리얼에서 제공하는   
   UAbilityTask_WaitTargetData 테스크로 변경
 * 개선 결과로 클라이언트 예측 구현,
   서버-클라 두 곳 모두에서 쓸 수 있는 GA 구현
 * 자세한 내용은 블로그 글을 통해 볼 수 있습니다.
+
+<a href="https://k99812.tistory.com/196" height="5" width="10" target="_blank" >
+<img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
+</a>
 
 <br/>
 
