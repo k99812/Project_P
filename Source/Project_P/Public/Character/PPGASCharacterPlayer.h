@@ -8,6 +8,7 @@
 #include "InputActionValue.h"
 #include "GameplayEffectTypes.h"
 #include "Interface/PPAnimInterface.h"
+#include "Interface/PPPlayerCharacterInterface.h"
 #include "PPGASCharacterPlayer.generated.h"
 
 DECLARE_DELEGATE(FInputReleasedDelegate);
@@ -16,7 +17,7 @@ DECLARE_DELEGATE(FInputReleasedDelegate);
  * 
  */
 UCLASS()
-class PROJECT_P_API APPGASCharacterPlayer : public APPCharacterBase, public IAbilitySystemInterface, public IPPAnimInterface
+class PROJECT_P_API APPGASCharacterPlayer : public APPCharacterBase, public IAbilitySystemInterface, public IPPAnimInterface, public IPPPlayerCharacterInterface
 {
 	GENERATED_BODY()
 
@@ -124,4 +125,12 @@ protected:
 protected:
 	UPROPERTY(VisibleAnywhere, Category = Animation)
 	TObjectPtr<class UAnimMontage> LevelStartMontage;
+
+// Monster HPBar
+public:
+	virtual void RequestSetMonsterHpBar(bool bIsFound, AActor* TargetMonster) override;
+
+protected:
+	UFUNCTION(Client, Unreliable)
+	void ClientRPC_SetMonsterHpBar(bool bIsFound, AActor* TargetMonster);
 };

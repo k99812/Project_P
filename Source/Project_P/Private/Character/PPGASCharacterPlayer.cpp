@@ -27,6 +27,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Project_P.h"
 #include "Interface/PPPlayerInterface.h"
+#include "Character/PPGASCharacterGrunt.h"
 
 APPGASCharacterPlayer::APPGASCharacterPlayer()
 {
@@ -307,6 +308,22 @@ void APPGASCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	}
 
 	SetupGASPlayerInputComponent();
+}
+
+void APPGASCharacterPlayer::RequestSetMonsterHpBar(bool bIsFound, AActor* TargetMonster)
+{
+	if (!HasAuthority()) return;
+
+	ClientRPC_SetMonsterHpBar(bIsFound, TargetMonster);
+}
+
+void APPGASCharacterPlayer::ClientRPC_SetMonsterHpBar_Implementation(bool bIsFound, AActor* TargetMonster)
+{
+	APPGASCharacterGrunt* Target = Cast<APPGASCharacterGrunt>(TargetMonster);
+	if (Target)
+	{
+		Target->SetMonstHpBarVisibility(bIsFound);
+	}
 }
 
 void APPGASCharacterPlayer::BindInputReleasedDelegate(UPPAnimInstance* InAnimInstance)

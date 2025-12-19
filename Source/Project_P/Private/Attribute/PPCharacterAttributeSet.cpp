@@ -107,6 +107,7 @@ void UPPCharacterAttributeSet::OnRep_IsDead()
 	UAbilitySystemComponent* ASC = GetOwningAbilitySystemComponent();
 	if (ASC)
 	{
+		
 		if (bIsDead)
 		{
 			ASC->AddLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
@@ -116,18 +117,18 @@ void UPPCharacterAttributeSet::OnRep_IsDead()
 			// 만약 부활 기능이 있다면 태그 제거도 필요
 			ASC->RemoveLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
 		}
-	}
 
-	APPGASCharacterPlayer* Player = Cast<APPGASCharacterPlayer>(GetOwningActor());
-	if (Player)
-	{
-		if (bIsDead)
+		APPGASCharacterPlayer* Player = Cast<APPGASCharacterPlayer>(ASC->GetAvatarActor());
+		if (Player)
 		{
-			Player->SetDead();
-		}
-		else
-		{
-			Player->SetAlive();
+			if (bIsDead)
+			{
+				Player->SetDead();
+			}
+			else
+			{
+				Player->SetAlive();
+			}
 		}
 	}
 }
