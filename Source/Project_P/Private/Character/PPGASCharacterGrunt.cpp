@@ -12,6 +12,7 @@
 #include "AI/PPAIController.h"
 #include "Interface/PPGameInterface.h"
 #include "GameFramework/GameModeBase.h"
+#include "Interface/PPPlayerCharacterInterface.h"
 
 APPGASCharacterGrunt::APPGASCharacterGrunt()
 {
@@ -98,7 +99,13 @@ void APPGASCharacterGrunt::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	
-//스탯 초기화
+}
+
+void APPGASCharacterGrunt::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	//스탯 초기화
 	AttributeSet->InitAttackRadius(AttributeData->AttackRadius);
 	AttributeSet->InitMaxAttackRadius(AttributeData->MaxAttackRadius);
 
@@ -111,22 +118,33 @@ void APPGASCharacterGrunt::PostInitializeComponents()
 	AttributeSet->InitMaxHealth(AttributeData->MaxHealth);
 	AttributeSet->InitHealth(AttributeSet->GetMaxHealth());
 
-//AI 관련 어트리뷰트 초기화
+	//AI 관련 어트리뷰트 초기화
 	AttributeSet->InitAIPatrolRadius(AttributeData->AIPatrolRadius);
 	AttributeSet->InitAITurnSpeed(AttributeData->AITurnSpeed);
 	AttributeSet->InitBTAttackRange(AttributeData->BTAttackRange);
 
-// HPBar 델리게이트 연결
+	// HPBar 델리게이트 연결
 	APPAIController* AIController = Cast<APPAIController>(GetController());
 	if (AIController)
 	{
-		AIController->FindTargetDelegate.BindDynamic(this, &APPGASCharacterGrunt::FoundTargetCallback);
+		AIController->FindTargetDelegate.AddDynamic(this, &APPGASCharacterGrunt::FoundTargetCallback);
 	}
 }
 
-void APPGASCharacterGrunt::FoundTargetCallback(bool bFoundTarget)
+void APPGASCharacterGrunt::FoundTargetCallback(bool bFoundTarget, AActor* TargetActor)
 {
-	HpBar->SetVisibility(bFoundTarget);
+	if (!HasAuthority()) return;
+
+	IPPPlayerCharacterInterface* PCInterface = Cast<IPPPlayerCharacterInterface>(TargetActor);
+	if (PCInterface)
+	{
+		PCInterface->RequestSetMonsterHpBar(bFoundTarget, this);
+	}
+}
+
+void APPGASCharacterGrunt::SetMonstHpBarVisibility(bool bVisible)
+{
+	HpBar->SetVisibility(bVisible);
 }
 
 void APPGASCharacterGrunt::TakeDamage(const FOnAttributeChangeData& ChangeData)

@@ -171,9 +171,9 @@ void APPAIController::ActorPerceptionForgetUpdated(AActor* Actor)
 		APawn* Target = Cast<APawn>(GetBlackboardComponent()->GetValueAsObject(BBKEY_TARGET));
 		if (PerceptionedPawn == Target)
 		{
+			FindTargetDelegate.Broadcast(false, Target);
 			Blackboard->SetValueAsObject(BBKEY_TARGET, nullptr);
 			AActor::SetActorTickEnabled(false);
-			FindTargetDelegate.ExecuteIfBound(false);
 		}
 	}
 }
@@ -209,7 +209,7 @@ void APPAIController::BlackboardTargetUpdate(APawn* Target)
 	{
 		Blackboard->SetValueAsObject(BBKEY_TARGET, Target);
 		AActor::SetActorTickEnabled(true);
-		FindTargetDelegate.ExecuteIfBound(true);
+		FindTargetDelegate.Broadcast(true, Target);
 	}
 }
 
@@ -225,9 +225,9 @@ void APPAIController::ResetTarget()
 			FGameplayTagContainer Tag(PPTAG_CHARACTER_ISDEAD);
 			if (ASC->HasAnyMatchingGameplayTags(Tag))
 			{
+				FindTargetDelegate.Broadcast(false, Target);
 				GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, nullptr);
 				AActor::SetActorTickEnabled(false);
-				FindTargetDelegate.ExecuteIfBound(false);
 			}
 		}
 	}

@@ -19,6 +19,10 @@ public:
 
 	virtual void PostInitializeComponents() override;
 
+	virtual void PossessedBy(AController* NewController) override;
+
+	void SetMonstHpBarVisibility(bool bVisible);
+
 protected:
 	UPROPERTY(EditAnywhere, Category = "AttributeData")
 	TObjectPtr<class UPPGruntAttributeData> AttributeData;
@@ -27,7 +31,7 @@ protected:
 	TObjectPtr<class UPPGASWidgetComponent> HpBar;
 
 	UFUNCTION()
-	void FoundTargetCallback(bool bFoundTarget);
+	void FoundTargetCallback(bool bFoundTarget, AActor* TargetActor);
 
 // Damage
 protected:

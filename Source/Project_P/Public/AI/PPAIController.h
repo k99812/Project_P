@@ -7,7 +7,7 @@
 #include "Perception/AIPerceptionTypes.h"
 #include "PPAIController.generated.h"
 
-DECLARE_DYNAMIC_DELEGATE_OneParam(FFindTargetDelegate, bool, bFindTarget);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FFindTargetDelegate, bool, bFindTarget, AActor*, TargetActor);
 
 /**
  * 
