@@ -27,7 +27,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Project_P.h"
 #include "Interface/PPPlayerInterface.h"
-#include "Character/PPGASCharacterGrunt.h"
+#include "Interface/PPMonsterInterface.h"
 
 APPGASCharacterPlayer::APPGASCharacterPlayer()
 {
@@ -204,26 +204,31 @@ void APPGASCharacterPlayer::InitGAS()
 			}
 
 			//ASC에 특정태그가 생기거나 제거되면 호출하는 델리게이트에 콜백함수 연결
-			ASC->RegisterGameplayTagEvent(PPTAG_CHARACTER_ISCC, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &APPGASCharacterPlayer::OnCCTagChanged);
+			//ASC->RegisterGameplayTagEvent(PPTAG_CHARACTER_ISCC, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &APPGASCharacterPlayer::OnCCTagChanged);
 
 			if (HasAuthority())
 			{
-				for (const TSubclassOf<UGameplayAbility>& StartAbility : StartAbilites)
+				if (!GASPlayerState->GetIsAbilitiesGiven())
 				{
-					//ASC는 직접적으로 GA를 접근, 관리하는게 아닌
-					//FGameplayAbilitySpec 구조체를 통해 간접적으로 관리함
-					FGameplayAbilitySpec Spec(StartAbility);
+					for (const TSubclassOf<UGameplayAbility>& StartAbility : StartAbilites)
+					{
+						//ASC는 직접적으로 GA를 접근, 관리하는게 아닌
+						//FGameplayAbilitySpec 구조체를 통해 간접적으로 관리함
+						FGameplayAbilitySpec Spec(StartAbility);
 
-					ASC->GiveAbility(Spec);
-				}
+						ASC->GiveAbility(Spec);
+					}
 
-				for (const TPair<EInputAbility, TSubclassOf<class UGameplayAbility>>& StartInputAbility : StartInputAbilites)
-				{
-					FGameplayAbilitySpec Spec(StartInputAbility.Value);
+					for (const TPair<EInputAbility, TSubclassOf<class UGameplayAbility>>& StartInputAbility : StartInputAbilites)
+					{
+						FGameplayAbilitySpec Spec(StartInputAbility.Value);
 
-					Spec.InputID = (int32)StartInputAbility.Key;
+						Spec.InputID = (int32)StartInputAbility.Key;
 
-					ASC->GiveAbility(Spec);
+						ASC->GiveAbility(Spec);
+					}
+
+					GASPlayerState->SetIsAbilitiesGiven(true);
 				}
 
 				InitializeAttributes();
@@ -319,7 +324,7 @@ void APPGASCharacterPlayer::RequestSetMonsterHpBar(bool bIsFound, AActor* Target
 
 void APPGASCharacterPlayer::ClientRPC_SetMonsterHpBar_Implementation(bool bIsFound, AActor* TargetMonster)
 {
-	APPGASCharacterGrunt* Target = Cast<APPGASCharacterGrunt>(TargetMonster);
+	IPPMonsterInterface* Target = Cast<IPPMonsterInterface>(TargetMonster);
 	if (Target)
 	{
 		Target->SetMonstHpBarVisibility(bIsFound);
