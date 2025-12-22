@@ -20,10 +20,15 @@ public:
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
+	FORCEINLINE bool GetIsAbilitiesGiven() const { return bIsAbilitiesGiven; }
+	FORCEINLINE void SetIsAbilitiesGiven(bool bGiven) { bIsAbilitiesGiven = bGiven; }
+
 protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TObjectPtr<class UAbilitySystemComponent> ASC;
 
 	UPROPERTY(VisibleAnywhere, Category = AttributeSet)
 	TObjectPtr<class UPPCharacterAttributeSet> AttributeSet;
+
+	bool bIsAbilitiesGiven = false;
 };

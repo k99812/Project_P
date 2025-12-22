@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Character/PPGASCharacterNonPlayer.h"
+#include "InterFace/PPMonsterInterface.h"
 #include "PPGASCharacterGrunt.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECT_P_API APPGASCharacterGrunt : public APPGASCharacterNonPlayer
+class PROJECT_P_API APPGASCharacterGrunt : public APPGASCharacterNonPlayer, public IPPMonsterInterface
 {
 	GENERATED_BODY()
 	
@@ -21,7 +22,7 @@ public:
 
 	virtual void PossessedBy(AController* NewController) override;
 
-	void SetMonstHpBarVisibility(bool bVisible);
+	virtual void SetMonstHpBarVisibility(bool bVisible) override;
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "AttributeData")
