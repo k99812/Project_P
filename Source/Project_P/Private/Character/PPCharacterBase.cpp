@@ -70,6 +70,10 @@ void APPCharacterBase::SetDead()
 	SetActorEnableCollision(false);
 }
 
+void APPCharacterBase::SetAlive()
+{
+}
+
 void APPCharacterBase::PlayDeadAnimation()
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();

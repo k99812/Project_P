@@ -8,10 +8,11 @@
 #include "Input/PPInputEnum.h"
 #include "GenericTeamAgentInterface.h"
 #include "Interface/PPGASInterface.h"
+#include "Interface/PPGASCharacterPlayerInterface.h"
 #include "PPCharacterBase.generated.h"
 
 UCLASS()
-class PROJECT_P_API APPCharacterBase : public ACharacter, public IGameplayTagAssetInterface, public IGenericTeamAgentInterface, public IPPGASInterface
+class PROJECT_P_API APPCharacterBase : public ACharacter, public IGameplayTagAssetInterface, public IGenericTeamAgentInterface, public IPPGASInterface, public IPPGASCharacterPlayerInterface
 {
 	GENERATED_BODY()
 
@@ -43,8 +44,12 @@ protected:
 	FGameplayTagContainer GameplayTags;
 
 // Dead Section
+public:
+	virtual void SetDead() override;
+
+	virtual void SetAlive() override;
+
 protected:
-	virtual void SetDead();
 	virtual void PlayDeadAnimation();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dead", Meta = (AllowPrivateAccess = "true"))

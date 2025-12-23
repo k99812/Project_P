@@ -71,7 +71,7 @@ protected:
 public:
 	virtual void SetDead() override;
 
-	void SetAlive();
+	virtual void SetAlive() override;
 
 // Ability System Section
 protected:

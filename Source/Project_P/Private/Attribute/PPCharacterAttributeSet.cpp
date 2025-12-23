@@ -6,7 +6,7 @@
 #include "Project_P.h"
 #include "Tag/PPGameplayTag.h"
 #include "Net/UnrealNetwork.h"
-#include "Character/PPGASCharacterPlayer.h"
+#include "Interface/PPGASCharacterPlayerInterface.h"
 
 UPPCharacterAttributeSet::UPPCharacterAttributeSet() : 
 	AttackRange(100.0f), MaxAttackRange(300.0f),
@@ -107,7 +107,6 @@ void UPPCharacterAttributeSet::OnRep_IsDead()
 	UAbilitySystemComponent* ASC = GetOwningAbilitySystemComponent();
 	if (ASC)
 	{
-		
 		if (bIsDead)
 		{
 			ASC->AddLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
@@ -118,7 +117,7 @@ void UPPCharacterAttributeSet::OnRep_IsDead()
 			ASC->RemoveLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
 		}
 
-		APPGASCharacterPlayer* Player = Cast<APPGASCharacterPlayer>(ASC->GetAvatarActor());
+		IPPGASCharacterPlayerInterface* Player = Cast<IPPGASCharacterPlayerInterface>(ASC->GetAvatarActor());
 		if (Player)
 		{
 			if (bIsDead)
