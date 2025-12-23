@@ -15,8 +15,7 @@ UPPAnimInstance::UPPAnimInstance()
 {
 	MovingThreshould = 3.0f;
 	JumpingThreshould = 100.0f;
-
-	SprintTagContainer.AddTag(PPTAG_CHARACTER_ISSPRINT);
+	SprintThreshould = 500.0f + 10.0f;
 }
 
 void UPPAnimInstance::NativeInitializeAnimation()
@@ -53,6 +52,7 @@ void UPPAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		bIsIdle = GroundSpeed < MovingThreshould;
 		bIsFalling = Movement->IsFalling();
 		bIsJumping = bIsFalling & (Velocity.Z > JumpingThreshould);
+		bIsSprint = GroundSpeed > SprintThreshould;
 
 		FRotator AimRotation = Owner->GetBaseAimRotation();
 		FRotator ActorRotation = Owner->GetActorRotation();
@@ -62,20 +62,11 @@ void UPPAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		Yaw = DeltaRotation.Yaw;
 		Pitch = DeltaRotation.Pitch;
 	}
-	if (ASC)
-	{
-		bIsSprint = ASC->HasAnyMatchingGameplayTags(SprintTagContainer);
-	}
 }
 
 void UPPAnimInstance::NativeBeginPlay()
 {
 	Super::NativeBeginPlay();
-
-	if (Owner)
-	{
-		ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Owner);
-	}
 }
 
 void UPPAnimInstance::SaveLastDirection()

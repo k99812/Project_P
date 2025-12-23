@@ -147,6 +147,23 @@ void APPGASCharacterGrunt::SetMonstHpBarVisibility(bool bVisible)
 	HpBar->SetVisibility(bVisible);
 }
 
+void APPGASCharacterGrunt::SetDead()
+{
+	Super::SetDead();
+
+	if (HasAuthority())
+	{
+		Multicast_PlayDeadAnimation();
+	}
+}
+
+void APPGASCharacterGrunt::Multicast_PlayDeadAnimation_Implementation()
+{
+	if (HasAuthority()) return;
+
+	PlayDeadAnimation();
+}
+
 void APPGASCharacterGrunt::TakeDamage(const FOnAttributeChangeData& ChangeData)
 {
 	Super::TakeDamage(ChangeData);

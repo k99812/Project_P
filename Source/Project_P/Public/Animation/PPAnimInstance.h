@@ -61,6 +61,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
 	uint8 bIsJumping : 1;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
+	float SprintThreshould;
+
 	//점프하는지 검삭하기 위한 변수
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
 	float JumpingThreshould;
@@ -76,11 +79,6 @@ protected:
 	//X축
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
 	float Roll;
-
-	UPROPERTY(BlueprintReadOnly, Category = ASC)
-	TObjectPtr<class UAbilitySystemComponent> ASC;
-
-	FGameplayTagContainer SprintTagContainer;
 
 public:
 	void SaveLastDirection();

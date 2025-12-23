@@ -426,7 +426,7 @@ void APPGASCharacterPlayer::SetDead()
 
 void APPGASCharacterPlayer::SetAlive()
 {
-	PPNET_LOG(LogGAS, Log, TEXT("Begin"));
+	//PPNET_LOG(LogGAS, Log, TEXT("Begin"));
 	if (GetCapsuleComponent())
 	{
 		GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_PPCAPSULE);
@@ -505,17 +505,15 @@ void APPGASCharacterPlayer::Look(const FInputActionValue& Value)
 
 void APPGASCharacterPlayer::MoveInputReleased()
 {
+	//PPNET_LOG(LogGAS, Log, TEXT("Begin"));
 	FGameplayTagContainer WalkingTagContainer;
 	WalkingTagContainer.AddTag(PPTAG_CHARACTER_ISWALKING);
 
 	InputReleasedDelegate.Execute();
 	RemoveTag(WalkingTagContainer);
 
-	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID((int32)EInputAbility::Sprint);
-	if (Spec->IsActive())
-	{
-		ASC->CancelAbilityHandle(Spec->Handle);
-	}
+	FGameplayTagContainer CancelAbilityTags(PPTAG_ABILITY_SPRINT);
+	ASC->CancelAbilities(&CancelAbilityTags);
 }
 
 void APPGASCharacterPlayer::RemoveTag(const FGameplayTagContainer& RemoveTagContainer)

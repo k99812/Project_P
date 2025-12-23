@@ -24,6 +24,13 @@ public:
 
 	virtual void SetMonstHpBarVisibility(bool bVisible) override;
 
+public:
+	virtual void SetDead() override;
+
+protected:
+	UFUNCTION(NetMulticast, Unreliable)
+	void Multicast_PlayDeadAnimation();
+
 protected:
 	UPROPERTY(EditAnywhere, Category = "AttributeData")
 	TObjectPtr<class UPPGruntAttributeData> AttributeData;
