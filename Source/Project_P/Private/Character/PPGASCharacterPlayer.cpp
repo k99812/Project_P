@@ -4,30 +4,31 @@
 #include "Character/PPGASCharacterPlayer.h"
 #include "Project_P.h"
 #include "AbilitySystemComponent.h"
-#include "Player/PPGASPlayerState.h"
-#include "Camera/CameraComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "Abilities/GameplayAbility.h"
+#include "AbilitySystemGlobals.h"
+#include "Attribute/PPCharacterAttributeSet.h"
+#include "GameplayTagContainer.h"
+#include "Tag/PPGameplayTag.h"
+#include "GameFramework/GameModeBase.h"
+#include "GameFramework/PlayerState.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Animation/PPAnimInstance.h"
+#include "Components/CapsuleComponent.h"
+#include "Camera/CameraComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
-#include "GameFramework/CharacterMovementComponent.h"
-#include "Abilities/GameplayAbility.h"
-#include "AbilitySystemGlobals.h"
-#include "GameplayTagContainer.h"
-#include "Tag/PPGameplayTag.h"
 #include "Data/PPComboActionData.h"
-#include "Attribute/PPCharacterAttributeSet.h"
-#include "Animation/PPAnimInstance.h"
-#include "Components/CapsuleComponent.h"
 #include "Physics/PPCollision.h"
 #include "Perception/AISense_Hearing.h"
 #include "UI/PPGASWidgetComponent.h"
-#include "Interface/PPGameInterface.h"
-#include "GameFramework/GameModeBase.h"
-#include "AbilitySystemBlueprintLibrary.h"
 #include "Project_P.h"
+#include "Interface/PPGameInterface.h"
 #include "Interface/PPPlayerInterface.h"
 #include "Interface/PPMonsterInterface.h"
+#include "Interface/PPPlayerStateInterface.h"
 
 APPGASCharacterPlayer::APPGASCharacterPlayer()
 {
@@ -179,13 +180,14 @@ void APPGASCharacterPlayer::OnRep_PlayerState()
 
 void APPGASCharacterPlayer::InitGAS()
 {
-	APPGASPlayerState* GASPlayerState = GetPlayerState<APPGASPlayerState>();
+	APlayerState* PState = GetPlayerState();
+	IAbilitySystemInterface* GASPlayerState = PState ? Cast<IAbilitySystemInterface>(PState) : nullptr;
 	if (GASPlayerState)
 	{
 		ASC = GASPlayerState->GetAbilitySystemComponent();
 		if (ASC)
 		{
-			ASC->InitAbilityActorInfo(GASPlayerState, this);
+			ASC->InitAbilityActorInfo(PState, this);
 			ASC->SetIsReplicated(true);
 
 			const UPPCharacterAttributeSet* AttributeSet = ASC->GetSet<UPPCharacterAttributeSet>();
@@ -206,9 +208,10 @@ void APPGASCharacterPlayer::InitGAS()
 			//ASC에 특정태그가 생기거나 제거되면 호출하는 델리게이트에 콜백함수 연결
 			//ASC->RegisterGameplayTagEvent(PPTAG_CHARACTER_ISCC, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &APPGASCharacterPlayer::OnCCTagChanged);
 
-			if (HasAuthority())
+			IPPPlayerStateInterface* IPlayerState = PState ? Cast<IPPPlayerStateInterface>(PState) : nullptr;
+			if (HasAuthority() && IPlayerState)
 			{
-				if (!GASPlayerState->GetIsAbilitiesGiven())
+				if (!IPlayerState->GetIsAbilitiesGiven())
 				{
 					for (const TSubclassOf<UGameplayAbility>& StartAbility : StartAbilites)
 					{
@@ -228,7 +231,7 @@ void APPGASCharacterPlayer::InitGAS()
 						ASC->GiveAbility(Spec);
 					}
 
-					GASPlayerState->SetIsAbilitiesGiven(true);
+					IPlayerState->SetIsAbilitiesGiven(true);
 				}
 
 				InitializeAttributes();

@@ -153,7 +153,7 @@ void APPGASCharacterGrunt::SetDead()
 
 	if (HasAuthority())
 	{
-		Multicast_PlayDeadAnimation();
+		//Multicast_PlayDeadAnimation();
 	}
 }
 
