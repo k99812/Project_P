@@ -5,13 +5,14 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerState.h"
 #include "AbilitySystemInterface.h"
+#include "Interface/PPPlayerStateInterface.h"
 #include "PPGASPlayerState.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECT_P_API APPGASPlayerState : public APlayerState, public IAbilitySystemInterface
+class PROJECT_P_API APPGASPlayerState : public APlayerState, public IAbilitySystemInterface, public IPPPlayerStateInterface
 {
 	GENERATED_BODY()
 	
@@ -20,8 +21,8 @@ public:
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
-	FORCEINLINE bool GetIsAbilitiesGiven() const { return bIsAbilitiesGiven; }
-	FORCEINLINE void SetIsAbilitiesGiven(bool bGiven) { bIsAbilitiesGiven = bGiven; }
+	FORCEINLINE virtual bool GetIsAbilitiesGiven() const override { return bIsAbilitiesGiven; }
+	FORCEINLINE virtual void SetIsAbilitiesGiven(bool bGiven) override { bIsAbilitiesGiven = bGiven; }
 
 protected:
 	UPROPERTY(EditAnywhere, Category = GAS)

@@ -34,6 +34,8 @@ void APPGASCharacterNonPlayer::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	ASC->InitAbilityActorInfo(this, this);
+	ASC->SetIsReplicated(true);
+
 	AttributeSet->ActorIsDead.AddDynamic(this, &APPGASCharacterNonPlayer::ActorIsDead);
 	ASC->GetGameplayAttributeValueChangeDelegate(UPPGruntAttributeSet::GetDamageAttribute()).
 		AddUObject(this, &APPGASCharacterNonPlayer::TakeDamage);
