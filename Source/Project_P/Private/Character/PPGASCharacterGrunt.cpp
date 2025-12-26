@@ -3,16 +3,17 @@
 
 #include "Character/PPGASCharacterGrunt.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/GameModeBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Attribute/PPGruntAttributeSet.h"
 #include "Data/PPGruntAttributeData.h"
 #include "Data/PPComboActionData.h"
 #include "UI/PPGASWidgetComponent.h"
 #include "UI/PPGASUserWidget.h"
-#include "AI/PPAIController.h"
 #include "Interface/PPGameInterface.h"
-#include "GameFramework/GameModeBase.h"
 #include "Interface/PPPlayerCharacterInterface.h"
+#include "Interface/PPAIControllerInterface.h"
+#include "Project_P.h"
 
 APPGASCharacterGrunt::APPGASCharacterGrunt()
 {
@@ -123,11 +124,26 @@ void APPGASCharacterGrunt::PossessedBy(AController* NewController)
 	AttributeSet->InitAITurnSpeed(AttributeData->AITurnSpeed);
 	AttributeSet->InitBTAttackRange(AttributeData->BTAttackRange);
 
+	/*
+	if (ASC && InitStatEffect)
+	{
+		FGameplayEffectContextHandle EffectContext = ASC->MakeEffectContext();
+		EffectContext.AddSourceObject(this);
+
+		FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(InitStatEffect, 1.0f, EffectContext);
+
+		if (SpecHandle.IsValid())
+		{
+			ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+		}
+	}
+	*/
+
 	// HPBar 델리게이트 연결
-	APPAIController* AIController = Cast<APPAIController>(GetController());
+	IPPAIControllerInterface* AIController = Cast<IPPAIControllerInterface>(GetController());
 	if (AIController)
 	{
-		AIController->FindTargetDelegate.AddDynamic(this, &APPGASCharacterGrunt::FoundTargetCallback);
+		AIController->GetFindTargetDelegate().AddDynamic(this, &APPGASCharacterGrunt::FoundTargetCallback);
 	}
 }
 
@@ -151,17 +167,7 @@ void APPGASCharacterGrunt::SetDead()
 {
 	Super::SetDead();
 
-	if (HasAuthority())
-	{
-		//Multicast_PlayDeadAnimation();
-	}
-}
-
-void APPGASCharacterGrunt::Multicast_PlayDeadAnimation_Implementation()
-{
-	if (HasAuthority()) return;
-
-	PlayDeadAnimation();
+	PPNET_LOG(LogGAS, Log, TEXT("end"));
 }
 
 void APPGASCharacterGrunt::TakeDamage(const FOnAttributeChangeData& ChangeData)

@@ -78,13 +78,9 @@ void UPPCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 
 	if (GetHealth() <= 0.0f && !bIsDead)
 	{
-		Data.Target.AddLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
-		//Data.Target.AddReplicatedLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
-
-		ActorIsDead.Broadcast();
+		bIsDead = true;
+		OnRep_IsDead();
 	}
-
-	bIsDead = GetHealth() <= 0.0f;
 }
 
 void UPPCharacterAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -109,20 +105,29 @@ void UPPCharacterAttributeSet::OnRep_IsDead()
 	{
 		if (bIsDead)
 		{
-			ASC->AddLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
+			if (!ASC->HasMatchingGameplayTag(PPTAG_CHARACTER_ISDEAD))
+			{
+				ASC->AddLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
+			}
 		}
 		else
 		{
-			// 만약 부활 기능이 있다면 태그 제거도 필요
-			ASC->RemoveLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
+			if (ASC->HasMatchingGameplayTag(PPTAG_CHARACTER_ISDEAD))
+			{
+				ASC->RemoveLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
+			}
 		}
 
-		IPPGASCharacterPlayerInterface* Player = Cast<IPPGASCharacterPlayerInterface>(ASC->GetAvatarActor());
+		AActor* Avartar = ASC->GetAvatarActor();
+		IPPGASCharacterPlayerInterface* Player = Avartar ? Cast<IPPGASCharacterPlayerInterface>(Avartar) : nullptr;
 		if (Player)
 		{
 			if (bIsDead)
 			{
-				Player->SetDead();
+				if (Avartar->GetLocalRole() == ENetRole::ROLE_SimulatedProxy)
+				{
+					Player->SetDead();
+				}
 			}
 			else
 			{

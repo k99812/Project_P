@@ -27,9 +27,8 @@ public:
 public:
 	virtual void SetDead() override;
 
-protected:
-	UFUNCTION(NetMulticast, Unreliable)
-	void Multicast_PlayDeadAnimation();
+	UFUNCTION()
+	void FoundTargetCallback(bool bFoundTarget, AActor* TargetActor);
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "AttributeData")
@@ -38,8 +37,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "UI")
 	TObjectPtr<class UPPGASWidgetComponent> HpBar;
 
-	UFUNCTION()
-	void FoundTargetCallback(bool bFoundTarget, AActor* TargetActor);
+	UPROPERTY(EditAnywhere, Category = "GAS")
+	TSubclassOf<class UGameplayEffect> InitStatEffect;
 
 // Damage
 protected:

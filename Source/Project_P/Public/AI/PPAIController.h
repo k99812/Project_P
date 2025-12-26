@@ -5,23 +5,23 @@
 #include "CoreMinimal.h"
 #include "AIController.h"
 #include "Perception/AIPerceptionTypes.h"
+#include "Interface/PPAIControllerInterface.h"
 #include "PPAIController.generated.h"
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FFindTargetDelegate, bool, bFindTarget, AActor*, TargetActor);
 
 /**
  * 
  */
 UCLASS()
-class PROJECT_P_API APPAIController : public AAIController
+class PROJECT_P_API APPAIController : public AAIController, public IPPAIControllerInterface
 {
 	GENERATED_BODY()
 	
 public:
 	APPAIController();
 
-	void RunAI();
-	void StopAI();
+	virtual void RunAI() override;
+	virtual void StopAI() override;
+	FORCEINLINE virtual FFindTargetDelegate& GetFindTargetDelegate() override { return FindTargetDelegate; }
 
 	FFindTargetDelegate FindTargetDelegate;
 
