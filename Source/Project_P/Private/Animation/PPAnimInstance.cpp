@@ -9,7 +9,7 @@
 #include "Tag/PPGameplayTag.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameFramework/Character.h"
-#include "Interface/PPAnimInterface.h"
+#include "Interface/PPPlayerCharacterInterface.h"
 
 UPPAnimInstance::UPPAnimInstance()
 {
@@ -30,10 +30,10 @@ void UPPAnimInstance::NativeInitializeAnimation()
 		//#include "GameFramework/CharacterMovementComponent.h" Ãß°¡
 		Movement = Owner->GetCharacterMovement();
 
-		IPPAnimInterface* OwnerInter = Cast<IPPAnimInterface>(Owner);
-		if (OwnerInter)
+		IPPPlayerCharacterInterface* Player = Cast<IPPPlayerCharacterInterface>(Owner);
+		if (Player)
 		{
-			OwnerInter->BindInputReleasedDelegate(this);
+			Player->GetInputReleasedDelegate().BindUObject(this, &UPPAnimInstance::SaveLastDirection);
 		}
 	}
 }

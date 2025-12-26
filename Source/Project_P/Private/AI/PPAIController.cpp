@@ -18,6 +18,7 @@
 #include "GameplayTagContainer.h"
 #include "Tag/PPGameplayTag.h"
 #include "AI/PPAI.h"
+#include "Character/PPGASCharacterGrunt.h"
 
 APPAIController::APPAIController()
 {

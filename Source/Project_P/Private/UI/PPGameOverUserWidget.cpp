@@ -11,6 +11,7 @@
 #include "AbilitySystemComponent.h"
 #include "Attribute/PPCharacterAttributeSet.h"
 #include "Tag/PPGameplayTag.h"
+#include "AbilitySystemInterface.h"
 
 
 UPPGameOverUserWidget::UPPGameOverUserWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -32,27 +33,32 @@ void UPPGameOverUserWidget::BtnEventGameRestart()
 	APlayerController* OwingPlayerController = GetOwningPlayer();
 	IPPPlayerInterface* Player = Cast<IPPPlayerInterface>(OwingPlayerController);
 	
-	if (!OwingPlayerController) UE_LOG(LogTemp, Error, TEXT("RestartBtn: PC is NULL"));
-	if (!Player) UE_LOG(LogTemp, Error, TEXT("RestartBtn: Interface Cast Failed"));
+	if (!OwingPlayerController)
+	{
+		UE_LOG(LogTemp, Error, TEXT("RestartBtn: PC is NULL"));
+		return;
+	}
 
+	if (!Player)
+	{
+		UE_LOG(LogTemp, Error, TEXT("RestartBtn: Interface Cast Failed"));
+		return;
+	}
+	
 	if (OwingPlayerController && Player)
 	{
-		APPGASPlayerState* PlayerState = OwingPlayerController->GetPlayerState<APPGASPlayerState>();
-		if (PlayerState)
+		IAbilitySystemInterface* IPanw = Cast<IAbilitySystemInterface>(OwingPlayerController->PlayerState);
+		UAbilitySystemComponent* ASC = IPanw ? IPanw->GetAbilitySystemComponent() : nullptr;
+		if (ASC)
 		{
-			UAbilitySystemComponent* ASC = PlayerState->GetAbilitySystemComponent();
-
-			if (ASC)
+			if (ASC->HasMatchingGameplayTag(PPTAG_CHARACTER_ISDEAD))
 			{
-				if (ASC->HasMatchingGameplayTag(PPTAG_CHARACTER_ISDEAD))
-				{
-					ASC->RemoveLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
-				}
+				ASC->RemoveLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
+			}
 
-				if (const UPPCharacterAttributeSet* AttributeSet = ASC->GetSet<UPPCharacterAttributeSet>())
-				{
-					const_cast<UPPCharacterAttributeSet*>(AttributeSet)->SetIsDead(false);
-				}
+			if (const UPPCharacterAttributeSet* AttributeSet = ASC->GetSet<UPPCharacterAttributeSet>())
+			{
+				const_cast<UPPCharacterAttributeSet*>(AttributeSet)->SetIsDead(false);
 			}
 		}
 

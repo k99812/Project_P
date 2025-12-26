@@ -334,11 +334,6 @@ void APPGASCharacterPlayer::ClientRPC_SetMonsterHpBar_Implementation(bool bIsFou
 	}
 }
 
-void APPGASCharacterPlayer::BindInputReleasedDelegate(UPPAnimInstance* InAnimInstance)
-{
-	InputReleasedDelegate.BindUObject(InAnimInstance, &UPPAnimInstance::SaveLastDirection);
-}
-
 void APPGASCharacterPlayer::SetupGASPlayerInputComponent()
 {
 	if (IsValid(ASC) && IsValid(InputComponent))
@@ -409,6 +404,7 @@ void APPGASCharacterPlayer::SetDead()
 {
 	Super::SetDead();
 
+	PPNET_LOG(LogGAS, Log, TEXT("Begin"));
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 	if (PlayerController)
 	{
@@ -420,16 +416,16 @@ void APPGASCharacterPlayer::SetDead()
 		GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_NOCOLLISION);
 	}
 
-	IPPPlayerInterface* Player = Cast<IPPPlayerInterface>(PlayerController);
-	if (Player)
+	IPPPlayerInterface* IPlayerController = Cast<IPPPlayerInterface>(PlayerController);
+	if (IPlayerController)
 	{
-		Player->OnPlayerDead();
+		IPlayerController->OnPlayerDead();
 	}
 }
 
 void APPGASCharacterPlayer::SetAlive()
 {
-	//PPNET_LOG(LogGAS, Log, TEXT("Begin"));
+	PPNET_LOG(LogGAS, Log, TEXT("Begin"));
 	if (GetCapsuleComponent())
 	{
 		GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_PPCAPSULE);

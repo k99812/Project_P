@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "PPPlayerCharacterInterface.generated.h"
+#include "PPAIControllerInterface.generated.h"
 
-DECLARE_DELEGATE(FInputReleasedDelegate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FFindTargetDelegate, bool, bFindTarget, AActor*, TargetActor);
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
-class UPPPlayerCharacterInterface : public UInterface
+class UPPAIControllerInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -18,12 +18,13 @@ class UPPPlayerCharacterInterface : public UInterface
 /**
  * 
  */
-class PROJECT_P_API IPPPlayerCharacterInterface
+class PROJECT_P_API IPPAIControllerInterface
 {
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual FInputReleasedDelegate& GetInputReleasedDelegate() = 0;
-	virtual void RequestSetMonsterHpBar(bool bIsFound, AActor* TargetMonster) = 0;
+	virtual void RunAI() = 0;
+	virtual void StopAI() = 0;
+	virtual FFindTargetDelegate& GetFindTargetDelegate() = 0;
 };
