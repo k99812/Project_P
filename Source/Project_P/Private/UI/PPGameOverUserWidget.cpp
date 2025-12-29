@@ -31,7 +31,7 @@ void UPPGameOverUserWidget::NativeConstruct()
 void UPPGameOverUserWidget::BtnEventGameRestart()
 {
 	APlayerController* OwingPlayerController = GetOwningPlayer();
-	IPPPlayerInterface* Player = Cast<IPPPlayerInterface>(OwingPlayerController);
+	IPPPlayerInterface* IPlayer = Cast<IPPPlayerInterface>(OwingPlayerController);
 	
 	if (!OwingPlayerController)
 	{
@@ -39,34 +39,31 @@ void UPPGameOverUserWidget::BtnEventGameRestart()
 		return;
 	}
 
-	if (!Player)
+	if (!IPlayer)
 	{
 		UE_LOG(LogTemp, Error, TEXT("RestartBtn: Interface Cast Failed"));
 		return;
 	}
 	
-	if (OwingPlayerController && Player)
+	IAbilitySystemInterface* IPlayerState = Cast<IAbilitySystemInterface>(OwingPlayerController->PlayerState);
+	UAbilitySystemComponent* ASC = IPlayerState ? IPlayerState->GetAbilitySystemComponent() : nullptr;
+	if (ASC)
 	{
-		IAbilitySystemInterface* IPanw = Cast<IAbilitySystemInterface>(OwingPlayerController->PlayerState);
-		UAbilitySystemComponent* ASC = IPanw ? IPanw->GetAbilitySystemComponent() : nullptr;
-		if (ASC)
+		if (ASC->HasMatchingGameplayTag(PPTAG_CHARACTER_ISDEAD))
 		{
-			if (ASC->HasMatchingGameplayTag(PPTAG_CHARACTER_ISDEAD))
-			{
-				ASC->RemoveLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
-			}
-
-			if (const UPPCharacterAttributeSet* AttributeSet = ASC->GetSet<UPPCharacterAttributeSet>())
-			{
-				const_cast<UPPCharacterAttributeSet*>(AttributeSet)->SetIsDead(false);
-			}
+			ASC->RemoveLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
 		}
 
-		Player->RequestRespawn();
-
-		OwingPlayerController->SetShowMouseCursor(false);
-		OwingPlayerController->SetInputMode(FInputModeGameOnly());
+		if (const UPPCharacterAttributeSet* AttributeSet = ASC->GetSet<UPPCharacterAttributeSet>())
+		{
+			const_cast<UPPCharacterAttributeSet*>(AttributeSet)->SetIsDead(false);
+		}
 	}
+
+	IPlayer->RequestRespawn();
+
+	OwingPlayerController->SetShowMouseCursor(false);
+	OwingPlayerController->SetInputMode(FInputModeGameOnly());
 
 	RemoveFromParent();
 }

@@ -2,16 +2,17 @@
 
 
 #include "Player/PPPlayerController.h"
+#include "AbilitySystemComponent.h"
+#include "AbilitySystemInterface.h"
+#include "Attribute/PPCharacterAttributeSet.h"
+#include "GameFramework/GameModeBase.h"
+#include "GameFramework/Character.h"
 #include "UI/PPHUDWidget.h"
 #include "UI/PPGameOverUserWidget.h"
 #include "UI/PPFloatingTextUserWidget.h"
-#include "GameFramework/GameModeBase.h"
-#include "Player/PPGASPlayerState.h"
-#include "AbilitySystemComponent.h"
-#include "Attribute/PPCharacterAttributeSet.h"
 #include "Tag/PPGameplayTag.h"
 #include "Project_P.h"
-#include "GameFramework/Character.h"
+
 
 APPPlayerController::APPPlayerController()
 {
@@ -83,7 +84,7 @@ void APPPlayerController::GameOver()
 
 	GameOverUIWidget = CreateWidget<UPPGameOverUserWidget>(this, GameOverUIClass);
 	if (GameOverUIWidget)
-	{
+	{ 
 		GameOverUIWidget->AddToViewport();
 		EnableInput(this);
 		SetShowMouseCursor(true);
@@ -97,41 +98,34 @@ void APPPlayerController::RequestRespawn()
 
 void APPPlayerController::ServerRPC_RequestRespawn_Implementation()
 {
-	APPGASPlayerState* PS = GetPlayerState<APPGASPlayerState>();
-	if (PS)
+	IAbilitySystemInterface* IPlayerSate = Cast<IAbilitySystemInterface>(PlayerState);
+	UAbilitySystemComponent* ASC = IPlayerSate ? IPlayerSate->GetAbilitySystemComponent() : nullptr;
+
+	if (ASC)
 	{
-		UAbilitySystemComponent* ASC = PS->GetAbilitySystemComponent();
-
-		if (ASC)
+		if (ASC->HasMatchingGameplayTag(PPTAG_CHARACTER_ISDEAD))
 		{
-			if (ASC->HasMatchingGameplayTag(PPTAG_CHARACTER_ISDEAD))
-			{
-				ASC->RemoveLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
-			}
+			ASC->RemoveLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
+		}
 
-			ASC->CurrentMontageStop(0.0f);
+		ASC->CurrentMontageStop(0.0f);
 
-			if (const UPPCharacterAttributeSet* AttributeSet = ASC->GetSet<UPPCharacterAttributeSet>())
-			{
-				const_cast<UPPCharacterAttributeSet*>(AttributeSet)->SetIsDead(false);
-			}
+		if (const UPPCharacterAttributeSet* AttributeSet = ASC->GetSet<UPPCharacterAttributeSet>())
+		{
+			const_cast<UPPCharacterAttributeSet*>(AttributeSet)->SetIsDead(false);
 		}
 	}
 
-	APawn* ControlledPawn = GetPawn();
-	if (ControlledPawn)
+	ACharacter* OldCharacter = Cast<ACharacter>(GetPawn());
+	if (OldCharacter)
 	{
-		ACharacter* OldCharacter = Cast<ACharacter>(ControlledPawn);
-		if (OldCharacter)
+		if (OldCharacter->GetMesh() && OldCharacter->GetMesh()->GetAnimInstance())
 		{
-			if (OldCharacter->GetMesh() && OldCharacter->GetMesh()->GetAnimInstance())
-			{
-				OldCharacter->GetMesh()->GetAnimInstance()->StopAllMontages(0.0f);
-			}
+			OldCharacter->GetMesh()->GetAnimInstance()->StopAllMontages(0.0f);
 		}
 
 		UnPossess();
-		ControlledPawn->Destroy();
+		OldCharacter->Destroy();
 	}
 
 	AGameModeBase* GameMode = GetWorld()->GetAuthGameMode();
