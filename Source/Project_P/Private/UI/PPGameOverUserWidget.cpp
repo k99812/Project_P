@@ -30,10 +30,10 @@ void UPPGameOverUserWidget::NativeConstruct()
 
 void UPPGameOverUserWidget::BtnEventGameRestart()
 {
-	APlayerController* OwingPlayerController = GetOwningPlayer();
-	IPPPlayerInterface* IPlayer = Cast<IPPPlayerInterface>(OwingPlayerController);
+	APlayerController* OwningPlayerController = GetOwningPlayer();
+	IPPPlayerInterface* IPlayer = Cast<IPPPlayerInterface>(OwningPlayerController);
 	
-	if (!OwingPlayerController)
+	if (!OwningPlayerController)
 	{
 		UE_LOG(LogTemp, Error, TEXT("RestartBtn: PC is NULL"));
 		return;
@@ -45,7 +45,7 @@ void UPPGameOverUserWidget::BtnEventGameRestart()
 		return;
 	}
 	
-	IAbilitySystemInterface* IPlayerState = Cast<IAbilitySystemInterface>(OwingPlayerController->PlayerState);
+	IAbilitySystemInterface* IPlayerState = Cast<IAbilitySystemInterface>(OwningPlayerController->PlayerState);
 	UAbilitySystemComponent* ASC = IPlayerState ? IPlayerState->GetAbilitySystemComponent() : nullptr;
 	if (ASC)
 	{
@@ -62,8 +62,8 @@ void UPPGameOverUserWidget::BtnEventGameRestart()
 
 	IPlayer->RequestRespawn();
 
-	OwingPlayerController->SetShowMouseCursor(false);
-	OwingPlayerController->SetInputMode(FInputModeGameOnly());
+	OwningPlayerController->SetShowMouseCursor(false);
+	OwningPlayerController->SetInputMode(FInputModeGameOnly());
 
 	RemoveFromParent();
 }
