@@ -98,8 +98,8 @@ void APPPlayerController::RequestRespawn()
 
 void APPPlayerController::ServerRPC_RequestRespawn_Implementation()
 {
-	IAbilitySystemInterface* IPlayerSate = Cast<IAbilitySystemInterface>(PlayerState);
-	UAbilitySystemComponent* ASC = IPlayerSate ? IPlayerSate->GetAbilitySystemComponent() : nullptr;
+	IAbilitySystemInterface* IPlayerState = Cast<IAbilitySystemInterface>(PlayerState);
+	UAbilitySystemComponent* ASC = IPlayerState ? IPlayerState->GetAbilitySystemComponent() : nullptr;
 
 	if (ASC)
 	{
