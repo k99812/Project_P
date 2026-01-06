@@ -41,11 +41,11 @@ protected:
 	UFUNCTION()
 	virtual void ActorPerceptionForgetUpdated(AActor* Actor);
 
-	virtual void PerceptionSensedSight(APawn* Pawn_);
+	virtual void PerceptionSensedSight(APawn* PerceptionedPawn);
 
-	virtual void PerceptionSensedHearing(APawn* Pawn_);
+	virtual void PerceptionSensedHearing(APawn* PerceptionedPawn, const FVector& Location);
 
-	virtual void PerceptionSensedDamage(APawn* Pawn_);
+	virtual void PerceptionSensedDamage(APawn* PerceptionedPawn);
 
 	virtual void BlackboardTargetUpdate(APawn* Target);
 

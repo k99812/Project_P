@@ -142,6 +142,10 @@ void APPAIController::ActorPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus
 
 	if (PerceptionedPawn && PerceptionedPawn->GetController()->IsPlayerController())
 	{
+		UAbilitySystemComponent* ASC = PerceptionedPawn ? UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(PerceptionedPawn) : nullptr;
+
+		if (ASC && ASC->HasMatchingGameplayTag(PPTAG_CHARACTER_ISDEAD)) return;
+
 		TSubclassOf<UAISense> SensedStimulsClass = UAIPerceptionSystem::GetSenseClassForStimulus(this, Stimulus);
 
 		if (SensedStimulsClass == UAISense_Sight::StaticClass())
@@ -151,7 +155,10 @@ void APPAIController::ActorPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus
 
 		if (SensedStimulsClass == UAISense_Hearing::StaticClass())
 		{
-			PerceptionSensedHearing(PerceptionedPawn);
+			if (Stimulus.Strength >= GruntAIData->HearingLoudness)
+			{
+				PerceptionSensedHearing(PerceptionedPawn, Stimulus.StimulusLocation);
+			}
 		}
 
 		if (SensedStimulsClass == UAISense_Damage::StaticClass())
@@ -189,9 +196,16 @@ void APPAIController::PerceptionSensedSight(APawn* PerceptionedPawn)
 	}
 }
 
-void APPAIController::PerceptionSensedHearing(APawn* PerceptionedPawn)
+void APPAIController::PerceptionSensedHearing(APawn* PerceptionedPawn, const FVector& Location)
 {
-	UE_LOG(LogTemp, Log, TEXT("Perception Sensed by Hearing : %s"), *PerceptionedPawn->GetName())
+	UE_LOG(LogTemp, Log, TEXT("Perception Sensed by Hearing : %s"), *PerceptionedPawn->GetName());
+
+	if (Blackboard->GetValueAsObject(BBKEY_TARGET)) return;
+
+	if (IsValid(PerceptionedPawn))
+	{
+		Blackboard->SetValueAsVector(BBKEY_NOISEPOS, Location);
+	}
 }
 
 void APPAIController::PerceptionSensedDamage(APawn* PerceptionedPawn)
@@ -217,19 +231,12 @@ void APPAIController::BlackboardTargetUpdate(APawn* Target)
 void APPAIController::ResetTarget()
 {
 	APawn* Target = Cast<APawn>(GetBlackboardComponent()->GetValueAsObject(BBKEY_TARGET));
-	if (Target)
+	UAbilitySystemComponent* ASC = Target ? UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Target) : nullptr;
+	
+	if (ASC && ASC->HasMatchingGameplayTag(PPTAG_CHARACTER_ISDEAD))
 	{
-		UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Target);
-
-		if (ASC)
-		{
-			FGameplayTagContainer Tag(PPTAG_CHARACTER_ISDEAD);
-			if (ASC->HasAnyMatchingGameplayTags(Tag))
-			{
-				FindTargetDelegate.Broadcast(false, Target);
-				GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, nullptr);
-				AActor::SetActorTickEnabled(false);
-			}
-		}
+		FindTargetDelegate.Broadcast(false, Target);
+		GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, nullptr);
+		AActor::SetActorTickEnabled(false);
 	}
 }
