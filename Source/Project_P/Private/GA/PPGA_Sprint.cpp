@@ -7,6 +7,7 @@
 #include "AbilitySystemComponent.h"
 #include "Tag/PPGameplayTag.h"
 #include "Project_P.h"
+#include "Perception/AISense_Hearing.h"
 
 UPPGA_Sprint::UPPGA_Sprint() : SprintSpeed(1000.0f), WalkSpeed(500.0f)
 {
@@ -28,6 +29,7 @@ void UPPGA_Sprint::ActivateAbility(const FGameplayAbilitySpecHandle Handle, cons
 	if (MovementComponent)
 	{
 		MovementComponent->MaxWalkSpeed = SprintSpeed;
+		UAISense_Hearing::ReportNoiseEvent(this, Character->GetActorLocation(), 1.0f, Character);
 	}
 }
 

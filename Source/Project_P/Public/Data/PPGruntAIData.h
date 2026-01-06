@@ -27,6 +27,9 @@ public:
 	float HearingRange;
 
 	UPROPERTY(EditAnywhere, Category = "Data")
+	float HearingLoudness;
+
+	UPROPERTY(EditAnywhere, Category = "Data")
 	float AIVisionAngleDeg;
 
 	UPROPERTY(EditAnywhere, Category = "Data")
