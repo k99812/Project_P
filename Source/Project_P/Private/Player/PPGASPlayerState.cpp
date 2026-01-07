@@ -9,6 +9,9 @@ APPGASPlayerState::APPGASPlayerState()
 {
 	ASC = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("ASC"));
 	AttributeSet = CreateDefaultSubobject<UPPCharacterAttributeSet>(TEXT("AttributeSet"));
+
+	NetUpdateFrequency = 100.0f;
+	MinNetUpdateFrequency = 66.0f;
 }
 
 UAbilitySystemComponent* APPGASPlayerState::GetAbilitySystemComponent() const
