@@ -481,7 +481,7 @@ HitCheck 과정에서 데미지를 주는 액터(가해자) 데미지를 받는 
 
 ## AIController
 
-https://github.com/user-attachments/assets/304a73f8-e93c-4e49-8669-28b2bcbe6248
+https://github.com/user-attachments/assets/03e28172-f83d-4ee7-a1cf-95480447eeb4
 
 ![image](https://github.com/user-attachments/assets/37c90fd0-c08d-4018-9a61-3e35d7d1be04)  
 <br/>
@@ -571,6 +571,8 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 * FindTargetDelegate(콜백함수에서 몬스터의 HPBar 비활성화) 실행   
 
 <br/>
+
+https://github.com/user-attachments/assets/304a73f8-e93c-4e49-8669-28b2bcbe6248
    
 > APPAIController
 
@@ -581,23 +583,38 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 
 		if (PerceptionedPawn && PerceptionedPawn->GetController()->IsPlayerController())
 		{
+			UAbilitySystemComponent* ASC = PerceptionedPawn ? UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(PerceptionedPawn) : nullptr;
+
+			if (ASC && ASC->HasMatchingGameplayTag(PPTAG_CHARACTER_ISDEAD)) return;
+
 			TSubclassOf<UAISense> SensedStimulsClass = UAIPerceptionSystem::GetSenseClassForStimulus(this, Stimulus);
 
 			if (SensedStimulsClass == UAISense_Sight::StaticClass())
 			{
 				PerceptionSensedSight(PerceptionedPawn);
-			}
+			}	
 
 			if (SensedStimulsClass == UAISense_Hearing::StaticClass())
 			{
-				PerceptionSensedHearing(PerceptionedPawn);
+				if (Stimulus.Strength >= GruntAIData->HearingLoudness)
+				{
+					PerceptionSensedHearing(PerceptionedPawn, Stimulus.StimulusLocation);
+				}
+			}
+
+			if (SensedStimulsClass == UAISense_Damage::StaticClass())
+			{
+				PerceptionSensedDamage(PerceptionedPawn);
 			}
 		}
 	}
 
 * Actor 변수는 AI가 감각을 통해 인식한 액터
 * Stimulus변수에 AI의 어떤 감각으로 함수가 호출됐는지 정보가 들어옴   
-* GetSenseClass 함수로 클래스를 가져와 클래스에 맞는 함수를 호출   
+* GetSenseClass 함수로 클래스를 가져와 클래스에 맞는 함수를 호출
+* GameplayTag를 확인하여 캐릭터가 죽은상태면 return
+* 시각, 데미지는 바로 타겟을 인식
+* 청각은 바로 타겟을 인식하지 않고 타겟 위치로 이동
 
 <br/>
 	
@@ -607,20 +624,15 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 	//AI가 시야를 통해 인식했을때 실행
 	void APPAIController::PerceptionSensedSight(APawn* PerceptionedPawn)
 	{
-		UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(PerceptionedPawn);
-		if (ASC)
+		UE_LOG(LogTemp, Log, TEXT("ActorPerceptionUpdated : %s"), *PerceptionedPawn->GetName());
+
+		if (IsValid(PerceptionedPawn))
 		{
-			GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, PerceptionedPawn);
-			AActor::SetActorTickEnabled(true);
-			FindTargetDelegate.ExecuteIfBound(true);
+			BlackboardTargetUpdate(PerceptionedPawn);
 		}
-	}
+	}  
 
-https://github.com/user-attachments/assets/03e28172-f83d-4ee7-a1cf-95480447eeb4
-
-* BlackBoard의 타겟변수 업데이트  
-* 틱함수 활성화   
-* FindTargetDelegate(콜백함수에서 몬스터의 HPBar 활성화) 실행   
+* 인식한 액터를 BlackboardTargetUpdate 함수로 블랙보드에 저장
 
 <br/>
 
@@ -630,18 +642,57 @@ https://github.com/user-attachments/assets/03e28172-f83d-4ee7-a1cf-95480447eeb4
 	//AI가 데미지를 통해 인식했을때 실행
 	void APPAIController::PerceptionSensedDamage(APawn* PerceptionedPawn)
 	{
+		UE_LOG(LogTemp, Log, TEXT("Perception Sensed by Damage : %s"), *PerceptionedPawn->GetName())
+
 		if (IsValid(PerceptionedPawn))
 		{
-			GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, PerceptionedPawn);
-			AActor::SetActorTickEnabled(true);
-			FindTargetDelegate.ExecuteIfBound(true);
+			BlackboardTargetUpdate(PerceptionedPawn);
 		}
 	}
 
 https://github.com/user-attachments/assets/e814d45d-6242-4d1b-b56a-287e2291645a
 
 * 데미지를 준 액터(가해자)가 매개변수로 전달됨
-* 변수가 유효한지 확인 후 블랙보드에 저장 및 기타 로직 실행
+* 인식한 액터를 BlackboardTargetUpdate 함수로 블랙보드에 저장
+
+<br/>
+
+> APPAIController
+
+	//BlackboardTargetUpdate
+	//AI가 시야, 데미지를 통해 인식했을때 실행
+	void APPAIController::BlackboardTargetUpdate(APawn* Target)
+	{
+		if (IsValid(Target) && !IsValid(Blackboard->GetValueAsObject(BBKEY_TARGET)))
+		{
+			Blackboard->SetValueAsObject(BBKEY_TARGET, Target);
+			AActor::SetActorTickEnabled(true);
+			FindTargetDelegate.Broadcast(true, Target);
+		}
+	}
+
+* BlackBoard의 타겟변수 업데이트  
+* 틱함수 활성화   
+* FindTargetDelegate(콜백함수에서 몬스터의 HPBar 활성화) 실행 
+
+> APPAIController
+
+	//PerceptionSensedHearing
+	//AI가 청각을 통해 인식했을때 실행
+	void APPAIController::PerceptionSensedHearing(APawn* PerceptionedPawn, const FVector& Location)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Perception Sensed by Hearing : %s"), *PerceptionedPawn->GetName());
+
+		if (Blackboard->GetValueAsObject(BBKEY_TARGET)) return;
+
+		if (IsValid(PerceptionedPawn))
+		{
+			Blackboard->SetValueAsVector(BBKEY_NOISEPOS, Location);
+		}
+	}
+
+* 이미 타겟이 존재(전투상황)하면 return하여 이벤트 종료
+* BlackBoard의 NoisePos 변수 업데이트
 
 <br/>
    
@@ -670,7 +721,235 @@ https://github.com/user-attachments/assets/e814d45d-6242-4d1b-b56a-287e2291645a
 * FindTargetDelegate(콜백함수에서 몬스터의 HPBar 비활성화) 실행   
 
 ### 행동트리
-![image](https://github.com/user-attachments/assets/949de752-ae9d-4bd9-a897-88b2f072c0cc)
+<img width="1256" height="728" alt="image" src="https://github.com/user-attachments/assets/c5b4b51f-a152-4cb4-add2-078b1b867f93" />
+
+* 제일 왼쪽 그룹
+몬스터가 플레이어를 인식했을때 작동   
+   
+* 중앙 그룹
+몬스터가 청각 이벤트를 받으면 작동   
+MoveTo 노드 실행후 별도의 테스크를 구현하여
+NoisePos 블랙보드 키를 초기화함
+
+> UBTTask_ClearKey
+
+	//ActorPerceptionForgetUpdated
+	//타겟이 시야범위를 벗어나고 일정시간이 지났을때 실행
+	EBTNodeResult::Type UBTTask_ClearKey::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+	{
+		EBTNodeResult::Type Result = Super::ExecuteTask(OwnerComp, NodeMemory);
+
+		if (Result != EBTNodeResult::Succeeded)
+		{
+			return Result;
+		}
+
+		UBlackboardComponent* Blackboard = OwnerComp.GetBlackboardComponent();
+
+		if (Blackboard)
+		{
+			Blackboard->ClearValue(GetSelectedBlackboardKey());
+
+			return EBTNodeResult::Succeeded;
+		}
+
+		return EBTNodeResult::Failed;
+	}
+
+   
+* 오른쪽 그룹
+몬스터가 평상시 정찰할 때 작동
+
+<br/>
+   
+<div align="right">
+  
+[목차로](#목차)
+
+</div>
+
+<br/>
+
+## 몬스터 HP Bar UI
+### WidgetComponent
+> UPPGASWidgetComponent.cpp
+
+	//InitWidget 함수
+	UPPGASUserWidget* GASUserWidget = Cast<UPPGASUserWidget>(GetWidget());
+	if (GASUserWidget)
+	{
+		GASUserWidget->SetAbilitySystemComponent(GetOwner());
+	}
+
+* WidgetComponent에서 위젯 컴포넌트가 초기화 될때 SetAbilitySystemComponent 함수에 오너를 전달
+* InitWidget 함수에서 생성한 위젯을 가져와 오너를 넘겨줌
+* 몬스터 HP Bar의 부모 클래스
+
+### PPGASUserWidget
+> UPPGASUserWidget 
+
+	//헤더파일
+	virtual void SetAbilitySystemComponent(AActor* Owner);
+ 
+	//Cpp파일
+	void UPPGASUserWidget::SetAbilitySystemComponent(AActor* Owner)
+	{
+	    if (IsValid(Owner))
+	    {
+	        ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Owner);
+	    }
+	}
+
+* 위젯 컴포넌트를 부모로 위젯을 생성하면 위젯에서 제공하는 GetOwningPlayer 함수를 사용할 수 없음   
+* 그러므로 부모 위젯 클래스를 생성하여 오너를 받아올 수 있는 함수를 생성해야 됨
+* UPPGASUserWidget을 상속받는 클래스에서 재정의 할 수 있게 가상함수로 선언
+
+
+### PPGASHPBarUserWidget
+> UPPGASHpBarUserWidget.cpp
+
+	void UPPGASHpBarUserWidget::SetAbilitySystemComponent(AActor* Owner)
+	{
+		Super::SetAbilitySystemComponent(Owner);
+
+		if (ASC)
+		{
+			//특정 어트리뷰트값이 바뀔때 마다 호출되는 델리게이트
+			ASC->GetGameplayAttributeValueChangeDelegate(UPPCharacterAttributeSet::GetHealthAttribute()).
+				AddUObject(this, &UPPGASHpBarUserWidget::OnHealthAttributeChange);
+			ASC->GetGameplayAttributeValueChangeDelegate(UPPCharacterAttributeSet::GetMaxHealthAttribute()).
+				AddUObject(this, &UPPGASHpBarUserWidget::OnMaxHealthAttributeChange);
+	
+			~~~
+		}
+	}
+ 
+* 부모함수를 호출해 ASC를 가져옴
+* SetAbilitySystemComponent 함수에서 매개변수로 들어온 오너를 이용하여 ASC에 어트리뷰트 체인지 델리게이트에 함수 등록
+* 프로그래스바, 텍스트 박스 관리
+  
+### 몬스터 HP BAR 동기화
+![image](https://github.com/user-attachments/assets/e2bf30e5-bd5e-44be-a264-ae9723ed376a)
+
+<img width="1525" height="965" alt="image" src="https://github.com/user-attachments/assets/f9d4f7af-f5df-47f5-8d62-fffceb4d3f77" />
+
+1. AIPerception 이벤트로 Delegate가 Broadcast
+	* Delegate를 통해 인식한 플레이어, bool 변수(인식 했는지)가 넘어간다
+   
+2. 콜백함수가 실행되면 인터페이스를 통해 간접 참조하여 플레이어 캐릭터의 함수를 실행
+	* 몬스터는 자기를 인식한 플레이어 캐릭터를 통해 Client RPC를 보낸다
+   
+3. 인터페이스를 통해 실행된 함수로 플레이어 캐릭터에서 Client RPC를 호출
+4. Client RPC가 실행되면 다시 인터페이스를 통해 몬스터를 간접참조하여 HPBar 조절 함수를 실행
+   
+코드와 자세한 내용은 아래 블로그 링크를 클릭하면 볼수 있습니다   
+<a href="https://k99812.tistory.com/198" height="5" width="10" target="_blank" >
+<img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
+</a>
+
+
+
+## Player HUD
+![image](https://github.com/user-attachments/assets/bd804c33-c2a1-4105-b9d7-aad5f35e5fa1)
+
+https://github.com/user-attachments/assets/6ed4f5f6-d580-4aa2-a2d8-4efa9fdd69cd
+
+<br/>
+
+### PPHUDWidget
+* 생성한 위젯들을 관리할 클래스
+* PPPlayerStatBarUserWidget 생성
+
+### PPPlayerStatBarUserWidget
+* ASC를 통해 어트리뷰트 체인지 델리게이트를 통해 콜백함수 연결
+* 프로그래스바, 텍스트박스 생성
+
+### 재시작 UI
+
+https://github.com/user-attachments/assets/e9e4e0ee-f90a-4545-8b29-fa12db39658c
+
+![image](https://github.com/user-attachments/assets/796bd9f7-2586-4520-bc19-a23bb26e9eab)
+<br/>
+
+1. 캐릭터 사망시 SetDead 함수가 실행
+2. GameMode를 가져와 상속받은 인터페이스로 캐스팅하여 함수 실행
+3. 게임모드에서 PlayerController 함수를 실행하여 UI 생성
+
+<br/>
+
+> UPPGameOverUserWidget
+
+ 	//헤더파일
+  	UFUNCTION(BlueprintCallable, Meta = (DisplayName = "BtnEventGameRestartCpp"))
+	void BtnEventGameRestart();
+
+![image](https://github.com/user-attachments/assets/7a643519-adc4-44aa-b12b-abd0c138ba32)
+
+ * 버튼 OnClicked 이벤트 콜백 함수를 BluprintCallable 설정을 해 블루프린트에서 함수 바인드
+
+> UPPGameOverUserWidget
+	
+  	//cpp파일
+   	//BtnEventGameRestart
+	void UPPGameOverUserWidget::BtnEventGameRestart()
+	{
+		APlayerController* OwingPlayerController = GetOwningPlayer();
+	
+		if (OwingPlayerController)
+		{
+			//Level restart
+			UGameplayStatics::OpenLevel(GetWorld(), GetWorld()->GetFName());
+	
+			//사용자 입력 비활성화
+			OwingPlayerController->SetShowMouseCursor(false);
+			OwingPlayerController->DisableInput(OwingPlayerController);
+	
+			//함수실행시 해당 위젯 제거
+			RemoveFromParent();
+		}
+	}
+
+ * 플레이어 컨트롤러를 통해 입력을 비활성화 및 현재 레벨 재시작
+ * RemoveFromParent를 호출해 위젯 제거
+
+<br/>
+
+## Damage UI
+
+https://github.com/user-attachments/assets/7e05d46d-074b-4ccf-9e8e-c709ea7f9647
+
+![image](https://github.com/user-attachments/assets/064dbf8b-7813-4201-8201-5f78d2bfd78a)
+
+1. 데미지 어트리뷰트가 바뀌면 게임모드를 가져와 상속받은 인터페이스로 캐스팅하여 함수실행
+2. 게임모드에서 플레이어컨트롤러 함수 실행
+3. 플레이어 컨트롤러에서 데미지 UI 생성 및 관리
+4. AddViewport 함수 실행전 SetTextWidget 함수를 실행하여 위젯의 위치, 텍스트를 설정
+
+<br/>
+
+![image](https://github.com/user-attachments/assets/833e316f-0f92-4484-b664-8a816dc02c2f)
+
+>APPPlayerController.cpp
+
+	//ActorTakedDamage 함수
+	//DamageUI의 델리게이트에 바인드되는 람다 함수
+	DamageUI.Get()->EndLifeTime.BindLambda([&]()
+	{
+		TWeakObjectPtr<UPPFloatingTextUserWidget> TempDamageUI = DamageUIArray[0];
+
+		if (TempDamageUI.IsValid())
+		{
+			TempDamageUI.Get()->RemoveFromParent();
+		}
+			
+		DamageUIArray.RemoveAt(0);
+	});
+
+1. 플레이어컨트롤러에서 SetTextWidget 함수 실행
+2. DamageUI에서 플레이어 컨트롤러를 가져와 3D좌표를 뷰표트 좌표로 변환 후 데미지 텍스트 설정
+3. 플레이어컨트롤러에서 DamageUI 생성후 뷰포트에 추가되면 NativeConstruct 실행
+4. Fade 애니메이션 Finished 델리게이트에 AnimationFinished 함수 바인드 후 UI 포지션 설정 및 애니메이션 재생
+5. AnimationFinished 함수 호출이 되면 바인드된 람다 함수 실행
 
 <div align="right">
   
@@ -678,9 +957,88 @@ https://github.com/user-attachments/assets/e814d45d-6242-4d1b-b56a-287e2291645a
 
 </div>
 
+# 현재는 사용하지 않음
+싱글플레이에서 멀티플레이로 리팩토링하여     
+현재는 사용하지 않는 로직들
+
+<details>
+
+## PlayerController
+> APPPlayerController
+
+	void APPPlayerController::BeginPlay()
+	{
+		Super::BeginPlay();
+
+		SetInputMode(FInputModeGameOnly());
+
+		HUDWidget = CreateWidget<UPPHUDWidget>(this, HUDWidgetClass);
+			if (HUDWidget)
+		{
+			HUDWidget->AddToViewport();
+		}
+	}
+
+* 인풋모드 관리
+* 플레이어 HUD 생성
 
 <br/>
 
+> APPPlayerController
+
+	void APPPlayerController::GameOver()
+	{
+		GameOverUIWidget = CreateWidget<UPPGameOverUserWidget>(this, GameOverUIClass);
+		if (GameOverUIWidget)
+		{
+			GameOverUIWidget->AddToViewport();
+			EnableInput(this);
+			SetShowMouseCursor(true);
+		}
+	}
+
+* GameOverUI 관리
+* 게임모드로 부터 GameOver 함수가 호출되면 UI 생성 및 뷰포트 추가
+
+<br/>
+
+> APPPlayerController.h
+
+	//플레이어컨트롤러 헤더파일
+	UPROPERTY(EditAnywhere, Category = "HUD")
+	TSubclassOf<class UUserWidget> DamageUIClass;
+
+	UPROPERTY(VisibleAnywhere, Category = "HUD")
+	TArray<TWeakObjectPtr<class UPPFloatingTextUserWidget>> DamageUIArray;
+
+* DamageUI 관리
+* DamageUIClass : 생성할 UI를 저장
+* DamageUIArray : 생성하고 일정시간후 파괴되는 DamgeUI 특성으로 약참조하는 WeekObjectPtr로 선언
+* TQueue 컨테이너가 UPROPERTY를 지원하지 않아 TArray를 이용하여 TQueue를 대체함
+
+<br/>
+
+> APPPlayerController.cpp
+
+	//ActorTakedDamage 함수
+	TWeakObjectPtr<UPPFloatingTextUserWidget> DamageUI = CreateWidget<UPPFloatingTextUserWidget>(this, DamageUIClass);
+	if (DamageUI.IsValid())
+	{
+ 		DamageUI.Get()->EndLifeTime.BindLambda([&]()
+   		{
+   			~~~ 
+   		});
+
+		//SetTextWidget함수를 먼저 실행뒤 결과에 따라 함수 실행
+		if (DamageUI.Get()->SetTextWidget(Damage, ActorPosition))
+		{
+			DamageUIArray.Emplace(DamageUI.Get());
+			DamageUI.Get()->AddToViewport();
+		}	
+	}
+
+* DamageUI 생성 후 SetTextWidget 함수 실행
+* 생성한 UI를 Array에 추가 후 뷰포트에 추가
 
 ## GameMode
 ![image](https://github.com/user-attachments/assets/b17e3b4c-0ee7-4d25-a189-1965e5df05b7)
@@ -772,254 +1130,7 @@ https://github.com/user-attachments/assets/e814d45d-6242-4d1b-b56a-287e2291645a
 
 * 플레이어 컨트롤러를 가져와 Damage, ActorPosition을 넘겨 데미지 UI생성
 
-<br/>
-
-
-## PlayerController
-> APPPlayerController
-
-	void APPPlayerController::BeginPlay()
-	{
-		Super::BeginPlay();
-
-		SetInputMode(FInputModeGameOnly());
-
-		HUDWidget = CreateWidget<UPPHUDWidget>(this, HUDWidgetClass);
-			if (HUDWidget)
-		{
-			HUDWidget->AddToViewport();
-		}
-	}
-
-* 인풋모드 관리
-* 플레이어 HUD 생성
-
-<br/>
-
-> APPPlayerController
-
-	void APPPlayerController::GameOver()
-	{
-		GameOverUIWidget = CreateWidget<UPPGameOverUserWidget>(this, GameOverUIClass);
-		if (GameOverUIWidget)
-		{
-			GameOverUIWidget->AddToViewport();
-			EnableInput(this);
-			SetShowMouseCursor(true);
-		}
-	}
-
-* GameOverUI 관리
-* 게임모드로 부터 GameOver 함수가 호출되면 UI 생성 및 뷰포트 추가
-
-<br/>
-
-> APPPlayerController.h
-
-	//플레이어컨트롤러 헤더파일
-	UPROPERTY(EditAnywhere, Category = "HUD")
-	TSubclassOf<class UUserWidget> DamageUIClass;
-
-	UPROPERTY(VisibleAnywhere, Category = "HUD")
-	TArray<TWeakObjectPtr<class UPPFloatingTextUserWidget>> DamageUIArray;
-
-* DamageUI 관리
-* DamageUIClass : 생성할 UI를 저장
-* DamageUIArray : 생성하고 일정시간후 파괴되는 DamgeUI 특성으로 약참조하는 WeekObjectPtr로 선언
-* TQueue 컨테이너가 UPROPERTY를 지원하지 않아 TArray를 이용하여 TQueue를 대체함
-
-<br/>
-
-> APPPlayerController.cpp
-
-	//ActorTakedDamage 함수
-	TWeakObjectPtr<UPPFloatingTextUserWidget> DamageUI = CreateWidget<UPPFloatingTextUserWidget>(this, DamageUIClass);
-	if (DamageUI.IsValid())
-	{
- 		DamageUI.Get()->EndLifeTime.BindLambda([&]()
-   		{
-   			~~~ 
-   		});
-
-		//SetTextWidget함수를 먼저 실행뒤 결과에 따라 함수 실행
-		if (DamageUI.Get()->SetTextWidget(Damage, ActorPosition))
-		{
-			DamageUIArray.Emplace(DamageUI.Get());
-			DamageUI.Get()->AddToViewport();
-		}	
-	}
-
-* DamageUI 생성 후 SetTextWidget 함수 실행
-* 생성한 UI를 Array에 추가 후 뷰포트에 추가
-
-<div align="right">
-  
-[목차로](#목차)
-
-</div>
-
-
-<br/>
-
-
-## UI
-### 몬스터 HP BAR
-![image](https://github.com/user-attachments/assets/e2bf30e5-bd5e-44be-a264-ae9723ed376a)
-<br/>
-
-### WidgetComponent
-> UPPGASWidgetComponent.cpp
-
-	//InitWidget 함수
-	UPPGASUserWidget* GASUserWidget = Cast<UPPGASUserWidget>(GetWidget());
-	if (GASUserWidget)
-	{
-		GASUserWidget->SetAbilitySystemComponent(GetOwner());
-	}
-
-* WidgetComponent에서 위젯 컴포넌트가 초기화 될때 SetAbilitySystemComponent 함수에 오너를 전달
-* InitWidget 함수에서 생성한 위젯을 가져와 오너를 넘겨줌
-
-### PPGASUserWidget
-> UPPGASUserWidget 
-
-	//헤더파일
-	virtual void SetAbilitySystemComponent(AActor* Owner);
- 
-	//Cpp파일
-	void UPPGASUserWidget::SetAbilitySystemComponent(AActor* Owner)
-	{
-	    if (IsValid(Owner))
-	    {
-	        ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Owner);
-	    }
-	}
-
-* 위젯 컴포넌트를 부모로 위젯을 생성하면 위젯에서 제공하는 GetOwningPlayer 함수를 사용할 수 없음   
-* 그러므로 부모 위젯 클래스를 생성하여 오너를 받아올 수 있는 함수를 생성해야 됨
-* UPPGASUserWidget을 상속받는 클래스에서 재정의 할 수 있게 가상함수로 선언
-
-### PPGASHPBarUserWidget
-> UPPGASHpBarUserWidget.cpp
-
-	void UPPGASHpBarUserWidget::SetAbilitySystemComponent(AActor* Owner)
-	{
-		Super::SetAbilitySystemComponent(Owner);
-
-		if (ASC)
-		{
-			//특정 어트리뷰트값이 바뀔때 마다 호출되는 델리게이트
-			ASC->GetGameplayAttributeValueChangeDelegate(UPPCharacterAttributeSet::GetHealthAttribute()).
-				AddUObject(this, &UPPGASHpBarUserWidget::OnHealthAttributeChange);
-			ASC->GetGameplayAttributeValueChangeDelegate(UPPCharacterAttributeSet::GetMaxHealthAttribute()).
-				AddUObject(this, &UPPGASHpBarUserWidget::OnMaxHealthAttributeChange);
-	
-			~~~
-		}
-	}
- 
-* 부모함수를 호출해 ASC를 가져옴
-* SetAbilitySystemComponent 함수에서 매개변수로 들어온 오너를 이용하여 ASC에 어트리뷰트 체인지 델리게이트에 함수 등록
-* 프로그래스바, 텍스트 박스 관리
-
-### Player HUD
-![image](https://github.com/user-attachments/assets/bd804c33-c2a1-4105-b9d7-aad5f35e5fa1)
-<br/>
-
-### PPHUDWidget
-* 생성한 위젯들을 관리할 클래스
-* PPPlayerStatBarUserWidget 생성
-
-### PPPlayerStatBarUserWidget
-* ASC를 통해 어트리뷰트 체인지 델리게이트를 통해 콜백함수 연결
-* 프로그래스바, 텍스트박스 생성
-
-## 재시작 UI
-
-https://github.com/user-attachments/assets/e9e4e0ee-f90a-4545-8b29-fa12db39658c
-
-![image](https://github.com/user-attachments/assets/796bd9f7-2586-4520-bc19-a23bb26e9eab)
-<br/>
-
-1. 캐릭터 사망시 SetDead 함수가 실행
-2. GameMode를 가져와 상속받은 인터페이스로 캐스팅하여 함수 실행
-3. 게임모드에서 PlayerController 함수를 실행하여 UI 생성
-
-<br/>
-
-> UPPGameOverUserWidget
-
- 	//헤더파일
-  	UFUNCTION(BlueprintCallable, Meta = (DisplayName = "BtnEventGameRestartCpp"))
-	void BtnEventGameRestart();
-
-![image](https://github.com/user-attachments/assets/7a643519-adc4-44aa-b12b-abd0c138ba32)
-
- * 버튼 OnClicked 이벤트 콜백 함수를 BluprintCallable 설정을 해 블루프린트에서 함수 바인드
-
-> UPPGameOverUserWidget
-	
-  	//cpp파일
-   	//BtnEventGameRestart
-	void UPPGameOverUserWidget::BtnEventGameRestart()
-	{
-		APlayerController* OwingPlayerController = GetOwningPlayer();
-	
-		if (OwingPlayerController)
-		{
-			//Level restart
-			UGameplayStatics::OpenLevel(GetWorld(), GetWorld()->GetFName());
-	
-			//사용자 입력 비활성화
-			OwingPlayerController->SetShowMouseCursor(false);
-			OwingPlayerController->DisableInput(OwingPlayerController);
-	
-			//함수실행시 해당 위젯 제거
-			RemoveFromParent();
-		}
-	}
-
- * 플레이어 컨트롤러를 통해 입력을 비활성화 및 현재 레벨 재시작
- * RemoveFromParent를 호출해 위젯 제거
-
-<br/>
-
-## Damage UI
-
-https://github.com/user-attachments/assets/7e05d46d-074b-4ccf-9e8e-c709ea7f9647
-
-![image](https://github.com/user-attachments/assets/064dbf8b-7813-4201-8201-5f78d2bfd78a)
-
-1. 데미지 어트리뷰트가 바뀌면 게임모드를 가져와 상속받은 인터페이스로 캐스팅하여 함수실행
-2. 게임모드에서 플레이어컨트롤러 함수 실행
-3. 플레이어 컨트롤러에서 데미지 UI 생성 및 관리
-4. AddViewport 함수 실행전 SetTextWidget 함수를 실행하여 위젯의 위치, 텍스트를 설정
-
-<br/>
-
-![image](https://github.com/user-attachments/assets/833e316f-0f92-4484-b664-8a816dc02c2f)
-
->APPPlayerController.cpp
-
-	//ActorTakedDamage 함수
-	//DamageUI의 델리게이트에 바인드되는 람다 함수
-	DamageUI.Get()->EndLifeTime.BindLambda([&]()
-	{
-		TWeakObjectPtr<UPPFloatingTextUserWidget> TempDamageUI = DamageUIArray[0];
-
-		if (TempDamageUI.IsValid())
-		{
-			TempDamageUI.Get()->RemoveFromParent();
-		}
-			
-		DamageUIArray.RemoveAt(0);
-	});
-
-1. 플레이어컨트롤러에서 SetTextWidget 함수 실행
-2. DamageUI에서 플레이어 컨트롤러를 가져와 3D좌표를 뷰표트 좌표로 변환 후 데미지 텍스트 설정
-3. 플레이어컨트롤러에서 DamageUI 생성후 뷰포트에 추가되면 NativeConstruct 실행
-4. Fade 애니메이션 Finished 델리게이트에 AnimationFinished 함수 바인드 후 UI 포지션 설정 및 애니메이션 재생
-5. AnimationFinished 함수 호출이 되면 바인드된 람다 함수 실행
+</details>
 
 <div align="right">
   
