@@ -391,45 +391,38 @@ HitCheck 과정에서 데미지를 주는 액터(가해자) 데미지를 받는 
 ![image](https://github.com/user-attachments/assets/896eefde-9528-4ecd-965c-958545f0756f)
 ![image](https://github.com/user-attachments/assets/a0843bb2-cb3e-416a-917e-8d9709ea03db)
    
-> Character
+> 델리게이트 바인드
 
-	//APPGASCharacterPlayer.h
- 	DECLARE_DELEGATE(FInputReleasedDelegate);
+	//PPPlayerCharacterInterface
+	DECLARE_DELEGATE(FInputReleasedDelegate);
+	virtual FInputReleasedDelegate& GetInputReleasedDelegate() = 0;
+	
+	//APPGASCharacterPlayer
  	FInputReleasedDelegate InputReleasedDelegate;
+  	FORCEINLINE virtual FInputReleasedDelegate& GetInputReleasedDelegate() override { return InputReleasedDelegate; }
 
-  	//인터페이스를 통해 AnimInstance를 넘겨 받음
-  	virtual void BindInputReleasedDelegate(class UPPAnimInstance* InAnimInstance) override;
-
- 	//APPGASCharacterPlayer.cpp
   	void APPGASCharacterPlayer::MoveInputReleased()
 	{
 		InputReleasedDelegate.Execute();
 	}
 
- 	void APPGASCharacterPlayer::BindInputReleasedDelegate(UPPAnimInstance* InAnimInstance)
+	//UPPAnimInstance
+ 	IPPPlayerCharacterInterface* Player = Cast<IPPPlayerCharacterInterface>(Owner);
+	if (Player)
 	{
-		InputReleasedDelegate.BindUObject(InAnimInstance, &UPPAnimInstance::SaveLastDirection);
+		Player->GetInputReleasedDelegate().BindUObject(this, &UPPAnimInstance::SaveLastDirection);
 	}
 
-* 움직이는 방향에 맞는 StopAnimation을 실행하기 위해 플레이어 캐릭터에 델리게이트를 생성함
+* 움직이는 방향에 맞는 StopAnimation을 실행하기 위해 플레이어 캐릭터에 델리게이트를 사용
 * 플레이어의 입력이 끝나면 델리게이트를 실행하여 마지막으로 움직인 방향을 계산
-* AnimInstance 클래스에서 인터페이스를 이용해 캐릭터의 델리게이트에 AnimInstance 클래스의 함수를 바인드
+* 인터페이스에 델리게이트를 정의하여 인터페이스를 상속받은 캐릭터, cpp에서 참조하는 애님인스턴스가 델리게이트를 알 수 있음
+	- 기존에는 캐릭터에 델리게이트를 정의하여 애님인스턴스에선 델리게이트를 알 수 없었음
+* 인터페이스 함수를 통해 델리게이트 참조를 반환하여 애님인스턴스에서 직접 콜백함수를 바인드
 
 
 <br/>
 
 > UPPAnimInstance
-
-	//NativeInitializeAnimation
-	Owner = Cast<ACharacter>(GetOwningActor());
-	if (Owner)
-	{
-		IPPAnimInterface* OwnerInter = Cast<IPPAnimInterface>(Owner);
-		if (OwnerInter)
-		{
-			OwnerInter->BindInputReleasedDelegate(this);
-		}
-	}
 
  	//SaveLastDirection
 	void UPPAnimInstance::SaveLastDirection()
@@ -437,9 +430,6 @@ HitCheck 과정에서 데미지를 주는 액터(가해자) 데미지를 받는 
 		LastDirection = CalculateDirection(Velocity , Movement->GetLastUpdateRotation());
 	}
    
-* NativeInitializeAnimation 함수에서 인터페이스를 통해   
-  자기자신(AnimInstance)을 넘겨 델리게이트에 콜백함수를 바인드
-  
 * SaveLastDirection함수가 델리게이트로 호출되면 CalculateDirection함수로  
   Velocity(캐릭터가 움직이는 방향), GetLastUpdateRotation을 넘겨 Direction을 계산
 
@@ -572,8 +562,6 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 
 <br/>
 
-https://github.com/user-attachments/assets/304a73f8-e93c-4e49-8669-28b2bcbe6248
-   
 > APPAIController
 
 	//AI 인식 업데이트
@@ -608,6 +596,8 @@ https://github.com/user-attachments/assets/304a73f8-e93c-4e49-8669-28b2bcbe6248
 			}
 		}
 	}
+
+https://github.com/user-attachments/assets/304a73f8-e93c-4e49-8669-28b2bcbe6248
 
 * Actor 변수는 AI가 감각을 통해 인식한 액터
 * Stimulus변수에 AI의 어떤 감각으로 함수가 호출됐는지 정보가 들어옴   
@@ -731,10 +721,11 @@ https://github.com/user-attachments/assets/e814d45d-6242-4d1b-b56a-287e2291645a
 MoveTo 노드 실행후 별도의 테스크를 구현하여
 NoisePos 블랙보드 키를 초기화함
 
+* 오른쪽 그룹
+몬스터가 평상시 정찰할 때 작동
+
 > UBTTask_ClearKey
 
-	//ActorPerceptionForgetUpdated
-	//타겟이 시야범위를 벗어나고 일정시간이 지났을때 실행
 	EBTNodeResult::Type UBTTask_ClearKey::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 	{
 		EBTNodeResult::Type Result = Super::ExecuteTask(OwnerComp, NodeMemory);
@@ -756,10 +747,6 @@ NoisePos 블랙보드 키를 초기화함
 		return EBTNodeResult::Failed;
 	}
 
-   
-* 오른쪽 그룹
-몬스터가 평상시 정찰할 때 작동
-
 <br/>
    
 <div align="right">
@@ -771,6 +758,8 @@ NoisePos 블랙보드 키를 초기화함
 <br/>
 
 ## 몬스터 HP Bar UI
+![image](https://github.com/user-attachments/assets/e2bf30e5-bd5e-44be-a264-ae9723ed376a)
+
 ### WidgetComponent
 > UPPGASWidgetComponent.cpp
 
@@ -783,7 +772,6 @@ NoisePos 블랙보드 키를 초기화함
 
 * WidgetComponent에서 위젯 컴포넌트가 초기화 될때 SetAbilitySystemComponent 함수에 오너를 전달
 * InitWidget 함수에서 생성한 위젯을 가져와 오너를 넘겨줌
-* 몬스터 HP Bar의 부모 클래스
 
 ### PPGASUserWidget
 > UPPGASUserWidget 
@@ -826,10 +814,9 @@ NoisePos 블랙보드 키를 초기화함
  
 * 부모함수를 호출해 ASC를 가져옴
 * SetAbilitySystemComponent 함수에서 매개변수로 들어온 오너를 이용하여 ASC에 어트리뷰트 체인지 델리게이트에 함수 등록
-* 프로그래스바, 텍스트 박스 관리
+* 해당 클래스를 사용하여 몬스터 HP Bar를 생성
   
-### 몬스터 HP BAR 동기화
-![image](https://github.com/user-attachments/assets/e2bf30e5-bd5e-44be-a264-ae9723ed376a)
+### 몬스터 HP BAR
 
 <img width="1525" height="965" alt="image" src="https://github.com/user-attachments/assets/f9d4f7af-f5df-47f5-8d62-fffceb4d3f77" />
 
@@ -858,22 +845,244 @@ https://github.com/user-attachments/assets/6ed4f5f6-d580-4aa2-a2d8-4efa9fdd69cd
 
 ### PPHUDWidget
 * 생성한 위젯들을 관리할 클래스
-* PPPlayerStatBarUserWidget 생성
+* PPPlayerStatBarUserWidget 의 상위 위젯
 
 ### PPPlayerStatBarUserWidget
-* ASC를 통해 어트리뷰트 체인지 델리게이트를 통해 콜백함수 연결
-* 프로그래스바, 텍스트박스 생성
+<img width="2116" height="1185" alt="image" src="https://github.com/user-attachments/assets/c3f8b949-3793-4112-b968-d9d88d15e202" />
 
-### 재시작 UI
+<br/>
+   
+싱글플레이에선 NativeConstruct에서 어트리뷰트 델리게이트에 바인드해도 문제가 없었지만   
+멀티플레이에선 클라이언트의 NativeConstruct 호출 시점에 ASC가 초기화가 마무리되지 않아   
+바인드가 정상적으로 되지 않음 따라서 위 흐름도처럼 GAS 초기화 이후 별도의 함수로 초기화를 진행하였다
+   
+1. ASC 초기화가 마무리 되는 PossessedBy, OnRep_PlayerState에서 인터페이스 함수 실행
+2. InitHUD 함수에서 HUD위젯, ASC가 생성이 되어있으면 BindAbilitySystem 함수 실행
+   아니면 ASC_Cache로 저장
+3. 플레이어 컨트롤러의 BeginPlay 실행 시점에 ASC_Cache가 있으면 BindAbilitySystem 함수 실행
 
-https://github.com/user-attachments/assets/e9e4e0ee-f90a-4545-8b29-fa12db39658c
+### Timer를 이용한 StatBar 보간
+HP Bar를 부드럽게 변경하기 위해 Tick 함수대신 Timer를 사용했다   
+Tick 대신 Timer를 사용한 이유는 Tick 함수는 스탯 변화가 없어도   
+계속 프레임당 실행되기 때문에 Timer를 사용하였다   
 
-![image](https://github.com/user-attachments/assets/796bd9f7-2586-4520-bc19-a23bb26e9eab)
 <br/>
 
-1. 캐릭터 사망시 SetDead 함수가 실행
-2. GameMode를 가져와 상속받은 인터페이스로 캐스팅하여 함수 실행
-3. 게임모드에서 PlayerController 함수를 실행하여 UI 생성
+> UPPPlayerStatBarUserWidget
+
+	UPPPlayerStatBarUserWidget::BindAbilitySystem(UAbilitySystemComponent* ASC)
+	{
+		생략
+		ASC->GetGameplayAttributeValueChangeDelegate(UPPCharacterAttributeSet::GetHealthAttribute()).
+			AddUObject(this, &UPPPlayerStatBarUserWidget::OnHealthAttributeChange);
+	}
+	
+  	void UPPPlayerStatBarUserWidget::OnHealthAttributeChange(const FOnAttributeChangeData& ChangeData)
+	{
+		TargetHealth = ChangeData.NewValue;
+		CheckShouldTick();
+	}
+
+다른 어트리뷰트도 위와 같이 콜백함수를 연결해준다   
+* TargetHealth : 변경된 체력값
+* CurrentHealth : 현재의 체력값(보간으로 UI에 반영될 값)
+
+<br/>
+
+> UPPPlayerStatBarUserWidget
+
+	void UPPPlayerStatBarUserWidget::CheckShouldTick()
+	{
+		bool bHealthMatched = FMath::IsNearlyEqual(CurrentHealth, TargetHealth, 0.1f) &&
+			FMath::IsNearlyEqual(CurrentMaxHealth, TargetMaxHealth, 0.1f);
+
+		bool bManaMatched = FMath::IsNearlyEqual(CurrentMana, TargetMana, 0.1f) &&
+			FMath::IsNearlyEqual(CurrentMaxMana, TargetMaxMana, 0.1f);
+
+		if (bHealthMatched && bManaMatched)
+		{
+			if (InterpTimerHandle.IsValid())
+			{
+				GetWorld()->GetTimerManager().ClearTimer(InterpTimerHandle);
+				InterpTimerHandle.Invalidate();
+			}
+		}
+		else
+		{
+			if (!InterpTimerHandle.IsValid())
+			{
+				GetWorld()->GetTimerManager().SetTimer(InterpTimerHandle, this, &UPPPlayerStatBarUserWidget::UpdateStatBar, TimerFrequency, true);
+			}
+		}
+	}
+
+* IsNearlyEqual 함수를 이용하여 CurrentHealth와 TargetHealth를 체크한다
+* 두 변수가 같을경우(근접) 타이머를 해제한다(주로 타이머 콜백함수 UpdateStatBar에서 다시 호출한경우)
+* 두 변수가 같지 않을 경우 타이머가 실행되있지 않으면 타이머를 실행하여 콜백함수를 실행한다
+* 콜백함수 주기는 0.016(1/60)으로 설정하였다
+
+<br/>
+
+> UPPPlayerStatBarUserWidget
+
+	void UPPPlayerStatBarUserWidget::UpdateStatBar()
+	{
+		float DeltaTime = GetWorld()->GetDeltaSeconds();
+
+		if (!FMath::IsNearlyEqual(CurrentHealth, TargetHealth, 0.1f) ||
+			!FMath::IsNearlyEqual(CurrentMaxHealth, TargetMaxHealth, 0.1f))
+		{
+			CurrentHealth = FMath::FInterpTo(CurrentHealth, TargetHealth, DeltaTime, BarInterpSpeed);
+			CurrentMaxHealth = FMath::FInterpTo(CurrentMaxHealth, TargetMaxHealth, DeltaTime, BarInterpSpeed);
+			UpdateHpBar();
+		}
+
+		생략
+
+		CheckShouldTick();
+	}
+
+* 보간에 필요한 DeltaTime을 월드에서 가져왔다
+* IsNearlyEqual 함수를 통해 체크, 보간을 진행한 뒤 UI 반영(UpdateHpBar 함수)
+* CheckShouldTick 함수를 실행하여 타이머를 종료할지 결정한다
+
+### 재시작 UI
+<img width="1853" height="1284" alt="image" src="https://github.com/user-attachments/assets/e6faa3a6-3c77-45cd-ae8e-46a8effe5771" />
+
+<br/>
+
+1. PostGameplayEffectExecute 함수에서 GetHealth() <= 0.0f 로 bIsDead = flase로 변경
+2. 서버에선 OnRep_IsDead 직접 호출, 클라이언트에선 리플리케이션으로 OnRep_IsDead 함수 호출
+3. OnRep_IsDead 함수에서 ActorIsDead 델리게이트 발동 및 ASC에 태그 부착
+4. 델리게이트 콜백함수 실행하여 몽타주 재생, 콜리전 비활성화, 인터페이스로 UI 생성 요청
+5. 플레이어 컨트롤러에서 로컬플레이어가 아니면 종료, 맞으면 UI 생성
+
+<br/>
+
+> UPPCharacterAttributeSet
+
+ 	//헤더파일
+  	UPROPERTY(ReplicatedUsing = OnRep_IsDead)
+	bool bIsDead = false;
+
+	void UPPCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+	{
+		생략
+
+		if (GetHealth() <= 0.0f && !bIsDead)
+		{
+			bIsDead = true;
+			OnRep_IsDead();
+		}
+	}
+
+PostGameplayEffectExecute 함수에서 캐릭터 죽음 체크 및 이벤트 발동
+
+<br/>
+
+> APPGASCharacterPlayer
+
+ 	void APPGASCharacterPlayer::SetDead()
+	{
+		Super::SetDead();
+
+		PPNET_LOG(LogGAS, Log, TEXT("Begin"));
+		APlayerController* PlayerController = Cast<APlayerController>(GetController());
+		if (PlayerController)
+		{
+			DisableInput(PlayerController);
+		}
+
+		if (GetCapsuleComponent())
+		{
+			GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_NOCOLLISION);
+		}
+
+		IPPPlayerInterface* IPlayerController = Cast<IPPPlayerInterface>(PlayerController);
+		if (IPlayerController)
+		{
+			IPlayerController->OnPlayerDead();
+		}
+	}
+
+* 해당 함수는 몬스터, 플레이어 캐릭터의 공통 부모 CharacterBase 클래스에서   
+  가상함수로 선언하여 기본적인 몽타주 재생을 수행함   
+* 캐릭터에선 추가적으로 인풋, 콜리전 비활성화 및 GameOverUI 요청을 함
+
+<br/>
+
+> UPPCharacterAttributeSet
+	
+  	void UPPCharacterAttributeSet::OnRep_IsDead()
+	{
+		PPNET_ATTLOG(LogGAS, Log, TEXT("Begin"));
+
+		if (bIsDead)
+		{
+			ActorIsDead.Broadcast();
+		}
+
+		UAbilitySystemComponent* ASC = GetOwningAbilitySystemComponent();
+		if (ASC)
+		{
+			if (bIsDead)
+			{
+				if (!ASC->HasMatchingGameplayTag(PPTAG_CHARACTER_ISDEAD))
+				{
+					ASC->AddLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
+				}
+			}
+			else
+			{
+				if (ASC->HasMatchingGameplayTag(PPTAG_CHARACTER_ISDEAD))
+				{
+					ASC->RemoveLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
+				}
+			}
+
+			AActor* Avartar = ASC->GetAvatarActor();
+			IPPCharacterBaseInterface* Player = Avartar ? Cast<IPPCharacterBaseInterface>(Avartar) : nullptr;
+			if (Player)
+			{
+				if (bIsDead)
+				{
+					if (Avartar->GetLocalRole() == ENetRole::ROLE_SimulatedProxy)
+					{
+						Player->SetDead();
+					}
+				}
+				else
+				{
+					Player->SetAlive();
+				}
+			}
+		}
+	}
+
+OnRep_IsDead 함수는 캐릭터 죽음 말고도 부활할 때도 실행됨   
+ASC에 캐릭터의 죽음태그를 bIsDead에 따라 부착 또는 제거   
+<br/>
+IPPCharacterBaseInterface로 실행되는 SetDead, SetAlive 함수들은   
+로컬플레이어 말고 SimulatedProxy를 위한 이벤트   
+<br/>
+로컬플레이어의 죽음 함수는 ActorIsDead로 실행   
+부활 함수는 파괴 및 재생성할 때 PossessedBy, OnRep_PlayerState 함수에서 실행
+
+<br/>
+
+### 캐릭터 부활 기능
+<img width="2269" height="1208" alt="image" src="https://github.com/user-attachments/assets/1b8d0d73-2ae6-4a1c-b597-c0ebc474f15b" />
+
+1. GameOver UI의 버튼 이벤트가 발생
+2. ASC를 통해 클라이언트 예측으로 Tag, 어트리뷰트셋 isDead 변수 초기화
+	* 클라이언트에서 먼저 반영하는 이유는 만약 먼저 반영하지않고 서버의 동기화를   
+      기다리면 서버에서 동기화가 되기전까지 캐릭터가 부활하면 바로죽는 버그가 생긴다
+3. 인터페이스를 통해 RequsetRespawn 함수(RPC)를 실행하여 서버에 부활요청을 한다
+4. 부활 요청을 받은 서버는 죽음 관련 변수를 초기화 및 액터 파괴, 재생성한다
+5. isDead 리플리케이션을 통해 캡슐컴포넌트, 무브먼트 관련 초기화를 진행한다 
+	* 리플리케이션을 통해 진행해야 시뮬레이티드 프록시에도 정상적으로 적용된다   
+      멀티캐스트를 사용하지 않은 이유는 부활, 죽음 로직은 플레이어가 중단 or 중간 진입하여   
+      RPC 이후에 접속하여도 적용되어야 하기 때문이다 
 
 <br/>
 
@@ -887,30 +1096,75 @@ https://github.com/user-attachments/assets/e9e4e0ee-f90a-4545-8b29-fa12db39658c
 
  * 버튼 OnClicked 이벤트 콜백 함수를 BluprintCallable 설정을 해 블루프린트에서 함수 바인드
 
+<br/>
+
 > UPPGameOverUserWidget
-	
-  	//cpp파일
-   	//BtnEventGameRestart
-	void UPPGameOverUserWidget::BtnEventGameRestart()
+
+ 	void UPPGameOverUserWidget::BtnEventGameRestart()
 	{
-		APlayerController* OwingPlayerController = GetOwningPlayer();
+		생략
 	
-		if (OwingPlayerController)
+		IAbilitySystemInterface* IPlayerState = Cast<IAbilitySystemInterface>(OwningPlayerController->PlayerState);
+		UAbilitySystemComponent* ASC = IPlayerState ? IPlayerState->GetAbilitySystemComponent() : nullptr;
+		if (ASC)
 		{
-			//Level restart
-			UGameplayStatics::OpenLevel(GetWorld(), GetWorld()->GetFName());
-	
-			//사용자 입력 비활성화
-			OwingPlayerController->SetShowMouseCursor(false);
-			OwingPlayerController->DisableInput(OwingPlayerController);
-	
-			//함수실행시 해당 위젯 제거
-			RemoveFromParent();
+			if (ASC->HasMatchingGameplayTag(PPTAG_CHARACTER_ISDEAD))
+			{
+				ASC->RemoveLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
+			}
+
+			if (const UPPCharacterAttributeSet* AttributeSet = ASC->GetSet<UPPCharacterAttributeSet>())
+			{
+				const_cast<UPPCharacterAttributeSet*>(AttributeSet)->SetIsDead(false);
+			}
+		}
+
+		IPlayerController->RequestRespawn();
+
+		OwningPlayerController->SetShowMouseCursor(false);
+		OwningPlayerController->SetInputMode(FInputModeGameOnly());
+
+		RemoveFromParent();
+	}
+
+특정 클래스에 의존하는 것을 방지하기 위해 언리얼의 기반 클래스(APlayerController)와   
+인터페이스를 활용하여 객체 간의 결합도를 낮추고 로직의 범용성과 재사용성을 확보   
+<br/>
+* ASC->RemoveLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
+* const_cast<UPPCharacterAttributeSet*>(AttributeSet)->SetIsDead(false);
+클라이언트 예측으로 버튼을 누르는 즉시 죽음 관련 변수, 태그들을 제거   
+선반영을 하지않으면 서버에서 리플리케이션 되기 전까지 게임플레이 태그,변수가   
+살아있어 캐릭터가 부활하자마자 죽음 관련 이벤트가 계속 실행된다   
+<br/>
+* IPlayerController->RequestRespawn();
+플레이어 컨트롤러에게 리스폰 요청
+<br/>
+* RemoveFromParent();
+UI 제거
+
+<br/>
+
+> APPGASCharacterPlayer
+
+ 	void APPGASCharacterPlayer::SetAlive()
+	{
+		PPNET_LOG(LogGAS, Log, TEXT("Begin"));
+		if (GetCapsuleComponent())
+		{
+			GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_PPCAPSULE);
+			GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+			SetActorEnableCollision(true);
+		}	
+
+		if (GetCharacterMovement())
+		{
+			GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+			GetCharacterMovement()->Activate();
+			GetCharacterMovement()->Velocity = FVector::ZeroVector;
 		}
 	}
 
- * 플레이어 컨트롤러를 통해 입력을 비활성화 및 현재 레벨 재시작
- * RemoveFromParent를 호출해 위젯 제거
+* 캡슐 컴포넌트, 무브먼트 관련 초기화 진행
 
 <br/>
 
