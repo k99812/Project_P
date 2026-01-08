@@ -758,6 +758,8 @@ NoisePos 블랙보드 키를 초기화함
 <br/>
 
 ## 몬스터 HP Bar UI
+![image](https://github.com/user-attachments/assets/e2bf30e5-bd5e-44be-a264-ae9723ed376a)
+
 ### WidgetComponent
 > UPPGASWidgetComponent.cpp
 
@@ -814,8 +816,7 @@ NoisePos 블랙보드 키를 초기화함
 * SetAbilitySystemComponent 함수에서 매개변수로 들어온 오너를 이용하여 ASC에 어트리뷰트 체인지 델리게이트에 함수 등록
 * 해당 클래스를 사용하여 몬스터 HP Bar를 생성
   
-### 몬스터 HP BAR 동기화
-![image](https://github.com/user-attachments/assets/e2bf30e5-bd5e-44be-a264-ae9723ed376a)
+### 몬스터 HP BAR
 
 <img width="1525" height="965" alt="image" src="https://github.com/user-attachments/assets/f9d4f7af-f5df-47f5-8d62-fffceb4d3f77" />
 
