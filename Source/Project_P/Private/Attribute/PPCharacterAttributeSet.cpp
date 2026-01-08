@@ -6,7 +6,7 @@
 #include "Project_P.h"
 #include "Tag/PPGameplayTag.h"
 #include "Net/UnrealNetwork.h"
-#include "Interface/PPGASCharacterPlayerInterface.h"
+#include "Interface/PPCharacterBaseInterface.h"
 
 UPPCharacterAttributeSet::UPPCharacterAttributeSet() : 
 	AttackRange(100.0f), MaxAttackRange(300.0f),
@@ -51,7 +51,7 @@ void UPPCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 	Super::PostGameplayEffectExecute(Data);
 
 	float MinHealth = 0.0f;
-
+	
 	//#include "GameplayEffectExtension.h" 추가
 	//Data에 실행되는 GE스펙, 타겟 ASC, EvaluatedData에 변경되는 어트리뷰트 및 연산자 등이 들어있음
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
@@ -119,7 +119,7 @@ void UPPCharacterAttributeSet::OnRep_IsDead()
 		}
 
 		AActor* Avartar = ASC->GetAvatarActor();
-		IPPGASCharacterPlayerInterface* Player = Avartar ? Cast<IPPGASCharacterPlayerInterface>(Avartar) : nullptr;
+		IPPCharacterBaseInterface* Player = Avartar ? Cast<IPPCharacterBaseInterface>(Avartar) : nullptr;
 		if (Player)
 		{
 			if (bIsDead)
