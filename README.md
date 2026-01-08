@@ -726,8 +726,6 @@ NoisePos 블랙보드 키를 초기화함
 
 > UBTTask_ClearKey
 
-	//ActorPerceptionForgetUpdated
-	//타겟이 시야범위를 벗어나고 일정시간이 지났을때 실행
 	EBTNodeResult::Type UBTTask_ClearKey::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 	{
 		EBTNodeResult::Type Result = Super::ExecuteTask(OwnerComp, NodeMemory);
