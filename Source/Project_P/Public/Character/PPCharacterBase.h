@@ -8,11 +8,11 @@
 #include "Input/PPInputEnum.h"
 #include "GenericTeamAgentInterface.h"
 #include "Interface/PPGASInterface.h"
-#include "Interface/PPGASCharacterPlayerInterface.h"
+#include "Interface/PPCharacterBaseInterface.h"
 #include "PPCharacterBase.generated.h"
 
 UCLASS()
-class PROJECT_P_API APPCharacterBase : public ACharacter, public IGameplayTagAssetInterface, public IGenericTeamAgentInterface, public IPPGASInterface, public IPPGASCharacterPlayerInterface
+class PROJECT_P_API APPCharacterBase : public ACharacter, public IGameplayTagAssetInterface, public IGenericTeamAgentInterface, public IPPGASInterface, public IPPCharacterBaseInterface
 {
 	GENERATED_BODY()
 

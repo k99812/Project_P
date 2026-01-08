@@ -31,7 +31,7 @@ void UPPGameOverUserWidget::NativeConstruct()
 void UPPGameOverUserWidget::BtnEventGameRestart()
 {
 	APlayerController* OwningPlayerController = GetOwningPlayer();
-	IPPPlayerInterface* IPlayer = Cast<IPPPlayerInterface>(OwningPlayerController);
+	IPPPlayerInterface* IPlayerController = Cast<IPPPlayerInterface>(OwningPlayerController);
 	
 	if (!OwningPlayerController)
 	{
@@ -39,7 +39,7 @@ void UPPGameOverUserWidget::BtnEventGameRestart()
 		return;
 	}
 
-	if (!IPlayer)
+	if (!IPlayerController)
 	{
 		UE_LOG(LogTemp, Error, TEXT("RestartBtn: Interface Cast Failed"));
 		return;
@@ -60,7 +60,7 @@ void UPPGameOverUserWidget::BtnEventGameRestart()
 		}
 	}
 
-	IPlayer->RequestRespawn();
+	IPlayerController->RequestRespawn();
 
 	OwningPlayerController->SetShowMouseCursor(false);
 	OwningPlayerController->SetInputMode(FInputModeGameOnly());

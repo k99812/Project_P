@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "PPGASCharacterPlayerInterface.generated.h"
+#include "PPCharacterBaseInterface.generated.h"
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
-class UPPGASCharacterPlayerInterface : public UInterface
+class UPPCharacterBaseInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -16,7 +16,7 @@ class UPPGASCharacterPlayerInterface : public UInterface
 /**
  * 
  */
-class PROJECT_P_API IPPGASCharacterPlayerInterface
+class PROJECT_P_API IPPCharacterBaseInterface
 {
 	GENERATED_BODY()
 
