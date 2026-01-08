@@ -391,45 +391,38 @@ HitCheck 과정에서 데미지를 주는 액터(가해자) 데미지를 받는 
 ![image](https://github.com/user-attachments/assets/896eefde-9528-4ecd-965c-958545f0756f)
 ![image](https://github.com/user-attachments/assets/a0843bb2-cb3e-416a-917e-8d9709ea03db)
    
-> Character
+> 델리게이트 바인드
 
-	//APPGASCharacterPlayer.h
- 	DECLARE_DELEGATE(FInputReleasedDelegate);
+	//PPPlayerCharacterInterface
+	DECLARE_DELEGATE(FInputReleasedDelegate);
+	virtual FInputReleasedDelegate& GetInputReleasedDelegate() = 0;
+	
+	//APPGASCharacterPlayer
  	FInputReleasedDelegate InputReleasedDelegate;
+  	FORCEINLINE virtual FInputReleasedDelegate& GetInputReleasedDelegate() override { return InputReleasedDelegate; }
 
-  	//인터페이스를 통해 AnimInstance를 넘겨 받음
-  	virtual void BindInputReleasedDelegate(class UPPAnimInstance* InAnimInstance) override;
-
- 	//APPGASCharacterPlayer.cpp
   	void APPGASCharacterPlayer::MoveInputReleased()
 	{
 		InputReleasedDelegate.Execute();
 	}
 
- 	void APPGASCharacterPlayer::BindInputReleasedDelegate(UPPAnimInstance* InAnimInstance)
+	//UPPAnimInstance
+ 	IPPPlayerCharacterInterface* Player = Cast<IPPPlayerCharacterInterface>(Owner);
+	if (Player)
 	{
-		InputReleasedDelegate.BindUObject(InAnimInstance, &UPPAnimInstance::SaveLastDirection);
+		Player->GetInputReleasedDelegate().BindUObject(this, &UPPAnimInstance::SaveLastDirection);
 	}
 
-* 움직이는 방향에 맞는 StopAnimation을 실행하기 위해 플레이어 캐릭터에 델리게이트를 생성함
+* 움직이는 방향에 맞는 StopAnimation을 실행하기 위해 플레이어 캐릭터에 델리게이트를 사용
 * 플레이어의 입력이 끝나면 델리게이트를 실행하여 마지막으로 움직인 방향을 계산
-* AnimInstance 클래스에서 인터페이스를 이용해 캐릭터의 델리게이트에 AnimInstance 클래스의 함수를 바인드
+* 인터페이스에 델리게이트를 정의하여 인터페이스를 상속받은 캐릭터, cpp에서 참조하는 애님인스턴스가 델리게이트를 알 수 있음
+	- 기존에는 캐릭터에 델리게이트를 정의하여 애님인스턴스에선 델리게이트를 알 수 없었음
+* 인터페이스 함수를 통해 델리게이트 참조를 반환하여 애님인스턴스에서 직접 콜백함수를 바인드
 
 
 <br/>
 
 > UPPAnimInstance
-
-	//NativeInitializeAnimation
-	Owner = Cast<ACharacter>(GetOwningActor());
-	if (Owner)
-	{
-		IPPAnimInterface* OwnerInter = Cast<IPPAnimInterface>(Owner);
-		if (OwnerInter)
-		{
-			OwnerInter->BindInputReleasedDelegate(this);
-		}
-	}
 
  	//SaveLastDirection
 	void UPPAnimInstance::SaveLastDirection()
@@ -437,9 +430,6 @@ HitCheck 과정에서 데미지를 주는 액터(가해자) 데미지를 받는 
 		LastDirection = CalculateDirection(Velocity , Movement->GetLastUpdateRotation());
 	}
    
-* NativeInitializeAnimation 함수에서 인터페이스를 통해   
-  자기자신(AnimInstance)을 넘겨 델리게이트에 콜백함수를 바인드
-  
 * SaveLastDirection함수가 델리게이트로 호출되면 CalculateDirection함수로  
   Velocity(캐릭터가 움직이는 방향), GetLastUpdateRotation을 넘겨 Direction을 계산
 
@@ -572,8 +562,6 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 
 <br/>
 
-https://github.com/user-attachments/assets/304a73f8-e93c-4e49-8669-28b2bcbe6248
-   
 > APPAIController
 
 	//AI 인식 업데이트
@@ -608,6 +596,8 @@ https://github.com/user-attachments/assets/304a73f8-e93c-4e49-8669-28b2bcbe6248
 			}
 		}
 	}
+
+https://github.com/user-attachments/assets/304a73f8-e93c-4e49-8669-28b2bcbe6248
 
 * Actor 변수는 AI가 감각을 통해 인식한 액터
 * Stimulus변수에 AI의 어떤 감각으로 함수가 호출됐는지 정보가 들어옴   
@@ -731,6 +721,9 @@ https://github.com/user-attachments/assets/e814d45d-6242-4d1b-b56a-287e2291645a
 MoveTo 노드 실행후 별도의 테스크를 구현하여
 NoisePos 블랙보드 키를 초기화함
 
+* 오른쪽 그룹
+몬스터가 평상시 정찰할 때 작동
+
 > UBTTask_ClearKey
 
 	//ActorPerceptionForgetUpdated
@@ -756,10 +749,6 @@ NoisePos 블랙보드 키를 초기화함
 		return EBTNodeResult::Failed;
 	}
 
-   
-* 오른쪽 그룹
-몬스터가 평상시 정찰할 때 작동
-
 <br/>
    
 <div align="right">
@@ -783,7 +772,6 @@ NoisePos 블랙보드 키를 초기화함
 
 * WidgetComponent에서 위젯 컴포넌트가 초기화 될때 SetAbilitySystemComponent 함수에 오너를 전달
 * InitWidget 함수에서 생성한 위젯을 가져와 오너를 넘겨줌
-* 몬스터 HP Bar의 부모 클래스
 
 ### PPGASUserWidget
 > UPPGASUserWidget 
@@ -826,7 +814,7 @@ NoisePos 블랙보드 키를 초기화함
  
 * 부모함수를 호출해 ASC를 가져옴
 * SetAbilitySystemComponent 함수에서 매개변수로 들어온 오너를 이용하여 ASC에 어트리뷰트 체인지 델리게이트에 함수 등록
-* 프로그래스바, 텍스트 박스 관리
+* 해당 클래스를 사용하여 몬스터 HP Bar를 생성
   
 ### 몬스터 HP BAR 동기화
 ![image](https://github.com/user-attachments/assets/e2bf30e5-bd5e-44be-a264-ae9723ed376a)
