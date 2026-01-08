@@ -1074,9 +1074,9 @@ IPPCharacterBaseInterface로 실행되는 SetDead, SetAlive 함수들은
 <img width="2269" height="1208" alt="image" src="https://github.com/user-attachments/assets/1b8d0d73-2ae6-4a1c-b597-c0ebc474f15b" />
 
 1. GameOver UI의 버튼 이벤트가 발생
+2. ASC를 통해 클라이언트 예측으로 Tag, 어트리뷰트셋 isDead 변수 초기화
 	* 클라이언트에서 먼저 반영하는 이유는 만약 먼저 반영하지않고 서버의 동기화를   
       기다리면 서버에서 동기화가 되기전까지 캐릭터가 부활하면 바로죽는 버그가 생긴다
-2. ASC를 통해 클라이언트 예측으로 Tag, 어트리뷰트셋 isDead 변수 초기화
 3. 인터페이스를 통해 RequsetRespawn 함수(RPC)를 실행하여 서버에 부활요청을 한다
 4. 부활 요청을 받은 서버는 죽음 관련 변수를 초기화 및 액터 파괴, 재생성한다
 5. isDead 리플리케이션을 통해 캡슐컴포넌트, 무브먼트 관련 초기화를 진행한다 
