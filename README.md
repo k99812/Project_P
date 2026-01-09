@@ -184,7 +184,7 @@ https://github.com/user-attachments/assets/c0b0fed6-6966-45b5-bd5b-dc073ae2f612
 ![image](https://github.com/user-attachments/assets/8c7fb823-4e61-4d59-81b2-43ccdae2e110)
  
 EnhancedInput을 사용
-* InputMappintContext에서 InputAction을 맵핑 후 저장
+* InputMappingContext에서 InputAction을 맵핑 후 저장
 
 ## GA(능력) 처리
 GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 진행됨
@@ -252,7 +252,7 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 
 <br/>
 
-* 입력을 통해서 발동되는 GA들은 TMap을 활용해 <열겨형, GA> Key값을 GA를 부여할때 InputID로 지정  
+* 입력을 통해서 발동되는 GA들은 TMap을 활용해 <열거형, GA> Key값을 GA를 부여할때 InputID로 지정  
 
 <br/>
 
@@ -951,7 +951,7 @@ Tick 대신 Timer를 사용한 이유는 Tick 함수는 스탯 변화가 없어�
 
 <br/>
 
-1. PostGameplayEffectExecute 함수에서 GetHealth() <= 0.0f 로 bIsDead = flase로 변경
+1. PostGameplayEffectExecute 함수에서 GetHealth() <= 0.0f 로 bIsDead = false로 변경
 2. 서버에선 OnRep_IsDead 직접 호출, 클라이언트에선 리플리케이션으로 OnRep_IsDead 함수 호출
 3. OnRep_IsDead 함수에서 ActorIsDead 델리게이트 발동 및 ASC에 태그 부착
 4. 델리게이트 콜백함수 실행하여 몽타주 재생, 콜리전 비활성화, 인터페이스로 UI 생성 요청
@@ -1077,7 +1077,7 @@ IPPCharacterBaseInterface로 실행되는 SetDead, SetAlive 함수들은
 2. ASC를 통해 클라이언트 예측으로 Tag, 어트리뷰트셋 isDead 변수 초기화
 	* 클라이언트에서 먼저 반영하는 이유는 만약 먼저 반영하지않고 서버의 동기화를   
       기다리면 서버에서 동기화가 되기전까지 캐릭터가 부활하면 바로죽는 버그가 생긴다
-3. 인터페이스를 통해 RequsetRespawn 함수(RPC)를 실행하여 서버에 부활요청을 한다
+3. 인터페이스를 통해 RequestRespawn 함수(RPC)를 실행하여 서버에 부활요청을 한다
 4. 부활 요청을 받은 서버는 죽음 관련 변수를 초기화 및 액터 파괴, 재생성한다
 5. isDead 리플리케이션을 통해 캡슐컴포넌트, 무브먼트 관련 초기화를 진행한다 
 	* 리플리케이션을 통해 진행해야 시뮬레이티드 프록시에도 정상적으로 적용된다   
@@ -1141,6 +1141,40 @@ IPPCharacterBaseInterface로 실행되는 SetDead, SetAlive 함수들은
 <br/>
 * RemoveFromParent();
 UI 제거
+
+<br/>
+
+> APPPlayerController
+
+ 	void APPPlayerController::RequestRespawn()
+	{
+		ServerRPC_RequestRespawn();
+	}
+
+	void APPPlayerController::ServerRPC_RequestRespawn_Implementation()
+	{
+		생략
+		//서버에서 죽음관련 변수 초기화
+		ASC->RemoveLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
+		const_cast<UPPCharacterAttributeSet*>(AttributeSet)->SetIsDead(false);
+		
+		생략
+		UnPossess();
+		OldCharacter->Destroy();
+
+		생략
+		GameMode->RestartPlayer(this);
+	}
+
+코드가 길어 변수 생성, 초기화, 방어코드는 생략하였음   
+<br/>
+* ServerRPC가 실행되면 서버에서 죽음관련 변수를 초기화
+* SetIsDead 함수로 bIsDead가 바뀌면 서버, 로컬클라는 OnRep함수가 실행되지않음
+	- 서버는 별도실행안함
+	- 로컬클라는 선반영으로 변수가 이미 변경됨
+	- 따라서 시뮬레이티드 프록시만 OnRep 함수가 실행됨
+* 기존 빙의한 액터를 UnPossess, Destory 진행
+* 게임모드를 통해 RestartPlayer 함수로 재생성
 
 <br/>
 
@@ -1267,7 +1301,7 @@ https://github.com/user-attachments/assets/7e05d46d-074b-4ccf-9e8e-c709ea7f9647
 
 * DamageUI 관리
 * DamageUIClass : 생성할 UI를 저장
-* DamageUIArray : 생성하고 일정시간후 파괴되는 DamgeUI 특성으로 약참조하는 WeekObjectPtr로 선언
+* DamageUIArray : 생성하고 일정시간후 파괴되는 DamgeUI 특성으로 약참조하는 WeakObjectPtr로 선언
 * TQueue 컨테이너가 UPROPERTY를 지원하지 않아 TArray를 이용하여 TQueue를 대체함
 
 <br/>
