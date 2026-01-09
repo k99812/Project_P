@@ -1075,14 +1075,16 @@ IPPCharacterBaseInterface로 실행되는 SetDead, SetAlive 함수들은
 
 1. GameOver UI의 버튼 이벤트가 발생
 2. ASC를 통해 클라이언트 예측으로 Tag, 어트리뷰트셋 isDead 변수 초기화
-	* 클라이언트에서 먼저 반영하는 이유는 만약 먼저 반영하지않고 서버의 동기화를   
-      기다리면 서버에서 동기화가 되기전까지 캐릭터가 부활하면 바로죽는 버그가 생긴다
 3. 인터페이스를 통해 RequestRespawn 함수(RPC)를 실행하여 서버에 부활요청을 한다
 4. 부활 요청을 받은 서버는 죽음 관련 변수를 초기화 및 액터 파괴, 재생성한다
 5. isDead 리플리케이션을 통해 캡슐컴포넌트, 무브먼트 관련 초기화를 진행한다 
-	* 리플리케이션을 통해 진행해야 시뮬레이티드 프록시에도 정상적으로 적용된다   
-      멀티캐스트를 사용하지 않은 이유는 부활, 죽음 로직은 플레이어가 중단 or 중간 진입하여   
-      RPC 이후에 접속하여도 적용되어야 하기 때문이다 
+
+클라이언트에서 먼저 반영하는 이유는 만약 먼저 반영하지않고 서버의 동기화를   
+기다리면 서버에서 동기화가 되기전까지 캐릭터가 부활하면 바로죽는 버그가 생긴다   
+<br/>
+리플리케이션을 통해 진행해야 시뮬레이티드 프록시에도 정상적으로 적용된다   
+멀티캐스트를 사용하지 않은 이유는 부활, 죽음 로직은 플레이어가 중단 or 중간 진입하여   
+RPC 이후에 접속하여도 적용되어야 하기 때문이다 
 
 <br/>
 
@@ -1131,16 +1133,13 @@ IPPCharacterBaseInterface로 실행되는 SetDead, SetAlive 함수들은
 인터페이스를 활용하여 객체 간의 결합도를 낮추고 로직의 범용성과 재사용성을 확보   
 <br/>
 * ASC->RemoveLooseGameplayTag(PPTAG_CHARACTER_ISDEAD);
-* const_cast<UPPCharacterAttributeSet*>(AttributeSet)->SetIsDead(false);
+* const_cast<UPPCharacterAttributeSet*>(AttributeSet)->SetIsDead(false);   
+<br/>
+
 클라이언트 예측으로 버튼을 누르는 즉시 죽음 관련 변수, 태그들을 제거   
 선반영을 하지않으면 서버에서 리플리케이션 되기 전까지 게임플레이 태그,변수가   
 살아있어 캐릭터가 부활하자마자 죽음 관련 이벤트가 계속 실행된다   
 <br/>
-* IPlayerController->RequestRespawn();
-플레이어 컨트롤러에게 리스폰 요청
-<br/>
-* RemoveFromParent();
-UI 제거
 
 <br/>
 
