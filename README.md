@@ -486,6 +486,10 @@ AI가 적을 인식할때 델리게이트를 이용하여 몬스터의 HPBar를 
 
 <br/>
 
+<img width="2049" height="1336" alt="image" src="https://github.com/user-attachments/assets/413c6618-70c9-4063-92fc-978640d72f47" />
+
+<br/>
+
 > APPAIController
 
 	//생성자
