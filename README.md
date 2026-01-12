@@ -474,6 +474,8 @@ HitCheck 과정에서 데미지를 주는 액터(가해자) 데미지를 받는 
 
 https://github.com/user-attachments/assets/03e28172-f83d-4ee7-a1cf-95480447eeb4
 
+https://github.com/user-attachments/assets/ed1ab653-93b2-4ec6-8e10-531416f6a213
+
 ![image](https://github.com/user-attachments/assets/37c90fd0-c08d-4018-9a61-3e35d7d1be04)  
 <br/>
 AI컨트롤러에서 AI Perception 기능을 이용해 적을 인식 하여 블랙보드에 저장   
@@ -666,6 +668,8 @@ https://github.com/user-attachments/assets/e814d45d-6242-4d1b-b56a-287e2291645a
 * 틱함수 활성화   
 * FindTargetDelegate(콜백함수에서 몬스터의 HPBar 활성화) 실행 
 
+<br/>
+
 > APPAIController
 
 	//PerceptionSensedHearing
@@ -710,6 +714,8 @@ https://github.com/user-attachments/assets/e814d45d-6242-4d1b-b56a-287e2291645a
 * 벗어난 액터가 블랙보드의 타겟인지 확인 후 타겟초기화   
 * 틱함수 비활성화   
 * FindTargetDelegate(콜백함수에서 몬스터의 HPBar 비활성화) 실행   
+
+<br/>
 
 ### 행동트리
 <img width="1249" height="699" alt="image" src="https://github.com/user-attachments/assets/5335351e-530e-43eb-ab5b-345cf682f84d" />
