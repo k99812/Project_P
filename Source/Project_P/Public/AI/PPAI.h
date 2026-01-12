@@ -6,3 +6,4 @@
 #define BBKEY_TARGET TEXT("Target")
 #define BBKEY_TARGETROT TEXT("TargetRotation")
 #define BBKEY_NOISEPOS TEXT("NoisePos")
+#define BBKEY_ISDEAD TEXT("bIsDead")

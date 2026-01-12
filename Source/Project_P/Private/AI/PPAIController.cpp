@@ -100,6 +100,7 @@ void APPAIController::RunAI()
 	{
 		//블랙보드 데이터에 값설정
 		Blackboard->SetValueAsVector(BBKEY_HOMEPOS, GetPawn()->GetActorLocation());
+		Blackboard->SetValueAsBool(BBKEY_ISDEAD, false);
 
 		bool RunResult = RunBehaviorTree(BTAsset);
 		ensure(RunResult);
@@ -113,6 +114,8 @@ void APPAIController::StopAI()
 	UBehaviorTreeComponent* BTComponent = Cast<UBehaviorTreeComponent>(BrainComponent);
 	if (BTComponent)
 	{
+		Blackboard->SetValueAsBool(BBKEY_ISDEAD, true);
+
 		BTComponent->StopTree();
 	}
 }
@@ -223,6 +226,7 @@ void APPAIController::BlackboardTargetUpdate(APawn* Target)
 	if (IsValid(Target) && !IsValid(Blackboard->GetValueAsObject(BBKEY_TARGET)))
 	{
 		Blackboard->SetValueAsObject(BBKEY_TARGET, Target);
+		Blackboard->ClearValue(BBKEY_NOISEPOS);
 		AActor::SetActorTickEnabled(true);
 		FindTargetDelegate.Broadcast(true, Target);
 	}
