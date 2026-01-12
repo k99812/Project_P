@@ -168,6 +168,12 @@ void APPGASCharacterGrunt::SetDead()
 	Super::SetDead();
 
 	PPNET_LOG(LogGAS, Log, TEXT("end"));
+
+	IPPAIControllerInterface* AIController = Cast<IPPAIControllerInterface>(GetController());
+	if (AIController)
+	{
+		AIController->StopAI();
+	}
 }
 
 void APPGASCharacterGrunt::TakeDamage(const FOnAttributeChangeData& ChangeData)
