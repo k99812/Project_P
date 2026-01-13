@@ -4,6 +4,7 @@
 #include "UI/PPFloatingTextUserWidget.h"
 #include "Components/TextBlock.h"
 #include "Animation/WidgetAnimation.h"
+#include "Subsystem/PPDamageUISubsystem.h"
 
 UPPFloatingTextUserWidget::UPPFloatingTextUserWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -22,7 +23,7 @@ void UPPFloatingTextUserWidget::NativeConstruct()
 	PlayAnimation(TextUp);
 }
 
-bool UPPFloatingTextUserWidget::SetTextWidget(const float& Damage, const FVector& ActorPosition)
+bool UPPFloatingTextUserWidget::SetTextWidget(const float Damage, const FVector& ActorPosition)
 {
 	APlayerController* PlayerController = GetOwningPlayer();
 
@@ -43,5 +44,10 @@ bool UPPFloatingTextUserWidget::SetTextWidget(const float& Damage, const FVector
 
 void UPPFloatingTextUserWidget::AnimationFinished()
 {
-	EndLifeTime.ExecuteIfBound();
+	//EndLifeTime.ExecuteIfBound();
+	UPPDamageUISubsystem* DamgaeUISubsystem = GetWorld()->GetSubsystem<UPPDamageUISubsystem>();
+	if (DamgaeUISubsystem)
+	{
+		DamgaeUISubsystem->ReturnToPool(this);
+	}
 }

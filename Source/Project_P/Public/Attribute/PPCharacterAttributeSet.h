@@ -90,6 +90,8 @@ protected:
 
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 
+	void DamageEvent(const struct FGameplayEffectModCallbackData& Data);
+
 protected:
 	UFUNCTION()
 	void OnRep_AttackRange(const FGameplayAttributeData& OldValue);

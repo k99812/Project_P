@@ -27,4 +27,6 @@ public:
 	virtual void OnPlayerDead() = 0;
 
 	virtual void RequestRespawn() = 0;
+
+	virtual void RequestShowDamageUI(const float Damage, const FVector& ActorPosition) = 0;
 };

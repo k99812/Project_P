@@ -7,6 +7,7 @@
 #include "Tag/PPGameplayTag.h"
 #include "Net/UnrealNetwork.h"
 #include "Interface/PPCharacterBaseInterface.h"
+#include "Interface/PPPlayerInterface.h"
 
 UPPCharacterAttributeSet::UPPCharacterAttributeSet() : 
 	AttackRange(100.0f), MaxAttackRange(300.0f),
@@ -36,6 +37,14 @@ void UPPCharacterAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetime
 	DOREPLIFETIME(UPPCharacterAttributeSet, bIsDead);
 }
 
+void UPPCharacterAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	if (Attribute == GetDamageAttribute())
+	{
+		NewValue = NewValue < 0.0f ? 0.0f : NewValue;
+	}
+}
+
 bool UPPCharacterAttributeSet::PreGameplayEffectExecute(FGameplayEffectModCallbackData& Data)
 {
 	if (!Super::PreGameplayEffectExecute(Data))
@@ -57,6 +66,7 @@ void UPPCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
 		PPGAS_LOG(LogGAS, Warning, TEXT("Direct Healt Accesss : %f"), GetHealth());
+
 		SetHealth(FMath::Clamp(GetHealth(), MinHealth, GetMaxHealth()));
 
 		if (AActor* Target = Data.Target.GetAvatarActor())
@@ -66,10 +76,22 @@ void UPPCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 	}
 	else if (Data.EvaluatedData.Attribute == GetDamageAttribute())
 	{
-		PPGAS_LOG(LogGAS, Log, TEXT("Direct Healt Accesss : %f"), GetHealth());
-		SetHealth(FMath::Clamp(GetHealth() - GetDamage(), MinHealth, GetMaxHealth()));
-		SetDamage(0.0f);
+		const float NowDamage = GetDamage();
 
+		PPGAS_LOG(LogGAS, Log, TEXT("Damage Accesss : %f"), NowDamage);
+
+		if (NowDamage <= 0.0f) 
+		{ 
+			PPGAS_LOG(LogGAS, Warning, TEXT("Minus Damage : %f"), NowDamage);
+			SetDamage(0.0f);
+			return; 
+		}
+		
+		DamageEvent(Data);
+
+		SetHealth(FMath::Clamp(GetHealth() - NowDamage, MinHealth, GetMaxHealth()));
+		SetDamage(0.0f);
+		
 		if (AActor* Target = Data.Target.GetAvatarActor())
 		{
 			Target->ForceNetUpdate();
@@ -83,11 +105,36 @@ void UPPCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 	}
 }
 
-void UPPCharacterAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+void UPPCharacterAttributeSet::DamageEvent(const FGameplayEffectModCallbackData& Data)
 {
-	if (Attribute == GetDamageAttribute())
+	const float NowDamage = GetDamage();
+
+	if (NowDamage <= 0.0f) return;
+
+	FGameplayEffectContextHandle ContextHandle = Data.EffectSpec.GetContext();
+	UAbilitySystemComponent* SourceASC = ContextHandle.GetInstigatorAbilitySystemComponent();
+	AActor* TargetActor = Data.Target.GetAvatarActor();
+	
+	if (SourceASC && TargetActor)
 	{
-		NewValue = NewValue < 0.0f ? 0.0f : NewValue;
+		APlayerController* PlayerController = nullptr;
+
+		if (SourceASC->AbilityActorInfo.IsValid())
+		{
+			PlayerController = SourceASC->AbilityActorInfo->PlayerController.Get();
+		}
+
+		if (!PlayerController && SourceASC->GetAvatarActor())
+		{
+			PlayerController = Cast<APlayerController>(SourceASC->GetAvatarActor()->GetInstigatorController());
+		}
+
+		IPPPlayerInterface* PlayerInterface = PlayerController ? Cast<IPPPlayerInterface>(PlayerController) : nullptr;
+
+		if (PlayerInterface)
+		{
+			PlayerInterface->RequestShowDamageUI(NowDamage, TargetActor->GetActorLocation());
+		}
 	}
 }
 

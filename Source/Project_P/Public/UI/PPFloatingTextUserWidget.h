@@ -22,7 +22,7 @@ public:
 	virtual void NativeConstruct() override;
 
 public:
-	bool SetTextWidget(const float& Damage, const FVector& ActorPosition);
+	bool SetTextWidget(const float Damage, const FVector& ActorPosition);
 
 	FEndLifeTime EndLifeTime;
 

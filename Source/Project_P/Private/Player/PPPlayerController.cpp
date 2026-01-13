@@ -135,6 +135,16 @@ void APPPlayerController::ServerRPC_RequestRespawn_Implementation()
 	}
 }
 
+void APPPlayerController::RequestShowDamageUI(const float Damage, const FVector& ActorPosition)
+{
+	ClientRPC_ShowDamageUI(Damage, ActorPosition);
+}
+
+void APPPlayerController::ClientRPC_ShowDamageUI_Implementation(const float Damage, const FVector& ActorPosition)
+{
+	if (!IsLocalPlayerController()) return;
+}
+
 void APPPlayerController::ActorTakedDamage(const float& Damage, const FVector& ActorPosition)
 {
 	if (!IsLocalPlayerController()) return;
@@ -150,7 +160,7 @@ void APPPlayerController::ActorTakedDamage(const float& Damage, const FVector& A
 			{
 				TempDamageUI.Get()->RemoveFromParent();
 			}
-			
+
 			DamageUIArray.RemoveAt(0);
 		});
 
