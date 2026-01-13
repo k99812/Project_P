@@ -37,8 +37,8 @@ void APPGASCharacterNonPlayer::PossessedBy(AController* NewController)
 	ASC->SetIsReplicated(true);
 
 	AttributeSet->ActorIsDead.AddDynamic(this, &APPGASCharacterNonPlayer::ActorIsDead);
-	ASC->GetGameplayAttributeValueChangeDelegate(UPPGruntAttributeSet::GetDamageAttribute()).
-		AddUObject(this, &APPGASCharacterNonPlayer::TakeDamage);
+	/*ASC->GetGameplayAttributeValueChangeDelegate(UPPGruntAttributeSet::GetDamageAttribute()).
+		AddUObject(this, &APPGASCharacterNonPlayer::TakeDamage);*/
 
 	for (const TSubclassOf<UGameplayAbility>& StartAbility : StartAbilites)
 	{

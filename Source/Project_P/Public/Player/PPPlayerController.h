@@ -61,7 +61,12 @@ protected:
 public:
 	void ActorTakedDamage(const float& Damage, const FVector& ActorPosition);
 
+	virtual void RequestShowDamageUI(const float Damage, const FVector& ActorPosition) override;
+
 protected:
+	UFUNCTION(Client, Unreliable)
+	void ClientRPC_ShowDamageUI(const float Damage, const FVector& ActorPosition);
+
 	UPROPERTY(EditAnywhere, Category = "HUD")
 	TSubclassOf<class UUserWidget> DamageUIClass;
 
