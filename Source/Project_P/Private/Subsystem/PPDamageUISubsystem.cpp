@@ -24,9 +24,9 @@ bool UPPDamageUISubsystem::ShouldCreateSubsystem(UObject* Outer) const
 		return false;
 	}
 
-	if (IsRunningDedicatedServer())
+	if (UWorld* World = Cast<UWorld>(Outer))
 	{
-		return false;
+		return World->GetNetMode() != NM_DedicatedServer;
 	}
 
 	return true;
@@ -60,9 +60,10 @@ void UPPDamageUISubsystem::ShowDamageUI(TSubclassOf<class UPPFloatingTextUserWid
 
 void UPPDamageUISubsystem::ReturnToPool(UPPFloatingTextUserWidget* Widget)
 {
-	if (Widget)
-	{
-		Widget->RemoveFromParent();
-		DamageUIPool.Add(Widget);
-	}
+	if (!Widget) return;
+
+	if (DamageUIPool.Contains(Widget)) return;
+
+	Widget->RemoveFromParent();
+	DamageUIPool.Add(Widget);
 }

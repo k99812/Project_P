@@ -17,28 +17,43 @@ void UPPFloatingTextUserWidget::NativeConstruct()
 
 	AnimFinishedDelegate.BindDynamic(this, &UPPFloatingTextUserWidget::AnimationFinished);
 	BindToAnimationFinished(FadeOut, AnimFinishedDelegate);
-
-	SetPositionInViewport(WidgetLocation);
-	PlayAnimation(FadeOut);
-	PlayAnimation(TextUp);
 }
 
 bool UPPFloatingTextUserWidget::SetTextWidget(const float Damage, const FVector& ActorPosition)
 {
 	APlayerController* PlayerController = GetOwningPlayer();
 
-	if (!PlayerController)
+	if (!PlayerController) return false;
+
+	FVector2D WidgetLocation;
+	if (PlayerController->ProjectWorldLocationToScreen(ActorPosition, WidgetLocation))
+	{
+		SetPositionInViewport(WidgetLocation);
+	}
+	else
 	{
 		return false;
 	}
 
-	if (!PlayerController->ProjectWorldLocationToScreen(ActorPosition, WidgetLocation))
+	if (DamageTxt)
 	{
-		return false;
+		DamageTxt->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Damage)));
+		DamageTxt->SetRenderTranslation(FVector2D::ZeroVector);
 	}
-
-	DamageTxt->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Damage)));
 	
+	SetRenderOpacity(1.0f);
+	SetVisibility(ESlateVisibility::HitTestInvisible);
+
+	if (FadeOut)
+	{
+		PlayAnimation(FadeOut, 0.0f, 1, EUMGSequencePlayMode::Forward, 1.0f);
+	}
+
+	if (TextUp)
+	{
+		PlayAnimation(TextUp, 0.0f, 1, EUMGSequencePlayMode::Forward, 1.0f);
+	}
+
 	return true;
 }
 
