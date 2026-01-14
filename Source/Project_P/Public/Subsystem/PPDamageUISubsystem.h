@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType)
 class PROJECT_P_API UPPDamageUISubsystem : public UWorldSubsystem
 {
 	GENERATED_BODY()
@@ -26,7 +26,7 @@ public:
 
 	void ReturnToPool(class UPPFloatingTextUserWidget* Widget);
 
-private:
+protected:
 	UPROPERTY(VisibleAnywhere)
 	TArray<TObjectPtr<class UPPFloatingTextUserWidget>> DamageUIPool;
 };

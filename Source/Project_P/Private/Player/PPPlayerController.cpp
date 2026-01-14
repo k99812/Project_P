@@ -10,6 +10,7 @@
 #include "UI/PPHUDWidget.h"
 #include "UI/PPGameOverUserWidget.h"
 #include "UI/PPFloatingTextUserWidget.h"
+#include "Subsystem/PPDamageUISubsystem.h"
 #include "Tag/PPGameplayTag.h"
 #include "Project_P.h"
 
@@ -143,6 +144,12 @@ void APPPlayerController::RequestShowDamageUI(const float Damage, const FVector&
 void APPPlayerController::ClientRPC_ShowDamageUI_Implementation(const float Damage, const FVector& ActorPosition)
 {
 	if (!IsLocalPlayerController()) return;
+
+	UPPDamageUISubsystem* UISubsystem = GetWorld()->GetSubsystem<UPPDamageUISubsystem>();
+	if (UISubsystem)
+	{
+		UISubsystem->ShowDamageUI(DamageUIClass, Damage, ActorPosition, this);
+	}
 }
 
 void APPPlayerController::ActorTakedDamage(const float& Damage, const FVector& ActorPosition)

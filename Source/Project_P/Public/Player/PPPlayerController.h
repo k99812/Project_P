@@ -68,7 +68,7 @@ protected:
 	void ClientRPC_ShowDamageUI(const float Damage, const FVector& ActorPosition);
 
 	UPROPERTY(EditAnywhere, Category = "HUD")
-	TSubclassOf<class UUserWidget> DamageUIClass;
+	TSubclassOf<class UPPFloatingTextUserWidget> DamageUIClass;
 
 	UPROPERTY(VisibleAnywhere, Category = "HUD")
 	TArray<TWeakObjectPtr<class UPPFloatingTextUserWidget>> DamageUIArray;
