@@ -117,21 +117,9 @@ void UPPCharacterAttributeSet::DamageEvent(const FGameplayEffectModCallbackData&
 	
 	if (SourceASC && TargetActor)
 	{
-		APlayerController* PlayerController = nullptr;
+		APlayerController* PlayerController = SourceASC->AbilityActorInfo->PlayerController.Get();;
 
-		if (SourceASC->AbilityActorInfo.IsValid())
-		{
-			PlayerController = SourceASC->AbilityActorInfo->PlayerController.Get();
-		}
-
-		if (!PlayerController && SourceASC->GetAvatarActor())
-		{
-			PlayerController = Cast<APlayerController>(SourceASC->GetAvatarActor()->GetInstigatorController());
-		}
-
-		IPPPlayerInterface* PlayerInterface = PlayerController ? Cast<IPPPlayerInterface>(PlayerController) : nullptr;
-
-		if (PlayerInterface)
+		if (IPPPlayerInterface* PlayerInterface = Cast<IPPPlayerInterface>(PlayerController))
 		{
 			PlayerInterface->RequestShowDamageUI(NowDamage, TargetActor->GetActorLocation());
 		}
@@ -166,8 +154,7 @@ void UPPCharacterAttributeSet::OnRep_IsDead()
 		}
 
 		AActor* Avartar = ASC->GetAvatarActor();
-		IPPCharacterBaseInterface* Player = Avartar ? Cast<IPPCharacterBaseInterface>(Avartar) : nullptr;
-		if (Player)
+		if (IPPCharacterBaseInterface* Player = Cast<IPPCharacterBaseInterface>(Avartar))
 		{
 			if (bIsDead)
 			{

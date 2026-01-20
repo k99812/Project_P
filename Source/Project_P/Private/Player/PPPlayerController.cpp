@@ -83,13 +83,19 @@ void APPPlayerController::GameOver()
 
 	if (GameOverUIWidget && GameOverUIWidget->IsInViewport()) return;
 
-	GameOverUIWidget = CreateWidget<UPPGameOverUserWidget>(this, GameOverUIClass);
-	if (GameOverUIWidget)
-	{ 
-		GameOverUIWidget->AddToViewport();
-		EnableInput(this);
-		SetShowMouseCursor(true);
+	if (!GameOverUIWidget && GameOverUIClass)
+	{
+		GameOverUIWidget = CreateWidget<UPPGameOverUserWidget>(this, GameOverUIClass);
 	}
+	
+	GameOverUIWidget->AddToViewport();
+
+	FInputModeUIOnly UIInputMode;
+	UIInputMode.SetWidgetToFocus(GameOverUIWidget->TakeWidget());
+	UIInputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+
+	SetInputMode(UIInputMode);
+	SetShowMouseCursor(true);
 }
 
 void APPPlayerController::RequestRespawn()

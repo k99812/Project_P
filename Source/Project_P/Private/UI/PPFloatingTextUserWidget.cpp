@@ -59,7 +59,6 @@ bool UPPFloatingTextUserWidget::SetTextWidget(const float Damage, const FVector&
 
 void UPPFloatingTextUserWidget::AnimationFinished()
 {
-	//EndLifeTime.ExecuteIfBound();
 	UPPDamageUISubsystem* DamgaeUISubsystem = GetWorld()->GetSubsystem<UPPDamageUISubsystem>();
 	if (DamgaeUISubsystem)
 	{
