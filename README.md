@@ -971,7 +971,7 @@ Tick 대신 Timer를 사용한 이유는 Tick 함수는 스탯 변화가 없어�
 <br/>
 
 ### 재시작 UI
-<img width="1853" height="1284" alt="image" src="https://github.com/user-attachments/assets/e6faa3a6-3c77-45cd-ae8e-46a8effe5771" />
+<img width="1970" height="1225" alt="image" src="https://github.com/user-attachments/assets/1fe97d13-4d14-485d-86ba-444e29863b8a" />
 
 <br/>
 
@@ -979,7 +979,9 @@ Tick 대신 Timer를 사용한 이유는 Tick 함수는 스탯 변화가 없어�
 2. 서버에선 OnRep_IsDead 직접 호출, 클라이언트에선 리플리케이션으로 OnRep_IsDead 함수 호출
 3. OnRep_IsDead 함수에서 ActorIsDead 델리게이트 발동 및 ASC에 태그 부착
 4. 델리게이트 콜백함수 실행하여 몽타주 재생, 콜리전 비활성화, 인터페이스로 UI 생성 요청
-5. 플레이어 컨트롤러에서 로컬플레이어가 아니면 종료, 맞으면 UI 생성
+5. 플레이어 컨트롤러에서 로컬플레이어가 아니면 종료
+6. 생성된 UI가 없을때만 생성 및 저장
+7. 저장된 UI 객체가 있으면 재사용
 
 <br/>
 
@@ -1035,6 +1037,45 @@ PostGameplayEffectExecute 함수에서 캐릭터 죽음 체크 및 이벤트 발
 
 <br/>
 
+> APPPlayerController
+
+ 	void APPPlayerController::GameOver()
+	{
+		if (!IsLocalPlayerController()) return;
+
+		if (GameOverUIWidget && GameOverUIWidget->IsInViewport()) return;
+
+		if (!GameOverUIWidget && GameOverUIClass)
+		{
+			GameOverUIWidget = CreateWidget<UPPGameOverUserWidget>(this, GameOverUIClass);
+		}
+	
+		GameOverUIWidget->AddToViewport();
+
+		FInputModeUIOnly UIInputMode;
+		UIInputMode.SetWidgetToFocus(GameOverUIWidget->TakeWidget());
+		UIInputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+
+		SetInputMode(UIInputMode);
+		SetShowMouseCursor(true);
+	}
+
+* GameOverUIWidget 인스턴스가 없을때만 생성 및 저장
+* 이벤트가 발생되면 저장된 인스턴스를 뷰포트에 추가
+
+> UPPGameOverUserWidget
+
+ 	void UPPGameOverUserWidget::BtnEventGameRestart()
+	{
+		생략
+
+		RemoveFromParent();
+	}
+
+* 버튼 이벤트가 발생하면 UI를 뷰포트에서 제거
+
+<br/>
+
 > UPPCharacterAttributeSet
 	
   	void UPPCharacterAttributeSet::OnRep_IsDead()
@@ -1065,8 +1106,7 @@ PostGameplayEffectExecute 함수에서 캐릭터 죽음 체크 및 이벤트 발
 			}
 
 			AActor* Avartar = ASC->GetAvatarActor();
-			IPPCharacterBaseInterface* Player = Avartar ? Cast<IPPCharacterBaseInterface>(Avartar) : nullptr;
-			if (Player)
+			if (IPPCharacterBaseInterface* Player = Cast<IPPCharacterBaseInterface>(Avartar))
 			{
 				if (bIsDead)
 				{
