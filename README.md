@@ -1269,7 +1269,7 @@ RPC 이후에 접속하여도 적용되어야 하기 때문이다
 
 ## Damage UI
 
-https://github.com/user-attachments/assets/7e05d46d-074b-4ccf-9e8e-c709ea7f9647
+https://github.com/user-attachments/assets/66f88ddb-f538-43f9-8ad3-db7246e9e024
 
 <img width="1466" height="1114" alt="image" src="https://github.com/user-attachments/assets/e5489741-3ea9-4015-990b-377c26263795" />
 
