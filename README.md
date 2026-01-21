@@ -1063,6 +1063,8 @@ PostGameplayEffectExecute 함수에서 캐릭터 죽음 체크 및 이벤트 발
 * GameOverUIWidget 인스턴스가 없을때만 생성 및 저장
 * 이벤트가 발생되면 저장된 인스턴스를 뷰포트에 추가
 
+<br/>
+
 > UPPGameOverUserWidget
 
  	void UPPGameOverUserWidget::BtnEventGameRestart()
