@@ -64,8 +64,9 @@ https://github.com/user-attachments/assets/069e524b-0c41-4e2f-8500-731cfae0d5d6
 - Montage, AnimNotify 기반 콤보 연계 및 타격 타이밍 처리
 
 ### UI 연동
-- HP Bar, 데미지 플로팅 텍스트, 플레이어 HUD, 사망/재시작 UI 구현
+- HP Bar, Damage UI, 플레이어 HUD, 사망/재시작 UI 구현
 - Attribute 연동을 통한 UI 실시간 갱신 (Delegate 활용)
+- 오브젝트 풀을 이용한 UI 재사용(Damage UI, 사망/재시작 UI)
 
 ### AI 시스템
 - Behavior Tree, AIController 기반 추적, 공격, 인식 AI 구현
@@ -87,10 +88,12 @@ https://github.com/user-attachments/assets/069e524b-0c41-4e2f-8500-731cfae0d5d6
 아래의 링크를 클릭하면 더 자세한 내용을 볼 수 있습니다.
 <br/>
 
-### AnimInstance
-* AnimInstance에서 Owner 변수를 PPGASCharacterPlayer에서 ACharacter로 변경 
-* AnimInstance에서 PPGASCharacterPlayer를 직접참조하여 델리게이트에 연결하는 로직을 인터페이스를 이용하여 연결하도록 변경
-<a href="https://k99812.tistory.com/130" height="5" width="10" target="_blank" >
+### Damage UI 오브젝트 풀 적용
+* 전투시 생성되는 Damage UI에 오브젝트 풀을 적용하여 최적화
+* WorldSubsystem을 이용하여 오브젝트 풀을 생성
+* 플레이어 컨트롤러는 한번만 생성되는 UI를 생성 및 관리
+* 여러번 생성되는 UI는 서브시스템에서 생성하여 플레이어 컨트롤러의 역할 분리
+<a href="https://k99812.tistory.com/202" height="5" width="10" target="_blank" >
 <img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
 </a>
 
@@ -115,6 +118,8 @@ https://github.com/user-attachments/assets/069e524b-0c41-4e2f-8500-731cfae0d5d6
 <img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
 </a>
 
+<br/>
+
 ### 공격판정 개선
 * 기존에 구현하여 사용하던 어빌리티 테스크를   
   언리얼에서 네트워크를 고려하며 설계한 어빌리티 테스크로 교체
@@ -122,6 +127,8 @@ https://github.com/user-attachments/assets/069e524b-0c41-4e2f-8500-731cfae0d5d6
 <a href="https://k99812.tistory.com/196" height="5" width="10" target="_blank" >
 <img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
 </a>
+
+<br/>
 
 ### 10 FPS, 제한없음
 
@@ -858,6 +865,8 @@ https://github.com/user-attachments/assets/6ed4f5f6-d580-4aa2-a2d8-4efa9fdd69cd
 * 생성한 위젯들을 관리할 클래스
 * PPPlayerStatBarUserWidget 의 상위 위젯
 
+<br/>
+
 ### PPPlayerStatBarUserWidget
 <img width="2116" height="1185" alt="image" src="https://github.com/user-attachments/assets/c3f8b949-3793-4112-b968-d9d88d15e202" />
 
@@ -871,6 +880,8 @@ https://github.com/user-attachments/assets/6ed4f5f6-d580-4aa2-a2d8-4efa9fdd69cd
 2. InitHUD 함수에서 HUD위젯, ASC가 생성이 되어있으면 BindAbilitySystem 함수 실행
    아니면 ASC_Cache로 저장
 3. 플레이어 컨트롤러의 BeginPlay 실행 시점에 ASC_Cache가 있으면 BindAbilitySystem 함수 실행
+
+<br/>
 
 ### Timer를 이용한 StatBar 보간
 HP Bar를 부드럽게 변경하기 위해 Tick 함수대신 Timer를 사용했다   
@@ -956,6 +967,8 @@ Tick 대신 Timer를 사용한 이유는 Tick 함수는 스탯 변화가 없어�
 * 보간에 필요한 DeltaTime을 월드에서 가져왔다
 * IsNearlyEqual 함수를 통해 체크, 보간을 진행한 뒤 UI 반영(UpdateHpBar 함수)
 * CheckShouldTick 함수를 실행하여 타이머를 종료할지 결정한다
+
+<br/>
 
 ### 재시작 UI
 <img width="1853" height="1284" alt="image" src="https://github.com/user-attachments/assets/e6faa3a6-3c77-45cd-ae8e-46a8effe5771" />
@@ -1216,38 +1229,39 @@ RPC 이후에 접속하여도 적용되어야 하기 때문이다
 
 https://github.com/user-attachments/assets/7e05d46d-074b-4ccf-9e8e-c709ea7f9647
 
-![image](https://github.com/user-attachments/assets/064dbf8b-7813-4201-8201-5f78d2bfd78a)
-
-1. 데미지 어트리뷰트가 바뀌면 게임모드를 가져와 상속받은 인터페이스로 캐스팅하여 함수실행
-2. 게임모드에서 플레이어컨트롤러 함수 실행
-3. 플레이어 컨트롤러에서 데미지 UI 생성 및 관리
-4. AddViewport 함수 실행전 SetTextWidget 함수를 실행하여 위젯의 위치, 텍스트를 설정
+<img width="1466" height="1114" alt="image" src="https://github.com/user-attachments/assets/e5489741-3ea9-4015-990b-377c26263795" />
 
 <br/>
 
-![image](https://github.com/user-attachments/assets/833e316f-0f92-4484-b664-8a816dc02c2f)
+1. 서버에서 GameEffect로 데미지 적용
+2. PostGameplayEffectExecute 에서 데미지 처리 및 이벤트 발동
+3. FGameplayEffectContextHandle 을 통해 가해자(타격한 액터)에게 RPC 전송
+4. 가해자 액터 클라이언트에서 Damage UI 출력
+5. Damage UI의 애니메이션이 끝나면 오브젝트 풀로 객체 반환
 
->APPPlayerController.cpp
+<br/>
 
-	//ActorTakedDamage 함수
-	//DamageUI의 델리게이트에 바인드되는 람다 함수
-	DamageUI.Get()->EndLifeTime.BindLambda([&]()
-	{
-		TWeakObjectPtr<UPPFloatingTextUserWidget> TempDamageUI = DamageUIArray[0];
+<img width="2093" height="935" alt="image" src="https://github.com/user-attachments/assets/c32e3d1e-cc6c-458f-a653-7a406ae7067e" />
+<img width="2523" height="718" alt="image" src="https://github.com/user-attachments/assets/cfac633d-854a-44fb-b342-62d771def0f6" />
+<img width="2495" height="774" alt="image" src="https://github.com/user-attachments/assets/b715be12-02e3-4a1a-8be4-01d3abb281a7" />
 
-		if (TempDamageUI.IsValid())
-		{
-			TempDamageUI.Get()->RemoveFromParent();
-		}
-			
-		DamageUIArray.RemoveAt(0);
-	});
+<br/>
 
-1. 플레이어컨트롤러에서 SetTextWidget 함수 실행
-2. DamageUI에서 플레이어 컨트롤러를 가져와 3D좌표를 뷰표트 좌표로 변환 후 데미지 텍스트 설정
-3. 플레이어컨트롤러에서 DamageUI 생성후 뷰포트에 추가되면 NativeConstruct 실행
-4. Fade 애니메이션 Finished 델리게이트에 AnimationFinished 함수 바인드 후 UI 포지션 설정 및 애니메이션 재생
-5. AnimationFinished 함수 호출이 되면 바인드된 람다 함수 실행
+1. Attack Hit Check GA에서 공격 판정이 일어나 GameEffect 적용(서버)
+2. 어트리뷰트셋 PostGameplayEffectExecute 에서 GameEffect 적용 및 Damage UI 생성 요청(서버)
+    * 해당 함수에서 GameEffectContext 를 이용해 가해자, 매개변수 Data를 이용해 타겟(피해자)을 구할 수 있음
+3. 가해자(공격을 한 액터)의 플레이어 컨트롤러에서 ClientRPC를 통해 오브젝트 풀(월드 서브시스템)에 Damage UI 요청
+4. 오브젝트 풀에 UI가 존재하면 풀에 있는 UI를 꺼내고 존재하지 않으면 생성
+	* 이때 UI 변수 초기화(위치, Text, 투명도 등)하여 그 전에 기록된 값을 기본 값으로 되돌린다
+5. UI 애니메이션이 종료되면 오브젝트 풀에 UI 객체를 저장한다
+
+<br/>
+
+자세한 코드는 아래 블로그 글 링크에 확인할 수 있습니다   
+<a href="https://k99812.tistory.com/202" height="5" width="10" target="_blank" >
+<img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
+</a>
+
 
 <div align="right">
   
@@ -1427,6 +1441,43 @@ https://github.com/user-attachments/assets/7e05d46d-074b-4ccf-9e8e-c709ea7f9647
 	}
 
 * 플레이어 컨트롤러를 가져와 Damage, ActorPosition을 넘겨 데미지 UI생성
+
+## Damage UI
+
+https://github.com/user-attachments/assets/7e05d46d-074b-4ccf-9e8e-c709ea7f9647
+
+![image](https://github.com/user-attachments/assets/064dbf8b-7813-4201-8201-5f78d2bfd78a)
+
+1. 데미지 어트리뷰트가 바뀌면 게임모드를 가져와 상속받은 인터페이스로 캐스팅하여 함수실행
+2. 게임모드에서 플레이어컨트롤러 함수 실행
+3. 플레이어 컨트롤러에서 데미지 UI 생성 및 관리
+4. AddViewport 함수 실행전 SetTextWidget 함수를 실행하여 위젯의 위치, 텍스트를 설정
+
+<br/>
+
+![image](https://github.com/user-attachments/assets/833e316f-0f92-4484-b664-8a816dc02c2f)
+
+>APPPlayerController.cpp
+
+	//ActorTakedDamage 함수
+	//DamageUI의 델리게이트에 바인드되는 람다 함수
+	DamageUI.Get()->EndLifeTime.BindLambda([&]()
+	{
+		TWeakObjectPtr<UPPFloatingTextUserWidget> TempDamageUI = DamageUIArray[0];
+
+		if (TempDamageUI.IsValid())
+		{
+			TempDamageUI.Get()->RemoveFromParent();
+		}
+			
+		DamageUIArray.RemoveAt(0);
+	});
+
+1. 플레이어컨트롤러에서 SetTextWidget 함수 실행
+2. DamageUI에서 플레이어 컨트롤러를 가져와 3D좌표를 뷰표트 좌표로 변환 후 데미지 텍스트 설정
+3. 플레이어컨트롤러에서 DamageUI 생성후 뷰포트에 추가되면 NativeConstruct 실행
+4. Fade 애니메이션 Finished 델리게이트에 AnimationFinished 함수 바인드 후 UI 포지션 설정 및 애니메이션 재생
+5. AnimationFinished 함수 호출이 되면 바인드된 람다 함수 실행
 
 </details>
 
