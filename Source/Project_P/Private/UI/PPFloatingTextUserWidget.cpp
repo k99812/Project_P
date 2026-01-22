@@ -59,9 +59,9 @@ bool UPPFloatingTextUserWidget::SetTextWidget(const float Damage, const FVector&
 
 void UPPFloatingTextUserWidget::AnimationFinished()
 {
-	UPPDamageUISubsystem* DamgaeUISubsystem = GetWorld()->GetSubsystem<UPPDamageUISubsystem>();
-	if (DamgaeUISubsystem)
+	UPPDamageUISubsystem* DamageUISubsystem = GetWorld()->GetSubsystem<UPPDamageUISubsystem>();
+	if (DamageUISubsystem)
 	{
-		DamgaeUISubsystem->ReturnToPool(this);
+		DamageUISubsystem->ReturnToPool(this);
 	}
 }

@@ -153,12 +153,12 @@ void UPPCharacterAttributeSet::OnRep_IsDead()
 			}
 		}
 
-		AActor* Avartar = ASC->GetAvatarActor();
-		if (IPPCharacterBaseInterface* Player = Cast<IPPCharacterBaseInterface>(Avartar))
+		AActor* Avatar = ASC->GetAvatarActor();
+		if (IPPCharacterBaseInterface* Player = Cast<IPPCharacterBaseInterface>(Avatar))
 		{
 			if (bIsDead)
 			{
-				if (Avartar->GetLocalRole() == ENetRole::ROLE_SimulatedProxy)
+				if (Avatar->GetLocalRole() == ENetRole::ROLE_SimulatedProxy)
 				{
 					Player->SetDead();
 				}
