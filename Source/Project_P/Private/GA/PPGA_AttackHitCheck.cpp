@@ -32,7 +32,7 @@ void UPPGA_AttackHitCheck::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 	{
 		bIsMonster = true;
 	}
-
+	
 	AGameplayAbilityTargetActor* SpawnedActor = nullptr;
 	UAbilityTask_WaitTargetData* WaitTargetData = UAbilityTask_WaitTargetData::WaitTargetData(this, FName("WaitTargetData"), EGameplayTargetingConfirmation::Instant, APPTA_Trace::StaticClass());
 	

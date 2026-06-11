@@ -188,7 +188,7 @@ void APPGASCharacterPlayer::InitGAS()
 		if (ASC)
 		{
 			ASC->InitAbilityActorInfo(PState, this);
-			ASC->SetIsReplicated(true);
+			//ASC->SetIsReplicated(true);
 
 			const UPPCharacterAttributeSet* AttributeSet = ASC->GetSet<UPPCharacterAttributeSet>();
 			if (AttributeSet)

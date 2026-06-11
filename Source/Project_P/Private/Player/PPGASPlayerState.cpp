@@ -10,6 +10,9 @@ APPGASPlayerState::APPGASPlayerState()
 	ASC = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("ASC"));
 	AttributeSet = CreateDefaultSubobject<UPPCharacterAttributeSet>(TEXT("AttributeSet"));
 
+	ASC->SetIsReplicated(true);
+	ASC->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+
 	NetUpdateFrequency = 100.0f;
 	MinNetUpdateFrequency = 66.0f;
 }
