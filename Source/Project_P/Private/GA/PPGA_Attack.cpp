@@ -174,11 +174,6 @@ void UPPGA_Attack::HandleCombo()
 	}
 
 	PlayMontageTask->ReadyForActivation();
-
-	if (HasAuthority(&CurrentActivationInfo)) 
-	{
-		PPCharacter->Multicast_SendPlayMontage(NextSection);
-	}
 }
 
 void UPPGA_Attack::AdvanceComboAttack(UAbilitySystemComponent* ASC)

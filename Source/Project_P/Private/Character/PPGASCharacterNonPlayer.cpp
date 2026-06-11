@@ -11,6 +11,9 @@ APPGASCharacterNonPlayer::APPGASCharacterNonPlayer()
 	ASC = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("ASC"));
 	AttributeSet = CreateDefaultSubobject<UPPGruntAttributeSet>(TEXT("AttributeSet"));
 
+	ASC->SetIsReplicated(true);
+	ASC->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
+
 //AI
 	static ConstructorHelpers::FClassFinder<AController> AIControllerRef(TEXT("/Script/CoreUObject.Class'/Script/Project_P.PPAIController'"));
 	if (AIControllerRef.Class)
@@ -34,7 +37,6 @@ void APPGASCharacterNonPlayer::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	ASC->InitAbilityActorInfo(this, this);
-	ASC->SetIsReplicated(true);
 
 	AttributeSet->ActorIsDead.AddDynamic(this, &APPGASCharacterNonPlayer::ActorIsDead);
 	/*ASC->GetGameplayAttributeValueChangeDelegate(UPPGruntAttributeSet::GetDamageAttribute()).
