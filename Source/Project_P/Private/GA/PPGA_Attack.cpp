@@ -66,7 +66,7 @@ void UPPGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGa
 		WaitInputOpenTask.Get()->EndTask();
 	}
 
-	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo_Checked();
+	UAbilitySystemComponent* ASC = ActorInfo->AbilitySystemComponent.Get();
 
 	if (ASC)
 	{
@@ -84,16 +84,26 @@ void UPPGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGa
 
 void UPPGA_Attack::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
+	UAbilitySystemComponent* ASC = ActorInfo->AbilitySystemComponent.Get();
+
 	if (ActorInfo->IsNetAuthority())
 	{
-		//PPNET_SUBLOG(LogGAS, Log, TEXT("Listhen Begin"));
-		HandleInputReceive();
+		PPNET_SUBLOG(LogGAS, Log, TEXT("Listhen Begin"));
+
+		if (!ASC->HasMatchingGameplayTag(EventInputReceiveTag))
+		{
+			HandleInputReceive();
+		}
 	}
 	else
 	{
-		//PPNET_SUBLOG(LogGAS, Log, TEXT("Client Begin"));
-		ServerRPC_InputReceived();
-		HandleInputReceive();
+		PPNET_SUBLOG(LogGAS, Log, TEXT("Client Begin"));
+
+		if (!ASC->HasMatchingGameplayTag(EventInputReceiveTag))
+		{
+			ServerRPC_InputReceived();
+			HandleInputReceive();
+		}
 	}
 }
 
@@ -106,7 +116,9 @@ void UPPGA_Attack::ServerRPC_InputReceived_Implementation()
 
 void UPPGA_Attack::HandleInputReceive()
 {
-	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo_Checked();
+	if (!CurrentActorInfo) return;
+
+	UAbilitySystemComponent* ASC = CurrentActorInfo->AbilitySystemComponent.Get();
 
 	if (ASC)
 	{
@@ -138,12 +150,14 @@ void UPPGA_Attack::OnInterruptedCallback()
 
 void UPPGA_Attack::OnInputOpen(FGameplayEventData Payload)
 {
+	if (!CurrentActorInfo) return;
+
 	if (WaitInputOpenTask.IsValid())
 	{
 		WaitInputOpenTask.Get()->EndTask();
 	}
 
-	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo_Checked();
+	UAbilitySystemComponent* ASC = CurrentActorInfo->AbilitySystemComponent.Get();
 
 	if (ASC)
 	{
