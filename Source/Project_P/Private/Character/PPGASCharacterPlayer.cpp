@@ -359,24 +359,7 @@ void APPGASCharacterPlayer::GASInputPressed(int32 InputID)
 {
 	//UAISense_Hearing::ReportNoiseEvent(this, this->GetActorLocation(), 1.f, this);
 
-	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(InputID);
-
-	if (Spec)
-	{
-		Spec->InputPressed = true;
-
-		if (Spec->IsActive())
-		{
-			//어빌리티가 실행중이면 GA의 InputPressed 함수 실행
-			ASC->AbilitySpecInputPressed(*Spec); 
-		}
-		else
-		{
-			//어빌리티 Activate 실행
-			//어빌리티의 실행 등 ASC로부터 GA를 다루는건 Handle을 통해 컨트롤
-			ASC->TryActivateAbility(Spec->Handle);
-		}
-	}
+	ASC->AbilityLocalInputPressed(InputID);
 }
 
 void APPGASCharacterPlayer::GASInputReleased(int32 InputID)
