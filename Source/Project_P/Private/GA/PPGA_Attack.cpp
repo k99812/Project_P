@@ -20,6 +20,8 @@ UPPGA_Attack::UPPGA_Attack()
 	NetExecutionPolicy = EGameplayAbilityNetExecutionPolicy::LocalPredicted;
 	//리플리케이션 정책
 	ReplicationPolicy = EGameplayAbilityReplicationPolicy::ReplicateYes;
+
+	//bReplicateInputDirectly = true;
 }
 
 void UPPGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
