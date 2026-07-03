@@ -22,8 +22,8 @@ void UAnimNotifyState_AttackHitCheck::NotifyBegin(USkeletalMeshComponent* MeshCo
 	IPPCombatInterface* PPCharacter = Owner ? Cast<IPPCombatInterface>(Owner) : nullptr;
 	if (PPCharacter)
 	{
-		PPCharacter->bIsSweeping = true;
-		PPCharacter->HitActors.Empty();
+		PPCharacter->SetIsSweeping(true);
+		PPCharacter->ClearHitActors();
 	}
 }
 
@@ -65,6 +65,6 @@ void UAnimNotifyState_AttackHitCheck::NotifyEnd(USkeletalMeshComponent* MeshComp
 	IPPCombatInterface* PPCharacter = Owner ? Cast<IPPCombatInterface>(Owner) : nullptr;
 	if (PPCharacter)
 	{
-		PPCharacter->bIsSweeping = false;
+		PPCharacter->SetIsSweeping(false);
 	}
 }

@@ -23,12 +23,7 @@ class PROJECT_P_API IPPCombatInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	virtual void PerformMeleeWeaponSweep(const FVector& CurrBase, const FVector CurrTip, int32 steps) = 0;
-	virtual void SetIsSweeping(bool bSweeping) = 0;
+	virtual void SetIsSweeping(bool InbIsSweeping) = 0;
 	virtual bool GetIsSweeping() const = 0;
 	virtual void ClearHitActors() = 0;
-
-public:
-	uint8 bIsSweeping : 1;
-
-	TArray<AActor*> HitActors;
 };
