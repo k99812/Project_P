@@ -8,13 +8,14 @@
 #include "InputActionValue.h"
 #include "GameplayEffectTypes.h"
 #include "Interface/PPPlayerCharacterInterface.h"
+#include "Interface/PPCombatInterface.h"
 #include "PPGASCharacterPlayer.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECT_P_API APPGASCharacterPlayer : public APPCharacterBase, public IAbilitySystemInterface, public IPPPlayerCharacterInterface
+class PROJECT_P_API APPGASCharacterPlayer : public APPCharacterBase, public IAbilitySystemInterface, public IPPPlayerCharacterInterface, public IPPCombatInterface
 {
 	GENERATED_BODY()
 
@@ -111,6 +112,20 @@ protected:
 	void Look(const FInputActionValue& Value);
 	void MoveInputReleased();
 
+//Melee Attack Section
+public:
+	virtual void PerformMeleeWeaponSweep(const FVector& CurrBase, const FVector CurrTip, int32 steps) override;
+	virtual void SetIsSweeping(bool InbIsSweeping) override { bIsSweeping = InbIsSweeping; }
+	virtual bool GetIsSweeping() const override { return bIsSweeping; }
+	virtual void ClearHitActors() override { HitActors.Empty(); }
+
+protected:
+	UPROPERTY(VisibleAnywhere, Category = "Melee")
+	uint8 bIsSweeping : 1 = false;
+
+	UPROPERTY(VisibleAnywhere, Category = "Melee")
+	TArray<AActor*> HitActors;
+
 //Gameplay Tag Event
 protected:
 	void RemoveTag(const FGameplayTagContainer& RemoveTagContainer);
@@ -120,7 +135,7 @@ protected:
 
 //Montage Section
 protected:
-	UPROPERTY(VisibleAnywhere, Category = Animation)
+	UPROPERTY(VisibleAnywhere, Category = "Animation")
 	TObjectPtr<class UAnimMontage> LevelStartMontage;
 
 // Monster HPBar

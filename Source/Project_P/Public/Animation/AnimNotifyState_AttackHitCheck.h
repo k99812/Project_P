@@ -36,27 +36,27 @@ protected:
 	virtual void NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference);
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee")
 	EAttackCollisionType AttackType;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
-	int Steps;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee")
+	int16 Steps;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat|Sword")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Sword")
 	FName BaseSocketName = FName("SwordBase");
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat|Sword")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Sword")
 	FName TipSocketName = FName("SwordTip");
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat|Sword")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Sword")
 	FName LeftBaseSocketName = FName("LeftSwordBase");
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat|Sword")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Sword")
 	FName LeftTipSocketName = FName("LeftSwordTip");
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat|Sword")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Sword")
 	FName RightBaseSocketName = FName("RightSwordBase");
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat|Sword")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Sword")
 	FName RightTipSocketName = FName("RightSwordTip");
 };

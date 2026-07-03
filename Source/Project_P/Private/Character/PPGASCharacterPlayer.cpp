@@ -498,6 +498,11 @@ void APPGASCharacterPlayer::MoveInputReleased()
 	ASC->CancelAbilities(&CancelAbilityTags);
 }
 
+void APPGASCharacterPlayer::PerformMeleeWeaponSweep(const FVector& CurrBase, const FVector CurrTip, int32 steps)
+{
+
+}
+
 void APPGASCharacterPlayer::RemoveTag(const FGameplayTagContainer& RemoveTagContainer)
 {
 	// ASC에 태그 제거
