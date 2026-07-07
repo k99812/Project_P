@@ -20,6 +20,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
+#include "DrawDebugHelpers.h"
 #include "Data/PPComboActionData.h"
 #include "Physics/PPCollision.h"
 #include "Perception/AISense_Hearing.h"
@@ -498,9 +499,63 @@ void APPGASCharacterPlayer::MoveInputReleased()
 	ASC->CancelAbilities(&CancelAbilityTags);
 }
 
-void APPGASCharacterPlayer::PerformMeleeWeaponSweep(const FVector& CurrBase, const FVector CurrTip, int32 steps)
+void APPGASCharacterPlayer::PerformMeleeWeaponSweep(const FVector& PrevBase, const FVector& PrevTip, const FVector& CurrBase, const FVector CurrTip, float WeaponRadius, int32 Steps)
 {
+	FCollisionQueryParams Params(FName(TEXT("Melee")), true, this);
 
+	FVector StepPrevBase = PrevBase, StepPrevTip = PrevTip;
+
+	for (int i = 1; i <= Steps; i++)
+	{
+		float Alpha = (float)i / (float)Steps;
+
+		FVector StepCurrBase = FMath::Lerp(PrevBase, CurrBase, Alpha);
+		FVector StepCurrTip = FMath::Lerp(PrevTip, CurrTip, Alpha);
+
+		FVector PrevCenter = (StepPrevBase + StepPrevTip) * 0.5f;
+		FVector CurrCenter = (StepCurrBase + StepCurrTip) * 0.5f;
+		float WeaponLenght = FVector::Distance(StepCurrBase, StepCurrTip);
+
+		FCollisionShape CollisionShape = FCollisionShape::MakeCapsule(WeaponRadius, WeaponLenght * 0.5f);
+		FQuat CapsuleRot = FRotationMatrix::MakeFromZ(StepCurrTip - StepCurrBase).ToQuat();
+
+		TArray<FHitResult> HitResult;
+
+		bool bHit = GetWorld()->SweepMultiByChannel(
+			HitResult,
+			PrevCenter,
+			CurrCenter,
+			CapsuleRot,
+			CCHANNEL_PPACTION,
+			CollisionShape,
+			Params
+		);
+
+		if (bHit)
+		{
+			for (const FHitResult& Hit : HitResult)
+			{
+				AActor* HitActor = Hit.GetActor();
+
+				if (HitActor)
+				{
+					if (HitActors.Contains(HitActor)) continue;
+
+					HitActors.Emplace(HitActor);
+					
+					//히트 이벤트 발동
+					PPGAS_LOG(LogGAS, Log, TEXT("Hit Event Activate : %s"), *HitActor->GetName());
+				}
+			}
+		}
+
+#if ENABLE_DRAW_DEBUG
+		if (bUseDrawDebug)
+		{
+
+		}
+#endif
+	}
 }
 
 void APPGASCharacterPlayer::RemoveTag(const FGameplayTagContainer& RemoveTagContainer)
