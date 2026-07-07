@@ -42,6 +42,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee")
 	int16 Steps;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee")
+	uint8 bUseDrawDebug : 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee")
+	float WeaponRadius;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Sword")
 	FName BaseSocketName = FName("SwordBase");
 
@@ -59,4 +65,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Sword")
 	FName RightTipSocketName = FName("RightSwordTip");
+
+private:
+	UPROPERTY(VisibleAnywere, Category = "Melee")
+	TMap<EAttackCollisionType, FVector> PrevBase;
+
+	UPROPERTY(VisibleAnywere, Category = "Melee")
+	TMap<EAttackCollisionType, FVector> PrevTip;
 };

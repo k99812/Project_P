@@ -24,6 +24,26 @@ void UAnimNotifyState_AttackHitCheck::NotifyBegin(USkeletalMeshComponent* MeshCo
 	{
 		PPCharacter->SetIsSweeping(true);
 		PPCharacter->ClearHitActors();
+
+		switch (AttackType)
+		{
+		case EAttackCollisionType::LeftSword:
+			PrevBase[EAttackCollisionType::LeftSword] = MeshComp->GetSocketLocation(LeftBaseSocketName);
+			PrevTip[EAttackCollisionType::LeftSword] = MeshComp->GetSocketLocation(LeftTipSocketName);
+			break;
+
+		case EAttackCollisionType::RightSword:
+			PrevBase[EAttackCollisionType::RightSword] = MeshComp->GetSocketLocation(RightBaseSocketName);
+			PrevTip[EAttackCollisionType::RightSword] = MeshComp->GetSocketLocation(RightTipSocketName);
+			break;
+
+		case EAttackCollisionType::BothSword:
+			PrevBase[EAttackCollisionType::LeftSword] = MeshComp->GetSocketLocation(LeftBaseSocketName);
+			PrevTip[EAttackCollisionType::LeftSword] = MeshComp->GetSocketLocation(LeftTipSocketName);
+			PrevBase[EAttackCollisionType::RightSword] = MeshComp->GetSocketLocation(RightBaseSocketName);
+			PrevTip[EAttackCollisionType::RightSword] = MeshComp->GetSocketLocation(RightTipSocketName);
+			break;
+		}
 	}
 }
 
@@ -37,22 +57,40 @@ void UAnimNotifyState_AttackHitCheck::NotifyTick(USkeletalMeshComponent* MeshCom
 	{
 		switch (AttackType)
 		{
-			case EAttackCollisionType::LeftSword:
-				PPCharacter->PerformMeleeWeaponSweep(MeshComp->GetSocketLocation(LeftBaseSocketName),
-					MeshComp->GetSocketLocation(LeftTipSocketName), Steps);
-				break;
+		case EAttackCollisionType::LeftSword:
+			PPCharacter->PerformMeleeWeaponSweep(PrevBase[EAttackCollisionType::LeftSword], 
+				PrevTip[EAttackCollisionType::LeftSword], MeshComp->GetSocketLocation(LeftBaseSocketName),
+				MeshComp->GetSocketLocation(LeftTipSocketName), bUseDrawDebug, Steps);
 
-			case EAttackCollisionType::RightSword:
-				PPCharacter->PerformMeleeWeaponSweep(MeshComp->GetSocketLocation(RightBaseSocketName),
-					MeshComp->GetSocketLocation(RightTipSocketName), Steps);
-				break;
+			PrevBase[EAttackCollisionType::LeftSword] = MeshComp->GetSocketLocation(LeftBaseSocketName);
+			PrevTip[EAttackCollisionType::LeftSword] = MeshComp->GetSocketLocation(LeftTipSocketName);
 
-			case EAttackCollisionType::BothSword:
-				PPCharacter->PerformMeleeWeaponSweep(MeshComp->GetSocketLocation(LeftBaseSocketName),
-					MeshComp->GetSocketLocation(LeftTipSocketName), Steps);
-				PPCharacter->PerformMeleeWeaponSweep(MeshComp->GetSocketLocation(RightBaseSocketName),
-					MeshComp->GetSocketLocation(RightTipSocketName), Steps);
-				break;
+			break;
+
+		case EAttackCollisionType::RightSword:
+			PPCharacter->PerformMeleeWeaponSweep(PrevBase[EAttackCollisionType::RightSword],
+				PrevTip[EAttackCollisionType::RightSword], MeshComp->GetSocketLocation(RightBaseSocketName),
+				MeshComp->GetSocketLocation(RightTipSocketName), bUseDrawDebug, Steps);
+
+			PrevBase[EAttackCollisionType::RightSword] = MeshComp->GetSocketLocation(RightBaseSocketName);
+			PrevTip[EAttackCollisionType::RightSword] = MeshComp->GetSocketLocation(RightTipSocketName);
+
+			break;
+
+		case EAttackCollisionType::BothSword:
+			PPCharacter->PerformMeleeWeaponSweep(PrevBase[EAttackCollisionType::LeftSword],
+				PrevTip[EAttackCollisionType::LeftSword], MeshComp->GetSocketLocation(LeftBaseSocketName),
+				MeshComp->GetSocketLocation(LeftTipSocketName), bUseDrawDebug, Steps);
+			PPCharacter->PerformMeleeWeaponSweep(PrevBase[EAttackCollisionType::RightSword],
+				PrevTip[EAttackCollisionType::RightSword], MeshComp->GetSocketLocation(RightBaseSocketName),
+				MeshComp->GetSocketLocation(RightTipSocketName), bUseDrawDebug, Steps);
+
+			PrevBase[EAttackCollisionType::LeftSword] = MeshComp->GetSocketLocation(LeftBaseSocketName);
+			PrevTip[EAttackCollisionType::LeftSword] = MeshComp->GetSocketLocation(LeftTipSocketName);
+			PrevBase[EAttackCollisionType::RightSword] = MeshComp->GetSocketLocation(RightBaseSocketName);
+			PrevTip[EAttackCollisionType::RightSword] = MeshComp->GetSocketLocation(RightTipSocketName);
+
+			break;
 		}
 	}
 }
@@ -66,5 +104,7 @@ void UAnimNotifyState_AttackHitCheck::NotifyEnd(USkeletalMeshComponent* MeshComp
 	if (PPCharacter)
 	{
 		PPCharacter->SetIsSweeping(false);
+		PrevBase.Empty();
+		PrevTip.Empty();
 	}
 }

@@ -114,12 +114,16 @@ protected:
 
 //Melee Attack Section
 public:
-	virtual void PerformMeleeWeaponSweep(const FVector& CurrBase, const FVector CurrTip, int32 steps) override;
+	virtual void PerformMeleeWeaponSweep(const FVector& PrevBase, const FVector& PrevTip, const FVector& CurrBase, const FVector CurrTip, float WeaponRadius, int32 Steps) override;
+	virtual void SetUseDrawDebug(bool InUseDrawDebug) override { bUseDrawDebug = InUseDrawDebug; }
 	virtual void SetIsSweeping(bool InbIsSweeping) override { bIsSweeping = InbIsSweeping; }
 	virtual bool GetIsSweeping() const override { return bIsSweeping; }
 	virtual void ClearHitActors() override { HitActors.Empty(); }
 
 protected:
+	UPROPERTY(VisibleAnywhere, Category = "Melee")
+	uint8 bUseDrawDebug : 1 = false;
+
 	UPROPERTY(VisibleAnywhere, Category = "Melee")
 	uint8 bIsSweeping : 1 = false;
 
