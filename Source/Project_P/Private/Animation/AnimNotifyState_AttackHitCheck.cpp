@@ -3,6 +3,7 @@
 
 #include "Animation/AnimNotifyState_AttackHitCheck.h"
 #include "Interface/PPCombatInterface.h"
+#include "Project_P.h"
 
 UAnimNotifyState_AttackHitCheck::UAnimNotifyState_AttackHitCheck()
 {
@@ -18,30 +19,38 @@ void UAnimNotifyState_AttackHitCheck::NotifyBegin(USkeletalMeshComponent* MeshCo
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration);
 
-	AActor* Owner = MeshComp->GetOwner();
-	IPPCombatInterface* PPCharacter = Owner ? Cast<IPPCombatInterface>(Owner) : nullptr;
-	if (PPCharacter)
+	PPGAS_LOG(LogGAS, Log, TEXT("MeleeAttack NotifyBegin"));
+
+	APawn* Owner = Cast<APawn>(MeshComp->GetOwner());
+
+	if (!Owner || !Owner->IsLocallyControlled()) return;
+
+	if (IPPCombatInterface* PPCharacter = Cast<IPPCombatInterface>(Owner))
 	{
 		PPCharacter->SetIsSweeping(true);
-		PPCharacter->ClearHitActors();
+		PPCharacter->SetUseDrawDebug(bUseDrawDebug);
 
 		switch (AttackType)
 		{
 		case EAttackCollisionType::LeftSword:
-			PrevBase[EAttackCollisionType::LeftSword] = MeshComp->GetSocketLocation(LeftBaseSocketName);
-			PrevTip[EAttackCollisionType::LeftSword] = MeshComp->GetSocketLocation(LeftTipSocketName);
+			PPCharacter->BeginWeaponSweep(EAttackCollisionType::LeftSword, 
+				MeshComp->GetSocketLocation(LeftBaseSocketName), 
+				MeshComp->GetSocketLocation(LeftTipSocketName));
 			break;
 
 		case EAttackCollisionType::RightSword:
-			PrevBase[EAttackCollisionType::RightSword] = MeshComp->GetSocketLocation(RightBaseSocketName);
-			PrevTip[EAttackCollisionType::RightSword] = MeshComp->GetSocketLocation(RightTipSocketName);
+			PPCharacter->BeginWeaponSweep(EAttackCollisionType::RightSword,
+				MeshComp->GetSocketLocation(RightBaseSocketName),
+				MeshComp->GetSocketLocation(RightTipSocketName));
 			break;
 
 		case EAttackCollisionType::BothSword:
-			PrevBase[EAttackCollisionType::LeftSword] = MeshComp->GetSocketLocation(LeftBaseSocketName);
-			PrevTip[EAttackCollisionType::LeftSword] = MeshComp->GetSocketLocation(LeftTipSocketName);
-			PrevBase[EAttackCollisionType::RightSword] = MeshComp->GetSocketLocation(RightBaseSocketName);
-			PrevTip[EAttackCollisionType::RightSword] = MeshComp->GetSocketLocation(RightTipSocketName);
+			PPCharacter->BeginWeaponSweep(EAttackCollisionType::LeftSword,
+				MeshComp->GetSocketLocation(LeftBaseSocketName),
+				MeshComp->GetSocketLocation(LeftTipSocketName));
+			PPCharacter->BeginWeaponSweep(EAttackCollisionType::RightSword,
+				MeshComp->GetSocketLocation(RightBaseSocketName),
+				MeshComp->GetSocketLocation(RightTipSocketName));
 			break;
 		}
 	}
@@ -51,45 +60,29 @@ void UAnimNotifyState_AttackHitCheck::NotifyTick(USkeletalMeshComponent* MeshCom
 {
 	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime);
 
-	AActor* Owner = MeshComp->GetOwner();
-	IPPCombatInterface* PPCharacter = Owner ? Cast<IPPCombatInterface>(Owner) : nullptr;
-	if (PPCharacter)
+	APawn* Owner = Cast<APawn>(MeshComp->GetOwner());
+
+	if (!Owner || !Owner->IsLocallyControlled()) return;
+
+	if (IPPCombatInterface* PPCharacter = Cast<IPPCombatInterface>(Owner))
 	{
 		switch (AttackType)
 		{
 		case EAttackCollisionType::LeftSword:
-			PPCharacter->PerformMeleeWeaponSweep(PrevBase[EAttackCollisionType::LeftSword], 
-				PrevTip[EAttackCollisionType::LeftSword], MeshComp->GetSocketLocation(LeftBaseSocketName),
+			PPCharacter->PerformMeleeWeaponSweep(EAttackCollisionType::LeftSword, MeshComp->GetSocketLocation(LeftBaseSocketName), 
 				MeshComp->GetSocketLocation(LeftTipSocketName), bUseDrawDebug, Steps);
-
-			PrevBase[EAttackCollisionType::LeftSword] = MeshComp->GetSocketLocation(LeftBaseSocketName);
-			PrevTip[EAttackCollisionType::LeftSword] = MeshComp->GetSocketLocation(LeftTipSocketName);
-
 			break;
 
 		case EAttackCollisionType::RightSword:
-			PPCharacter->PerformMeleeWeaponSweep(PrevBase[EAttackCollisionType::RightSword],
-				PrevTip[EAttackCollisionType::RightSword], MeshComp->GetSocketLocation(RightBaseSocketName),
+			PPCharacter->PerformMeleeWeaponSweep(EAttackCollisionType::RightSword, MeshComp->GetSocketLocation(RightBaseSocketName),
 				MeshComp->GetSocketLocation(RightTipSocketName), bUseDrawDebug, Steps);
-
-			PrevBase[EAttackCollisionType::RightSword] = MeshComp->GetSocketLocation(RightBaseSocketName);
-			PrevTip[EAttackCollisionType::RightSword] = MeshComp->GetSocketLocation(RightTipSocketName);
-
 			break;
 
 		case EAttackCollisionType::BothSword:
-			PPCharacter->PerformMeleeWeaponSweep(PrevBase[EAttackCollisionType::LeftSword],
-				PrevTip[EAttackCollisionType::LeftSword], MeshComp->GetSocketLocation(LeftBaseSocketName),
+			PPCharacter->PerformMeleeWeaponSweep(EAttackCollisionType::LeftSword, MeshComp->GetSocketLocation(LeftBaseSocketName),
 				MeshComp->GetSocketLocation(LeftTipSocketName), bUseDrawDebug, Steps);
-			PPCharacter->PerformMeleeWeaponSweep(PrevBase[EAttackCollisionType::RightSword],
-				PrevTip[EAttackCollisionType::RightSword], MeshComp->GetSocketLocation(RightBaseSocketName),
+			PPCharacter->PerformMeleeWeaponSweep(EAttackCollisionType::RightSword, MeshComp->GetSocketLocation(RightBaseSocketName),
 				MeshComp->GetSocketLocation(RightTipSocketName), bUseDrawDebug, Steps);
-
-			PrevBase[EAttackCollisionType::LeftSword] = MeshComp->GetSocketLocation(LeftBaseSocketName);
-			PrevTip[EAttackCollisionType::LeftSword] = MeshComp->GetSocketLocation(LeftTipSocketName);
-			PrevBase[EAttackCollisionType::RightSword] = MeshComp->GetSocketLocation(RightBaseSocketName);
-			PrevTip[EAttackCollisionType::RightSword] = MeshComp->GetSocketLocation(RightTipSocketName);
-
 			break;
 		}
 	}
@@ -99,12 +92,15 @@ void UAnimNotifyState_AttackHitCheck::NotifyEnd(USkeletalMeshComponent* MeshComp
 {
 	Super::NotifyEnd(MeshComp, Animation);
 
-	AActor* Owner = MeshComp->GetOwner();
-	IPPCombatInterface* PPCharacter = Owner ? Cast<IPPCombatInterface>(Owner) : nullptr;
-	if (PPCharacter)
+	PPGAS_LOG(LogGAS, Log, TEXT("MeleeAttack NotifyEnd"));
+
+	APawn* Owner = Cast<APawn>(MeshComp->GetOwner());
+
+	if (!Owner || !Owner->IsLocallyControlled()) return;
+
+	if (IPPCombatInterface* PPCharacter = Cast<IPPCombatInterface>(Owner))
 	{
 		PPCharacter->SetIsSweeping(false);
-		PrevBase.Empty();
-		PrevTip.Empty();
+		PPCharacter->EndWeaponSweep();
 	}
 }

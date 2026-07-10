@@ -114,11 +114,17 @@ protected:
 
 //Melee Attack Section
 public:
-	virtual void PerformMeleeWeaponSweep(const FVector& PrevBase, const FVector& PrevTip, const FVector& CurrBase, const FVector CurrTip, float WeaponRadius, int32 Steps) override;
+	virtual void BeginWeaponSweep(EAttackCollisionType AttackType, const FVector& InitBase, const FVector& InitTip) override;
+	virtual void EndWeaponSweep() override;
+
+	virtual void PerformMeleeWeaponSweep(EAttackCollisionType AttackType, const FVector& CurrBase, const FVector CurrTip, float WeaponRadius, int32 Steps) override;
+	
 	virtual void SetUseDrawDebug(bool InUseDrawDebug) override { bUseDrawDebug = InUseDrawDebug; }
 	virtual void SetIsSweeping(bool InbIsSweeping) override { bIsSweeping = InbIsSweeping; }
 	virtual bool GetIsSweeping() const override { return bIsSweeping; }
-	virtual void ClearHitActors() override { HitActors.Empty(); }
+
+protected:
+	void MeleeAttackDebugDraw(const TArray<FHitResult>& HitResult, const FVector& PrevCenter, const FVector& CurrCenter, const FQuat& CapsuleRot, const float WeaponLength, const float WeaponRadius, const bool bHit) const;
 
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Melee")
@@ -129,6 +135,12 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Melee")
 	TArray<AActor*> HitActors;
+
+	UPROPERTY()
+	TMap<EAttackCollisionType, FVector> PrevBaseMap;
+
+	UPROPERTY()
+	TMap<EAttackCollisionType, FVector> PrevTipMap;
 
 //Gameplay Tag Event
 protected:

@@ -499,10 +499,26 @@ void APPGASCharacterPlayer::MoveInputReleased()
 	ASC->CancelAbilities(&CancelAbilityTags);
 }
 
-void APPGASCharacterPlayer::PerformMeleeWeaponSweep(const FVector& PrevBase, const FVector& PrevTip, const FVector& CurrBase, const FVector CurrTip, float WeaponRadius, int32 Steps)
+void APPGASCharacterPlayer::BeginWeaponSweep(EAttackCollisionType AttackType, const FVector& InitBase, const FVector& InitTip)
 {
+	PrevBaseMap.Add(AttackType, InitBase);
+	PrevTipMap.Add(AttackType, InitTip);
+}
+
+void APPGASCharacterPlayer::EndWeaponSweep()
+{
+	HitActors.Empty();
+	PrevBaseMap.Empty();
+	PrevTipMap.Empty();
+}
+
+void APPGASCharacterPlayer::PerformMeleeWeaponSweep(EAttackCollisionType AttackType, const FVector& CurrBase, const FVector CurrTip, float WeaponRadius, int32 Steps)
+{
+	if (!PrevBaseMap.Contains(AttackType) || !PrevTipMap.Contains(AttackType)) return;
+
 	FCollisionQueryParams Params(FName(TEXT("Melee")), true, this);
 
+	FVector PrevBase = PrevBaseMap[AttackType], PrevTip = PrevTipMap[AttackType];
 	FVector StepPrevBase = PrevBase, StepPrevTip = PrevTip;
 
 	for (int i = 1; i <= Steps; i++)
@@ -514,9 +530,9 @@ void APPGASCharacterPlayer::PerformMeleeWeaponSweep(const FVector& PrevBase, con
 
 		FVector PrevCenter = (StepPrevBase + StepPrevTip) * 0.5f;
 		FVector CurrCenter = (StepCurrBase + StepCurrTip) * 0.5f;
-		float WeaponLenght = FVector::Distance(StepCurrBase, StepCurrTip);
+		float WeaponLength = FVector::Distance(StepCurrBase, StepCurrTip);
 
-		FCollisionShape CollisionShape = FCollisionShape::MakeCapsule(WeaponRadius, WeaponLenght * 0.5f);
+		FCollisionShape CollisionShape = FCollisionShape::MakeCapsule(WeaponRadius, WeaponLength * 0.5f);
 		FQuat CapsuleRot = FRotationMatrix::MakeFromZ(StepCurrTip - StepCurrBase).ToQuat();
 
 		TArray<FHitResult> HitResult;
@@ -552,11 +568,39 @@ void APPGASCharacterPlayer::PerformMeleeWeaponSweep(const FVector& PrevBase, con
 #if ENABLE_DRAW_DEBUG
 		if (bUseDrawDebug)
 		{
-
+			MeleeAttackDebugDraw(HitResult, PrevCenter, CurrCenter, CapsuleRot, WeaponLength, WeaponRadius, bHit);
 		}
 #endif
+
+		StepPrevBase = StepCurrBase;
+		StepPrevTip = StepCurrTip;
+	}
+
+	PrevBaseMap[AttackType] = CurrBase;
+	PrevTipMap[AttackType] = CurrTip;
+}
+
+#if ENABLE_DRAW_DEBUG
+void APPGASCharacterPlayer::MeleeAttackDebugDraw(const TArray<FHitResult>& HitResult, const FVector& PrevCenter, const FVector& CurrCenter, const FQuat& CapsuleRot, const float WeaponLength, const float WeaponRadius, const bool bHit) const
+{
+	FColor DrawColor = bHit ? FColor::Green : FColor::Red;
+	float DrawLifeTime = 2.0f;
+
+	DrawDebugCapsule(GetWorld(), CurrCenter, WeaponLength * 0.5f, WeaponRadius, CapsuleRot, DrawColor,
+		false, DrawLifeTime, 0, 0.5f);
+
+	DrawDebugLine(GetWorld(), PrevCenter, CurrCenter, DrawColor, false, DrawLifeTime, 0, 1.0f);
+
+	if (bHit)
+	{
+		for (const FHitResult& Hit : HitResult)
+		{
+			DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 8.0f, 12, FColor::Yellow, false, 
+				DrawLifeTime, 0, 1.0f);
+		}
 	}
 }
+#endif
 
 void APPGASCharacterPlayer::RemoveTag(const FGameplayTagContainer& RemoveTagContainer)
 {
