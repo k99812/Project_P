@@ -11,15 +11,6 @@
  * 
  */
 
-UENUM(BlueprintType)
-enum class EAttackCollisionType : uint8
-{
-	LongSword UMETA(DisplayName = "Long Sword Attack (Capsule Sweep)"),
-	LeftSword UMETA(DisplayName = "Left Sword Attack (Capsule Sweep)"),
-	RightSword UMETA(DisplayName = "Long Sword Attack (Capsule Sweep)"),
-	BothSword  UMETA(DisplayName = "Both Sword Attack (Capsule Sweep)")
-};
-
 UCLASS()
 class PROJECT_P_API UAnimNotifyState_AttackHitCheck : public UAnimNotifyState
 {
@@ -40,7 +31,7 @@ public:
 	EAttackCollisionType AttackType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee")
-	int16 Steps;
+	int Steps;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee")
 	uint8 bUseDrawDebug : 1;
@@ -65,11 +56,4 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Sword")
 	FName RightTipSocketName = FName("RightSwordTip");
-
-private:
-	UPROPERTY(VisibleAnywere, Category = "Melee")
-	TMap<EAttackCollisionType, FVector> PrevBase;
-
-	UPROPERTY(VisibleAnywere, Category = "Melee")
-	TMap<EAttackCollisionType, FVector> PrevTip;
 };

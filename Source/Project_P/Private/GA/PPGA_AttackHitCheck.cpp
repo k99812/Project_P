@@ -44,7 +44,7 @@ void UPPGA_AttackHitCheck::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 		APPTA_Trace* MyTrace = Cast<APPTA_Trace>(SpawnedActor);
 		if (MyTrace)
 		{
-			MyTrace->SetShowDebug(true);
+			MyTrace->SetShowDebug(false);
 			MyTrace->ShouldProduceTargetDataOnServer = bIsMonster;
 		}
 
@@ -56,7 +56,7 @@ void UPPGA_AttackHitCheck::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 
 void UPPGA_AttackHitCheck::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
-	PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
+	//PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
 
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
@@ -68,7 +68,7 @@ void UPPGA_AttackHitCheck::EndAbility(const FGameplayAbilitySpecHandle Handle, c
 
 void UPPGA_AttackHitCheck::TraceResultCallback(const FGameplayAbilityTargetDataHandle& DataHandle)
 {
-	PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
+	//PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
 
 	if (HasAuthority(&CurrentActivationInfo))
 	{
@@ -87,7 +87,7 @@ void UPPGA_AttackHitCheck::TraceResultCallback(const FGameplayAbilityTargetDataH
 
 void UPPGA_AttackHitCheck::ServerApplyHitLogic(const FGameplayAbilityTargetDataHandle& DataHandle)
 {
-	PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
+	//PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
 
 	//#include "AbilitySystemBlueprintLibrary.h" Ãß°¡
 	if (UAbilitySystemBlueprintLibrary::TargetDataHasHitResult(DataHandle, 0))
@@ -165,7 +165,7 @@ void UPPGA_AttackHitCheck::ServerApplyHitLogic(const FGameplayAbilityTargetDataH
 
 void UPPGA_AttackHitCheck::ClientPlayHitCue(const FGameplayAbilityTargetDataHandle& DataHandle)
 {
-	PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
+	//PPNET_SUBLOG(LogGAS, Log, TEXT("Begin"));
 
 	if (UAbilitySystemBlueprintLibrary::TargetDataHasHitResult(DataHandle, 0))
 	{
