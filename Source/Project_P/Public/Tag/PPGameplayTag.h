@@ -10,6 +10,7 @@
 
 #define PPTAG_EVENT_INPUTOPEN FGameplayTag::RequestGameplayTag(FName("Event.Input.Open"))
 #define PPTAG_EVENT_INPUTRECEIVE FGameplayTag::RequestGameplayTag(FName("Event.Input.Receive"))
+#define PPTAG_EVENT_MELEEHIT FGameplayTag::RequestGameplayTag(FName("Event.Melee.Hit"))
 
 #define PPTAG_CHARACTER_EVENT_INPUTRECEVIE FGameplayTag::RequestGameplayTag(FName("Character.State.Event.InputReceive"))
 #define PPTAG_CHARACTER_EVENT_INPUTOPEN FGameplayTag::RequestGameplayTag(FName("Character.State.Event.InputOpen"))

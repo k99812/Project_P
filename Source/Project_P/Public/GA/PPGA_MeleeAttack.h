@@ -27,6 +27,7 @@ public:
 
 	virtual void InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
 
+//Attack Section
 protected:
 	UFUNCTION()
 	void OnCompletedCallback();
@@ -37,15 +38,9 @@ protected:
 	UFUNCTION()
 	void OnInputOpen(FGameplayEventData Payload);
 
-	UFUNCTION()
-	void OnHitReceived(FGameplayEventData Payload);
-
 	UFUNCTION(Server, Reliable)
 	void ServerRPC_InputReceived();
 
-	void AdvanceComboAttack(UAbilitySystemComponent* ASC);
-
-	//ÄÞº¸ ¼½¼Ç
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "GAS|Animation")
 	TObjectPtr<UAnimMontage> ComboAttackMontage;
@@ -58,7 +53,7 @@ protected:
 
 	TWeakObjectPtr<class UAbilityTask_PlayMontageAndWait> MontageTask;
 	TWeakObjectPtr<class UAbilityTask_WaitGameplayEvent> WaitInputOpenTask;
-	TWeakObjectPtr<class UAbilityTask_WaitGameplayEvent> WaitHitEventTask;
+
 	TScriptInterface<class IPPGASInterface> PPCharacter;
 
 	FGameplayTag EventInputOpenTag = PPTAG_CHARACTER_EVENT_INPUTOPEN;
@@ -68,8 +63,25 @@ protected:
 
 protected:
 	void HandleCombo();
-	
+
 	void HandleInputReceive();
-	
+
+	void AdvanceComboAttack(UAbilitySystemComponent* ASC);
+
 	FName GetNextSection();
+
+//Hit Check Section
+protected:
+	UFUNCTION()
+	void OnHitReceived(FGameplayEventData Payload);
+
+	UFUNCTION()
+	void OnTargetDataReceived(const FGameplayAbilityTargetDataHandle& DataHandle, FGameplayTag ActivationTag);
+
+	UFUNCTION()
+	void OnTargetDataCancelled();
+
+protected:
+	TWeakObjectPtr<class UAbilityTask_WaitGameplayEvent> WaitHitEventTask;
+	
 };

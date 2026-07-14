@@ -9,10 +9,11 @@
 #include "GenericTeamAgentInterface.h"
 #include "Interface/PPGASInterface.h"
 #include "Interface/PPCharacterBaseInterface.h"
+#include "Interface/PPCombatInterface.h"
 #include "PPCharacterBase.generated.h"
 
 UCLASS()
-class PROJECT_P_API APPCharacterBase : public ACharacter, public IGameplayTagAssetInterface, public IGenericTeamAgentInterface, public IPPGASInterface, public IPPCharacterBaseInterface
+class PROJECT_P_API APPCharacterBase : public ACharacter, public IGameplayTagAssetInterface, public IGenericTeamAgentInterface, public IPPGASInterface, public IPPCharacterBaseInterface, public IPPCombatInterface
 {
 	GENERATED_BODY()
 
@@ -59,4 +60,34 @@ public:
 
 protected:
 	FGenericTeamId GenericTeamId;
+
+//Melee Attack Section
+public:
+	virtual void BeginWeaponSweep(EAttackCollisionType AttackType, const FVector& InitBase, const FVector& InitTip) override;
+	virtual void EndWeaponSweep() override;
+
+	virtual void PerformMeleeWeaponSweep(EAttackCollisionType AttackType, const FVector& CurrBase, const FVector CurrTip, float WeaponRadius, int32 Steps) override;
+
+	virtual void SetUseDrawDebug(bool InUseDrawDebug) override { bUseDrawDebug = InUseDrawDebug; }
+	virtual void SetIsSweeping(bool InbIsSweeping) override { bIsSweeping = InbIsSweeping; }
+	virtual bool GetIsSweeping() const override { return bIsSweeping; }
+
+protected:
+	void MeleeAttackDebugDraw(const TArray<FHitResult>& HitResult, const FVector& PrevCenter, const FVector& CurrCenter, const FQuat& CapsuleRot, const float WeaponLength, const float WeaponRadius, const bool bHit) const;
+
+protected:
+	UPROPERTY(VisibleAnywhere, Category = "Melee")
+	uint8 bUseDrawDebug : 1 = false;
+
+	UPROPERTY(VisibleAnywhere, Category = "Melee")
+	uint8 bIsSweeping : 1 = false;
+
+	UPROPERTY(VisibleAnywhere, Category = "Melee")
+	TArray<AActor*> HitActors;
+
+	UPROPERTY()
+	TMap<EAttackCollisionType, FVector> PrevBaseMap;
+
+	UPROPERTY()
+	TMap<EAttackCollisionType, FVector> PrevTipMap;
 };
