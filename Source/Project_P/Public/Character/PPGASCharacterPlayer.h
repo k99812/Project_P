@@ -8,14 +8,13 @@
 #include "InputActionValue.h"
 #include "GameplayEffectTypes.h"
 #include "Interface/PPPlayerCharacterInterface.h"
-#include "Interface/PPCombatInterface.h"
 #include "PPGASCharacterPlayer.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECT_P_API APPGASCharacterPlayer : public APPCharacterBase, public IAbilitySystemInterface, public IPPPlayerCharacterInterface, public IPPCombatInterface
+class PROJECT_P_API APPGASCharacterPlayer : public APPCharacterBase, public IAbilitySystemInterface, public IPPPlayerCharacterInterface
 {
 	GENERATED_BODY()
 
@@ -111,36 +110,6 @@ protected:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void MoveInputReleased();
-
-//Melee Attack Section
-public:
-	virtual void BeginWeaponSweep(EAttackCollisionType AttackType, const FVector& InitBase, const FVector& InitTip) override;
-	virtual void EndWeaponSweep() override;
-
-	virtual void PerformMeleeWeaponSweep(EAttackCollisionType AttackType, const FVector& CurrBase, const FVector CurrTip, float WeaponRadius, int32 Steps) override;
-	
-	virtual void SetUseDrawDebug(bool InUseDrawDebug) override { bUseDrawDebug = InUseDrawDebug; }
-	virtual void SetIsSweeping(bool InbIsSweeping) override { bIsSweeping = InbIsSweeping; }
-	virtual bool GetIsSweeping() const override { return bIsSweeping; }
-
-protected:
-	void MeleeAttackDebugDraw(const TArray<FHitResult>& HitResult, const FVector& PrevCenter, const FVector& CurrCenter, const FQuat& CapsuleRot, const float WeaponLength, const float WeaponRadius, const bool bHit) const;
-
-protected:
-	UPROPERTY(VisibleAnywhere, Category = "Melee")
-	uint8 bUseDrawDebug : 1 = false;
-
-	UPROPERTY(VisibleAnywhere, Category = "Melee")
-	uint8 bIsSweeping : 1 = false;
-
-	UPROPERTY(VisibleAnywhere, Category = "Melee")
-	TArray<AActor*> HitActors;
-
-	UPROPERTY()
-	TMap<EAttackCollisionType, FVector> PrevBaseMap;
-
-	UPROPERTY()
-	TMap<EAttackCollisionType, FVector> PrevTipMap;
 
 //Gameplay Tag Event
 protected:
