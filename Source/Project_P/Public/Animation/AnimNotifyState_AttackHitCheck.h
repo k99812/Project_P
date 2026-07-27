@@ -26,34 +26,34 @@ protected:
 	virtual void NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime, const FAnimNotifyEventReference& EventReference);
 	virtual void NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference);
 
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee")
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee", meta = (AllowPrivateAccess = "true"))
 	EAttackCollisionType AttackType;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee", meta = (AllowPrivateAccess = "true"))
 	int Steps;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee", meta = (AllowPrivateAccess = "true"))
 	uint8 bUseDrawDebug : 1;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee", meta = (AllowPrivateAccess = "true"))
 	float WeaponRadius;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Sword")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Sword", meta = (AllowPrivateAccess = "true"))
 	FName BaseSocketName = FName("SwordBase");
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Sword")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Sword", meta = (AllowPrivateAccess = "true"))
 	FName TipSocketName = FName("SwordTip");
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Sword")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Sword", meta = (AllowPrivateAccess = "true"))
 	FName LeftBaseSocketName = FName("LeftSwordBase");
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Sword")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Sword", meta = (AllowPrivateAccess = "true"))
 	FName LeftTipSocketName = FName("LeftSwordTip");
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Sword")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Sword", meta = (AllowPrivateAccess = "true"))
 	FName RightBaseSocketName = FName("RightSwordBase");
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Sword")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Sword", meta = (AllowPrivateAccess = "true"))
 	FName RightTipSocketName = FName("RightSwordTip");
 };
