@@ -84,7 +84,7 @@ FGenericTeamId APPCharacterBase::GetGenericTeamId() const
 	return GenericTeamId;
 }
 
-void APPCharacterBase::BeginWeaponSweep(EAttackCollisionType AttackType, const FVector& InitBase, const FVector& InitTip)
+void APPCharacterBase::BeginWeaponSweep(EAttackType AttackType, const FVector& InitBase, const FVector& InitTip)
 {
 	PrevBaseMap.Add(AttackType, InitBase);
 	PrevTipMap.Add(AttackType, InitTip);
@@ -97,7 +97,7 @@ void APPCharacterBase::EndWeaponSweep()
 	PrevTipMap.Empty();
 }
 
-void APPCharacterBase::PerformMeleeWeaponSweep(EAttackCollisionType AttackType, const FVector& CurrBase, const FVector CurrTip, float WeaponRadius, int32 Steps)
+void APPCharacterBase::PerformMeleeWeaponSweep(EAttackType AttackType, const FVector& CurrBase, const FVector CurrTip, float WeaponRadius, int32 Steps)
 {
 	if (!PrevBaseMap.Contains(AttackType) || !PrevTipMap.Contains(AttackType)) return;
 
