@@ -32,23 +32,23 @@ void UAnimNotifyState_AttackHitCheck::NotifyBegin(USkeletalMeshComponent* MeshCo
 
 		switch (AttackType)
 		{
-		case EAttackCollisionType::LeftSword:
-			PPCharacter->BeginWeaponSweep(EAttackCollisionType::LeftSword, 
+		case EAttackType::LeftSword:
+			PPCharacter->BeginWeaponSweep(EAttackType::LeftSword,
 				MeshComp->GetSocketLocation(LeftBaseSocketName), 
 				MeshComp->GetSocketLocation(LeftTipSocketName));
 			break;
 
-		case EAttackCollisionType::RightSword:
-			PPCharacter->BeginWeaponSweep(EAttackCollisionType::RightSword,
+		case EAttackType::RightSword:
+			PPCharacter->BeginWeaponSweep(EAttackType::RightSword,
 				MeshComp->GetSocketLocation(RightBaseSocketName),
 				MeshComp->GetSocketLocation(RightTipSocketName));
 			break;
 
-		case EAttackCollisionType::BothSword:
-			PPCharacter->BeginWeaponSweep(EAttackCollisionType::LeftSword,
+		case EAttackType::BothSword:
+			PPCharacter->BeginWeaponSweep(EAttackType::LeftSword,
 				MeshComp->GetSocketLocation(LeftBaseSocketName),
 				MeshComp->GetSocketLocation(LeftTipSocketName));
-			PPCharacter->BeginWeaponSweep(EAttackCollisionType::RightSword,
+			PPCharacter->BeginWeaponSweep(EAttackType::RightSword,
 				MeshComp->GetSocketLocation(RightBaseSocketName),
 				MeshComp->GetSocketLocation(RightTipSocketName));
 			break;
@@ -68,20 +68,20 @@ void UAnimNotifyState_AttackHitCheck::NotifyTick(USkeletalMeshComponent* MeshCom
 	{
 		switch (AttackType)
 		{
-		case EAttackCollisionType::LeftSword:
-			PPCharacter->PerformMeleeWeaponSweep(EAttackCollisionType::LeftSword, MeshComp->GetSocketLocation(LeftBaseSocketName), 
+		case EAttackType::LeftSword:
+			PPCharacter->PerformMeleeWeaponSweep(EAttackType::LeftSword, MeshComp->GetSocketLocation(LeftBaseSocketName),
 				MeshComp->GetSocketLocation(LeftTipSocketName), WeaponRadius, Steps);
 			break;
 
-		case EAttackCollisionType::RightSword:
-			PPCharacter->PerformMeleeWeaponSweep(EAttackCollisionType::RightSword, MeshComp->GetSocketLocation(RightBaseSocketName),
+		case EAttackType::RightSword:
+			PPCharacter->PerformMeleeWeaponSweep(EAttackType::RightSword, MeshComp->GetSocketLocation(RightBaseSocketName),
 				MeshComp->GetSocketLocation(RightTipSocketName), WeaponRadius, Steps);
 			break;
 
-		case EAttackCollisionType::BothSword:
-			PPCharacter->PerformMeleeWeaponSweep(EAttackCollisionType::LeftSword, MeshComp->GetSocketLocation(LeftBaseSocketName),
+		case EAttackType::BothSword:
+			PPCharacter->PerformMeleeWeaponSweep(EAttackType::LeftSword, MeshComp->GetSocketLocation(LeftBaseSocketName),
 				MeshComp->GetSocketLocation(LeftTipSocketName), WeaponRadius, Steps);
-			PPCharacter->PerformMeleeWeaponSweep(EAttackCollisionType::RightSword, MeshComp->GetSocketLocation(RightBaseSocketName),
+			PPCharacter->PerformMeleeWeaponSweep(EAttackType::RightSword, MeshComp->GetSocketLocation(RightBaseSocketName),
 				MeshComp->GetSocketLocation(RightTipSocketName), WeaponRadius, Steps);
 			break;
 		}

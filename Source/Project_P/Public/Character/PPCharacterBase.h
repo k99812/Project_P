@@ -63,10 +63,10 @@ protected:
 
 //Melee Attack Section
 public:
-	virtual void BeginWeaponSweep(EAttackCollisionType AttackType, const FVector& InitBase, const FVector& InitTip) override;
+	virtual void BeginWeaponSweep(EAttackType AttackType, const FVector& InitBase, const FVector& InitTip) override;
 	virtual void EndWeaponSweep() override;
 
-	virtual void PerformMeleeWeaponSweep(EAttackCollisionType AttackType, const FVector& CurrBase, const FVector CurrTip, float WeaponRadius, int32 Steps) override;
+	virtual void PerformMeleeWeaponSweep(EAttackType AttackType, const FVector& CurrBase, const FVector CurrTip, float WeaponRadius, int32 Steps) override;
 
 	virtual void SetUseDrawDebug(bool InUseDrawDebug) override { bUseDrawDebug = InUseDrawDebug; }
 	virtual void SetIsSweeping(bool InbIsSweeping) override { bIsSweeping = InbIsSweeping; }
@@ -86,8 +86,8 @@ protected:
 	TArray<AActor*> HitActors;
 
 	UPROPERTY()
-	TMap<EAttackCollisionType, FVector> PrevBaseMap;
+	TMap<EAttackType, FVector> PrevBaseMap;
 
 	UPROPERTY()
-	TMap<EAttackCollisionType, FVector> PrevTipMap;
+	TMap<EAttackType, FVector> PrevTipMap;
 };
