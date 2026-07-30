@@ -1,8 +1,7 @@
+
 # Project_P: 언리얼 엔진 5 GAS 기반 멀티플레이
 
-https://github.com/user-attachments/assets/069e524b-0c41-4e2f-8500-731cfae0d5d6
-
-30fps, 100PktLag 상황에서 동작입니다
+https://github.com/user-attachments/assets/83293cb8-3cad-4757-b038-fdda15ca4042
 
 <br/>
 
@@ -43,16 +42,20 @@ https://github.com/user-attachments/assets/069e524b-0c41-4e2f-8500-731cfae0d5d6
 ## 개요
 | 항목 | 내용 | 비고 |
 |------|------|------|
-| 개발 기간 | 2024.06 ~ 2025.03 <br> 2025.11 ~ (진행 중) | 2025.03 (v1.0) <br/> 2025.12 (v2.0 Network Update)|
+| 개발 기간 | 2024.06 ~ 2025.03 <br> 2025.11 ~ 2026.03 <br> 2026.06 ~ 2026.07 | 2025.03 (v1.0) <br/> 2025.12 (v2.0 Network Update) <br> 2026.06 (v3.0 공격판정 리팩토링) |
 | 엔진 | Unreal Engine 5.3.2 |
 | 언어 | C++ / Blueprint |
-| 주요 시스템 | GAS / AI / UMG / Input <br/> Animation / Network |
+| 주요 시스템 | GAS / AI / UMG / Input / <br/> Animation / Network |
 
 ## 주요 기능
 ### 전투 시스템 (GAS 기반)
 - 어빌리티, 어트리뷰트셋 기반의 콤보 공격, 공격 판정 설계 및 구현
 - 게임 플레이 태그를 활용한 제어 및 상태 관리
 - Trace 기반의 공격 판정, 타격 시 GE를 통한 데미지 처리
+
+### 공통 전투 시스템
+- 플레이어(Input)와 몬스터(Behavior Tree)가 동일한 콤보 공격 GA, 
+  AnimNotifyState, AttributeSet을 공유하도록 설계
 
 ### 네트워크 및 동기화
 - 리슨서버 환경에서의 클라이언트-서버 구조 구현
@@ -110,10 +113,10 @@ https://github.com/user-attachments/assets/069e524b-0c41-4e2f-8500-731cfae0d5d6
 <br/>
 
 ### 콤보공격 개선 및 네트워크 지원
-* 기존 Timer를 이용한 공격로직은 클라이언트의 프레임이 불안정하거나 네트워크 렉이
+* 기존 Timer를 이용한 공격로직은 클라이언트의 프레임이 불안정하거나 네트워크 렉이   
   발생할 경우 클라이언트가 입력을 해도 씹히는 현상 발생
-* 공격 로직을 GAS의 AbilityTask와 GameplayTag를 활용하는 GAS 이벤트를 활용하여 개선함
-* 또한 네트워크 지원을 위해 기존 GAS 초기화 로직을 개선함
+* 공격 로직을 GAS의 AbilityTask와 GameplayTag를 활용하는 GAS 이벤트를 활용하여 개선함   
+* 또한 네트워크 지원을 위해 기존 GAS 초기화 로직을 개선함   
 <a href="https://k99812.tistory.com/192" height="5" width="10" target="_blank" >
 <img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
 </a>
@@ -121,10 +124,12 @@ https://github.com/user-attachments/assets/069e524b-0c41-4e2f-8500-731cfae0d5d6
 <br/>
 
 ### 공격판정 개선
-* 기존에 구현하여 사용하던 어빌리티 테스크를   
-  언리얼에서 네트워크를 고려하며 설계한 어빌리티 테스크로 교체
-* 개선결과로 클라이언트, 서버 두 곳 모두에서 사용할 수 있는 GA 구현
-<a href="https://k99812.tistory.com/196" height="5" width="10" target="_blank" >
+* 기존 WaitTargetData 테스크 기반 공격 판정에서 매 공격마다 Target Actor를 생성하고 관리하는   
+  과정으로 인해 불필요한 객체 생성 및 GC 부담 발생
+* Target Actor 스폰 방식을 폐기하고 C++ AnimNotifyState 기반의   
+  위치 보간(Interpolation) 캡슐 스윕을 구현하여 중복 히트 방지 및   
+  객체 생성/GC 부담 최소화
+<a href="https://k99812.tistory.com/221" height="5" width="10" target="_blank" >
 <img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
 </a>
 
@@ -319,10 +324,6 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
 
 https://github.com/user-attachments/assets/a3cfa008-0c46-4d4e-8a13-b52bb8c2fbbd
 
-![image](https://github.com/user-attachments/assets/360325b1-1141-4885-94fb-c94afd2047fb)
-* GameAbility를 사용해 개발한 콤보공격 플로우 차트
-* 개선전 콤보공격 로직
-
 <br/>
 
 <img width="1540" height="998" alt="image" src="https://github.com/user-attachments/assets/8bf4f338-e735-4bd3-9560-e24f55018361" />
@@ -332,54 +333,111 @@ https://github.com/user-attachments/assets/a3cfa008-0c46-4d4e-8a13-b52bb8c2fbbd
 * 개선후 콤보공격 로직의 플로우 차트와 네트워크 흐름도
 * 네트워크 흐름도에서 (InputOpenEvent, OnInputOpen),   
   (Re-Input, InputPresseed)는 순서가 바뀔 수 있습니다.
-* 자세한 내용은 블로그 글을 통해 볼 수 있습니다.
-
-<a href="https://k99812.tistory.com/192" height="5" width="10" target="_blank" >
-<img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
-</a>
 
 <br/>
 
 ## Attack Hit Check
-![image](https://github.com/user-attachments/assets/49a357a4-081c-49bc-a447-edef2450c8d8)
-* GameAbility, AbilityTask, TargetActor를 사용해 개발한 공격 히트 체크 플로우 차트
-* 개선전 공격판정 로직
+
+> 공격 판정 구조
+
+ 	              AnimNotifyState
+                         │
+                  IPPCCombatInterface
+                    │           │
+                    ▼           ▼
+                Player       Monster
+                    │           │
+                    └─────┬─────┘
+                          │
+                     Sweep 판정
+
+* WaitTargetData 방식은 공격 판정을 진행할 때 마다 타겟 액터를 생성 및 파괴하여   
+  단순히 공격시 스윕 판정만 하는 기본공격에는 적합하지 않음
+* AnimationNotifyState를 사용하여 매프레임 Sweep을 하여 판정하는 방식으로 교체
 
 <br/>
 
-<img width="2872" height="1240" alt="image" src="https://github.com/user-attachments/assets/ea3bb68b-a552-4e35-9fdf-21eada09b9c1" />
-<img width="1850" height="1343" alt="image" src="https://github.com/user-attachments/assets/a2ceaaec-1dd2-4e15-9b0e-e1b002341cca" />
-<img width="2326" height="717" alt="image" src="https://github.com/user-attachments/assets/2665c359-8563-415f-b4b0-9e1d0b5600cc" />
+### IPPCombatInterface
 
-* 기존 구현했던 어빌리티 테스크를 언리얼에서 제공하는   
-  UAbilityTask_WaitTargetData 테스크로 변경
-* 개선 결과로 클라이언트 예측 구현,
-  서버-클라 두 곳 모두에서 쓸 수 있는 GA 구현
-* 자세한 내용은 블로그 글을 통해 볼 수 있습니다.
+> IPPCombatInterface
 
-<a href="https://k99812.tistory.com/196" height="5" width="10" target="_blank" >
+ 	UENUM(BlueprintType)
+	enum class EAttackType : uint8
+	{
+		LongSword UMETA(DisplayName = "Long Sword Attack (Capsule Sweep)"),
+		LeftSword UMETA(DisplayName = "Left Sword Attack (Capsule Sweep)"),
+		RightSword UMETA(DisplayName = "Right Sword Attack (Capsule Sweep)"),
+		BothSword  UMETA(DisplayName = "Both Sword Attack (Capsule Sweep)")
+	};
+	
+	class PROJECT_P_API IPPCombatInterface
+	{
+		GENERATED_BODY()
+	
+	public:
+		virtual void BeginWeaponSweep(EAttackType AttackType, const FVector& InitBase, const FVector& InitTip) = 0;
+		virtual void PerformMeleeWeaponSweep(EAttackType AttackType, const FVector& CurrBase, const FVector CurrTip, float WeaponRadius, int32 Steps) = 0;
+		virtual void EndWeaponSweep() = 0;
+	
+		virtual void SetUseDrawDebug(bool InUseDrawDebug) = 0;
+		virtual void SetIsSweeping(bool InbIsSweeping) = 0;
+		virtual bool GetIsSweeping() const = 0;
+	};
+
+<br/>
+
+* 공격 판정 구조는 플레이어와 몬스터가 공통으로 사용할 수 있도록 인터페이스 기반으로 설계
+* 플레이어와 몬스터는 인터페이스를 통해 UAnimNotifyState_AttackHitCheck를 사용하여 공격판정
+
+### AnimNotifyState
+
+<img width="2516" height="1266" alt="image" src="https://github.com/user-attachments/assets/0c35ccaf-0ca3-4f32-aacf-2523890261b8" />
+
+<br/>
+
+* AnimationNotifyState는 인터페이스를 통해 공격 액터의 함수 실행
+
+### CharacterBase
+
+<img width="1710" height="1359" alt="image" src="https://github.com/user-attachments/assets/56ecd467-4410-47ec-a803-345ab0c13328" />
+
+<br/>
+
+<br/>
+
+* 인터페이스 함수를 통해서 PerformMeleeWeaponSweep 함수가 실행되면
+  과거 위치와 현재위치를 보간하여 Sweep을 수행
+* 판정에 성공하면 GAS 이벤트를 발동해 이벤트 대기하던 GA에 데이터를 전송
+
+### UPPGA_MeleeAttack
+
+<img width="2269" height="1280" alt="image" src="https://github.com/user-attachments/assets/001b5d1b-6cbd-4334-86f0-59779ad2be8e" />
+
+<br/>
+
+* Sweep 판정에 성공해서 데이터를 받으면 클라이언트는
+  서버로 데이터 전송
+* 몬스터/리슨서버 클라이언트는 직접 데미지 적용함수 호출
+* 서버는 클라이언트에서 데이터를 수신하면 데미지 적용함수 호출
+
+더 자세한 로직은 블로그에서 볼 수 있습니다
+
+### CharacterBase
+<a href="https://k99812.tistory.com/221" height="5" width="10" target="_blank" >
+<img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
+</a>
+
+### AnimNotifyState
+<a href="https://k99812.tistory.com/222" height="5" width="10" target="_blank" >
+<img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
+</a>
+
+### UPPGA_MeleeAttack
+<a href="https://k99812.tistory.com/223" height="5" width="10" target="_blank" >
 <img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
 </a>
 
 <br/>
-
-### 데미지 이벤트 실행
-HitCheck 과정에서 데미지를 주는 액터(가해자) 데미지를 받는 액터(피해자)를 둘다 쉽게   
-알 수 있어서 해당 함수에서 데미지 이벤트를 실행시킴
-
-> UPPGA_AttackHitCheck
-
-	//TraceResultCallback->ServerApplyHitLogic
-	//ServerApplyHitLogic 함수에서 GameEffect 타겟이 몬스터일 경우 실행
-	IGameplayTagAssetInterface* TargetActor = Cast<IGameplayTagAssetInterface>(HitResult.GetActor());
-	if (TargetActor && TargetActor->HasMatchingGameplayTag(PPTAG_CHARACTER_MONSTER))
-	{
-		UAISense_Damage::ReportDamageEvent(this, HitResult.GetActor(), OwnerASC->GetAvatarActor(),
-			OwnerAttributeSet->GetAttackRate(), HitResult.GetActor()->GetActorLocation(), HitResult.Location);
-	}
-
-* IGameplayTagAssetInterface를 통하여 액터가 몬스터(몬스터 태그)인지 확인
-* 몬스터인 경우 UAISense_Damage::ReportDamageEvent 함수를 실행하여 데미지 이벤트 실행
 
 <div align="right">
   
@@ -1316,6 +1374,47 @@ https://github.com/user-attachments/assets/66f88ddb-f538-43f9-8ad3-db7246e9e024
 현재는 사용하지 않는 로직들
 
 <details>
+
+## Attack Hit Check
+![image](https://github.com/user-attachments/assets/49a357a4-081c-49bc-a447-edef2450c8d8)
+* GameAbility, AbilityTask, TargetActor를 사용해 개발한 공격 히트 체크 플로우 차트
+* 개선전 공격판정 로직
+
+<br/>
+
+<img width="2872" height="1240" alt="image" src="https://github.com/user-attachments/assets/ea3bb68b-a552-4e35-9fdf-21eada09b9c1" />
+<img width="1850" height="1343" alt="image" src="https://github.com/user-attachments/assets/a2ceaaec-1dd2-4e15-9b0e-e1b002341cca" />
+<img width="2326" height="717" alt="image" src="https://github.com/user-attachments/assets/2665c359-8563-415f-b4b0-9e1d0b5600cc" />
+
+* 기존 구현했던 어빌리티 테스크를 언리얼에서 제공하는   
+  UAbilityTask_WaitTargetData 테스크로 변경
+* 개선 결과로 클라이언트 예측 구현,
+  서버-클라 두 곳 모두에서 쓸 수 있는 GA 구현
+* 자세한 내용은 블로그 글을 통해 볼 수 있습니다.
+
+<a href="https://k99812.tistory.com/196" height="5" width="10" target="_blank" >
+<img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
+</a>
+
+<br/>
+
+### 데미지 이벤트 실행
+HitCheck 과정에서 데미지를 주는 액터(가해자) 데미지를 받는 액터(피해자)를 둘다 쉽게   
+알 수 있어서 해당 함수에서 데미지 이벤트를 실행시킴
+
+> UPPGA_AttackHitCheck
+
+	//TraceResultCallback->ServerApplyHitLogic
+	//ServerApplyHitLogic 함수에서 GameEffect 타겟이 몬스터일 경우 실행
+	IGameplayTagAssetInterface* TargetActor = Cast<IGameplayTagAssetInterface>(HitResult.GetActor());
+	if (TargetActor && TargetActor->HasMatchingGameplayTag(PPTAG_CHARACTER_MONSTER))
+	{
+		UAISense_Damage::ReportDamageEvent(this, HitResult.GetActor(), OwnerASC->GetAvatarActor(),
+			OwnerAttributeSet->GetAttackRate(), HitResult.GetActor()->GetActorLocation(), HitResult.Location);
+	}
+
+* IGameplayTagAssetInterface를 통하여 액터가 몬스터(몬스터 태그)인지 확인
+* 몬스터인 경우 UAISense_Damage::ReportDamageEvent 함수를 실행하여 데미지 이벤트 실행
 
 ## PlayerController
 > APPPlayerController
