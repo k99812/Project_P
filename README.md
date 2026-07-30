@@ -423,12 +423,10 @@ https://github.com/user-attachments/assets/a3cfa008-0c46-4d4e-8a13-b52bb8c2fbbd
 
 <img width="2269" height="1280" alt="image" src="https://github.com/user-attachments/assets/001b5d1b-6cbd-4334-86f0-59779ad2be8e" />
 
-
 <br/>
 
 <br/>
 
-https://github.com/k99812/Project_P/blob/main/README.md
 * Sweep 판정에 성공해서 데이터를 받으면 클라이언트는
   서버로 데이터 전송
 * 몬스터/리슨서버 클라이언트는 직접 데미지 적용함수 호출
