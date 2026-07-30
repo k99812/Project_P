@@ -1437,8 +1437,8 @@ https://github.com/user-attachments/assets/66f88ddb-f538-43f9-8ad3-db7246e9e024
 </div>
 
 # 현재는 사용하지 않음
-싱글플레이에서 멀티플레이로 리팩토링하여     
-현재는 사용하지 않는 로직들
+프로젝트 코드를 개선하면서
+수정했거나 사용하지 않는 코드들
 
 <details>
 
