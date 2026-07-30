@@ -29,11 +29,15 @@ https://github.com/user-attachments/assets/83293cb8-3cad-4757-b038-fdda15ca4042
 * [캐릭터 구조](#Character-구조)
 * [입력 처리](#입력처리)
 * [콤보 공격](#Combo-Attack)
+* [공격 판정](#Attack-Hit-Check)
 * [애니메이션](#Animation)
 * [AI](#AIController)
 * [GameMode](#GameMode)
 * [PlayerController](#PlayerController)
 * [UI](#UI)
+	* [몬스터 HP Bar UI](#몬스터-HP-Bar-UI)
+	* [Player HUD](#Player-HUD)
+	* [Damage UI](#Damage-UI)
 
 </details>
 
@@ -56,6 +60,8 @@ https://github.com/user-attachments/assets/83293cb8-3cad-4757-b038-fdda15ca4042
 ### 공통 전투 시스템
 - 플레이어(Input)와 몬스터(Behavior Tree)가 동일한 콤보 공격 GA, 
   AnimNotifyState, AttributeSet을 공유하도록 설계
+- 플레이어와 몬스터의 공격 시작 방식은 각각 Input과 Behavior Tree로 분리
+  실제 공격 판정은 공통 인터페이스를 통해 동일한 Sweep 로직을 사용
 
 ### 네트워크 및 동기화
 - 리슨서버 환경에서의 클라이언트-서버 구조 구현
@@ -91,6 +97,29 @@ https://github.com/user-attachments/assets/83293cb8-3cad-4757-b038-fdda15ca4042
 아래의 링크를 클릭하면 더 자세한 내용을 볼 수 있습니다.
 <br/>
 
+### 공격판정 개선
+* 기존 WaitTargetData 테스크 기반 공격 판정에서 매 공격마다 Target Actor를 생성하고 관리하는   
+  과정으로 인해 불필요한 객체 생성 및 GC 부담 발생
+* Target Actor 스폰 방식을 폐기하고 C++ AnimNotifyState 기반의   
+  위치 보간(Interpolation) 캡슐 스윕을 구현하여 중복 히트 방지 및   
+  객체 생성/GC 부담 최소화
+<a href="https://k99812.tistory.com/221" height="5" width="10" target="_blank" >
+<img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
+</a>
+
+<br/>
+
+### 콤보공격 개선 및 네트워크 지원
+* 기존 Timer를 이용한 공격로직은 클라이언트의 프레임이 불안정하거나 네트워크 렉이   
+  발생할 경우 클라이언트가 입력을 해도 씹히는 현상 발생
+* 공격 로직을 GAS의 AbilityTask와 GameplayTag를 활용하는 GAS 이벤트를 활용하여 개선함   
+* 또한 네트워크 지원을 위해 기존 GAS 초기화 로직을 개선함   
+<a href="https://k99812.tistory.com/192" height="5" width="10" target="_blank" >
+<img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
+</a>
+
+<br/>
+
 ### Damage UI 오브젝트 풀 적용
 * 전투시 생성되는 Damage UI에 오브젝트 풀을 적용하여 최적화
 * WorldSubsystem을 이용하여 오브젝트 풀을 생성
@@ -111,37 +140,6 @@ https://github.com/user-attachments/assets/83293cb8-3cad-4757-b038-fdda15ca4042
 </a>
 
 <br/>
-
-### 콤보공격 개선 및 네트워크 지원
-* 기존 Timer를 이용한 공격로직은 클라이언트의 프레임이 불안정하거나 네트워크 렉이   
-  발생할 경우 클라이언트가 입력을 해도 씹히는 현상 발생
-* 공격 로직을 GAS의 AbilityTask와 GameplayTag를 활용하는 GAS 이벤트를 활용하여 개선함   
-* 또한 네트워크 지원을 위해 기존 GAS 초기화 로직을 개선함   
-<a href="https://k99812.tistory.com/192" height="5" width="10" target="_blank" >
-<img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
-</a>
-
-<br/>
-
-### 공격판정 개선
-* 기존 WaitTargetData 테스크 기반 공격 판정에서 매 공격마다 Target Actor를 생성하고 관리하는   
-  과정으로 인해 불필요한 객체 생성 및 GC 부담 발생
-* Target Actor 스폰 방식을 폐기하고 C++ AnimNotifyState 기반의   
-  위치 보간(Interpolation) 캡슐 스윕을 구현하여 중복 히트 방지 및   
-  객체 생성/GC 부담 최소화
-<a href="https://k99812.tistory.com/221" height="5" width="10" target="_blank" >
-<img src="https://img.shields.io/badge/블로그 글 링크-E4501E?style=for-the-badge&logo=Tistory&logoColor=white">
-</a>
-
-<br/>
-
-### 10 FPS, 제한없음
-
-https://github.com/user-attachments/assets/7f20ad76-1a5a-4516-bb73-a703ea676fb4
-
-### 제한없음, 500 pktLag
-
-https://github.com/user-attachments/assets/c0b0fed6-6966-45b5-bd5b-dc073ae2f612
 
 <div align="right">
   
@@ -196,7 +194,7 @@ https://github.com/user-attachments/assets/c0b0fed6-6966-45b5-bd5b-dc073ae2f612
 ![image](https://github.com/user-attachments/assets/8c7fb823-4e61-4d59-81b2-43ccdae2e110)
  
 EnhancedInput을 사용
-* InputMappingContext에서 InputAction을 맵핑 후 저장
+* InputMappingContext에서 InputAction을 매핑 후 저장
 
 ## GA(능력) 처리
 GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 진행됨
@@ -310,7 +308,7 @@ GA의 부여는 캐릭터가 빙의될때 호출되는 PossessedBy 함수에서 
      	}
 
 * 전달받은 열거형(키값)을 통해 어빌리티 시스템 컴포넌트(ASC)에서 등록된 GA의 스펙을 가져옴   
-* 어빌리티스펙을 통해 GA를 실행 및 취소 등 컨트롤할 수 있음
+* 어빌리티 스펙을 통해 GA를 실행 및 취소 등 컨트롤할 수 있음
 
 <div align="right">
   
@@ -333,6 +331,19 @@ https://github.com/user-attachments/assets/a3cfa008-0c46-4d4e-8a13-b52bb8c2fbbd
 * 개선후 콤보공격 로직의 플로우 차트와 네트워크 흐름도
 * 네트워크 흐름도에서 (InputOpenEvent, OnInputOpen),   
   (Re-Input, InputPresseed)는 순서가 바뀔 수 있습니다.
+
+<br/>
+
+#### 10 FPS, 제한없음
+
+https://github.com/user-attachments/assets/7f20ad76-1a5a-4516-bb73-a703ea676fb4
+
+#### 제한없음, 500ms Packet Lag
+
+https://github.com/user-attachments/assets/c0b0fed6-6966-45b5-bd5b-dc073ae2f612
+
+* WaitTargetData 기반 공격 판정에 클라이언트 예측을 적용하고, 10 FPS 및
+  500ms 네트워크 지연 환경에서 멀티플레이 동작을 테스트
 
 <br/>
 
@@ -386,8 +397,11 @@ https://github.com/user-attachments/assets/a3cfa008-0c46-4d4e-8a13-b52bb8c2fbbd
 
 <br/>
 
-* 공격 판정 구조는 플레이어와 몬스터가 공통으로 사용할 수 있도록 인터페이스 기반으로 설계
-* 플레이어와 몬스터는 인터페이스를 통해 UAnimNotifyState_AttackHitCheck를 사용하여 공격판정
+* 플레이어는 입력을 통해, 몬스터는 Behavior Tree를 통해 공격을 시작하지만 실제 무기 궤적 판정은
+  동일한 AnimNotifyState와 Sweep 로직을 사용
+* AnimNotifyState는 공격 주체의 구체적인 클래스에 의존하지 않고
+  IPPCombatInterface를 통해 공격 판정을 요청
+* 이를 통해 플레이어와 몬스터의 공격 시작 방식과 공격 판정 로직을 분리
 
 ### AnimNotifyState
 
@@ -414,6 +428,9 @@ https://github.com/user-attachments/assets/a3cfa008-0c46-4d4e-8a13-b52bb8c2fbbd
 * 인터페이스 함수를 통해서 PerformMeleeWeaponSweep 함수가 실행되면
   과거 위치와 현재위치를 보간하여 Sweep을 수행
 * 판정에 성공하면 GAS 이벤트를 발동해 이벤트 대기하던 GA에 데이터를 전송
+* TArray를 사용해 판정된 액터를 TArray에 저장하여
+  TArray에 중복된 액터는 히트 이벤트를 발동하지 않음
+
 
 <br/>
 
@@ -427,10 +444,10 @@ https://github.com/user-attachments/assets/a3cfa008-0c46-4d4e-8a13-b52bb8c2fbbd
 
 <br/>
 
-* Sweep 판정에 성공해서 데이터를 받으면 클라이언트는
-  서버로 데이터 전송
-* 몬스터/리슨서버 클라이언트는 직접 데미지 적용함수 호출
-* 서버는 클라이언트에서 데이터를 수신하면 데미지 적용함수 호출
+* 공격 판정은 클라이언트에서 즉시 수행하여 공격 반응성을 확보
+* 클라이언트는 Sweep 결과를 서버에 전달하고, 서버에서 최종적으로 데미지를 적용
+* 리슨 서버의 서버 권한 캐릭터는 별도의 RPC 없이 직접 데미지 적용
+* 이를 통해 클라이언트 예측 기반의 즉각적인 공격 판정과 서버 권한의 데미지 처리를 분리
 
 <br/>
 
@@ -1205,7 +1222,7 @@ OnRep_IsDead 함수는 캐릭터 죽음 말고도 부활할 때도 실행됨
 ASC에 캐릭터의 죽음태그를 bIsDead에 따라 부착 또는 제거   
 <br/>
 IPPCharacterBaseInterface로 실행되는 SetDead, SetAlive 함수들은   
-로컬플레이어 말고 SimulatedProxy를 위한 이벤트   
+로컬플레이어 말고 Simulated Proxy를 위한 이벤트   
 <br/>
 로컬플레이어의 죽음 함수는 ActorIsDead로 실행   
 부활 함수는 파괴 및 재생성할 때 PossessedBy, OnRep_PlayerState 함수에서 실행
@@ -1238,7 +1255,7 @@ RPC 이후에 접속하여도 적용되어야 하기 때문이다
 
 ![image](https://github.com/user-attachments/assets/7a643519-adc4-44aa-b12b-abd0c138ba32)
 
- * 버튼 OnClicked 이벤트 콜백 함수를 BluprintCallable 설정을 해 블루프린트에서 함수 바인드
+ * 버튼 OnClicked 이벤트 콜백 함수를 BlueprintCallable 설정을 해 블루프린트에서 함수 바인드
 
 <br/>
 
@@ -1314,7 +1331,7 @@ RPC 이후에 접속하여도 적용되어야 하기 때문이다
 	- 서버는 별도실행안함
 	- 로컬클라는 선반영으로 변수가 이미 변경됨
 	- 따라서 시뮬레이티드 프록시만 OnRep 함수가 실행됨
-* 기존 빙의한 액터를 UnPossess, Destory 진행
+* 기존 빙의한 액터를 UnPossess, Destroy 진행
 * 게임모드를 통해 RestartPlayer 함수로 재생성
 
 <br/>
@@ -1351,7 +1368,7 @@ https://github.com/user-attachments/assets/66f88ddb-f538-43f9-8ad3-db7246e9e024
 
 <br/>
 
-1. 서버에서 GameEffect로 데미지 적용
+1. 서버에서 GameplayEffect로 데미지 적용
 2. PostGameplayEffectExecute 에서 데미지 처리 및 이벤트 발동
 3. FGameplayEffectContextHandle 을 통해 가해자(타격한 액터)에게 RPC 전송
 4. 가해자 액터 클라이언트에서 Damage UI 출력
@@ -1365,10 +1382,10 @@ https://github.com/user-attachments/assets/66f88ddb-f538-43f9-8ad3-db7246e9e024
 
 <br/>
 
-1. Attack Hit Check GA에서 공격 판정이 일어나 GameEffect 적용(서버)
-2. 어트리뷰트셋 PostGameplayEffectExecute 에서 GameEffect 적용 및 Damage UI 생성 요청(서버)
+1. Attack Hit Check GA에서 공격 판정이 일어나 GameplayEffect 적용(서버)
+2. 어트리뷰트셋 PostGameplayEffectExecute 에서 GameplayEffect 적용 및 Damage UI 생성 요청(서버)
     * 해당 함수에서 GameEffectContext 를 이용해 가해자, 매개변수 Data를 이용해 타겟(피해자)을 구할 수 있음
-3. 가해자(공격을 한 액터)의 플레이어 컨트롤러에서 ClientRPC를 통해 오브젝트 풀(월드 서브시스템)에 Damage UI 요청
+3. 가해자(공격을 한 액터)의 플레이어 컨트롤러에서 Client RPC를 통해 오브젝트 풀(월드 서브시스템)에 Damage UI 요청
 4. 오브젝트 풀에 UI가 존재하면 풀에 있는 UI를 꺼내고 존재하지 않으면 생성
 	* 이때 UI 변수 초기화(위치, Text, 투명도 등)하여 그 전에 기록된 값을 기본 값으로 되돌린다
 5. UI 애니메이션이 종료되면 오브젝트 풀에 UI 객체를 저장한다
@@ -1395,7 +1412,7 @@ https://github.com/user-attachments/assets/66f88ddb-f538-43f9-8ad3-db7246e9e024
 
 ## Attack Hit Check
 ![image](https://github.com/user-attachments/assets/49a357a4-081c-49bc-a447-edef2450c8d8)
-* GameAbility, AbilityTask, TargetActor를 사용해 개발한 공격 히트 체크 플로우 차트
+* GameAbility, AbilityTask, Target Actor를 사용해 개발한 공격 히트 체크 플로우 차트
 * 개선전 공격판정 로직
 
 <br/>
@@ -1484,7 +1501,7 @@ HitCheck 과정에서 데미지를 주는 액터(가해자) 데미지를 받는 
 
 * DamageUI 관리
 * DamageUIClass : 생성할 UI를 저장
-* DamageUIArray : 생성하고 일정시간후 파괴되는 DamgeUI 특성으로 약참조하는 WeakObjectPtr로 선언
+* DamageUIArray : 생성하고 일정시간후 파괴되는 Damage UI 특성으로 약참조하는 WeakObjectPtr로 선언
 * TQueue 컨테이너가 UPROPERTY를 지원하지 않아 TArray를 이용하여 TQueue를 대체함
 
 <br/>
@@ -1633,7 +1650,7 @@ https://github.com/user-attachments/assets/7e05d46d-074b-4ccf-9e8e-c709ea7f9647
 	});
 
 1. 플레이어컨트롤러에서 SetTextWidget 함수 실행
-2. DamageUI에서 플레이어 컨트롤러를 가져와 3D좌표를 뷰표트 좌표로 변환 후 데미지 텍스트 설정
+2. DamageUI에서 플레이어 컨트롤러를 가져와 3D좌표를 뷰포트 좌표로 변환 후 데미지 텍스트 설정
 3. 플레이어컨트롤러에서 DamageUI 생성후 뷰포트에 추가되면 NativeConstruct 실행
 4. Fade 애니메이션 Finished 델리게이트에 AnimationFinished 함수 바인드 후 UI 포지션 설정 및 애니메이션 재생
 5. AnimationFinished 함수 호출이 되면 바인드된 람다 함수 실행
