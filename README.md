@@ -395,7 +395,13 @@ https://github.com/user-attachments/assets/a3cfa008-0c46-4d4e-8a13-b52bb8c2fbbd
 
 <br/>
 
+<br/>
+
 * AnimationNotifyState는 인터페이스를 통해 공격 액터의 함수 실행
+
+<br/>
+
+<br/>
 
 ### CharacterBase
 
@@ -409,18 +415,32 @@ https://github.com/user-attachments/assets/a3cfa008-0c46-4d4e-8a13-b52bb8c2fbbd
   과거 위치와 현재위치를 보간하여 Sweep을 수행
 * 판정에 성공하면 GAS 이벤트를 발동해 이벤트 대기하던 GA에 데이터를 전송
 
+<br/>
+
+<br/>
+
 ### UPPGA_MeleeAttack
 
 <img width="2269" height="1280" alt="image" src="https://github.com/user-attachments/assets/001b5d1b-6cbd-4334-86f0-59779ad2be8e" />
 
+
 <br/>
 
+<br/>
+
+https://github.com/k99812/Project_P/blob/main/README.md
 * Sweep 판정에 성공해서 데이터를 받으면 클라이언트는
   서버로 데이터 전송
 * 몬스터/리슨서버 클라이언트는 직접 데미지 적용함수 호출
 * 서버는 클라이언트에서 데이터를 수신하면 데미지 적용함수 호출
 
+<br/>
+
+<br/>
+
 더 자세한 로직은 블로그에서 볼 수 있습니다
+
+<br/>
 
 ### CharacterBase
 <a href="https://k99812.tistory.com/221" height="5" width="10" target="_blank" >
