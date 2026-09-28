@@ -155,7 +155,7 @@ void UPPPlayerStatBarUserWidget::UpdateMpBar()
 		PbMpBar->SetPercent(CurrentMana / CurrentMaxMana);
 	}
 
-	if (TxtHpStat)
+	if (TxtMpStat)
 	{
 		TxtMpStat->SetText(FText::FromString(FString::Printf(TEXT("%.0f/%0.f"), CurrentMana, CurrentMaxMana)));
 	}

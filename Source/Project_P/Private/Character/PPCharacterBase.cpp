@@ -67,7 +67,11 @@ void APPCharacterBase::SetAlive()
 void APPCharacterBase::PlayDeadAnimation()
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	AnimInstance->StopAllMontages(0.0f);
+	if (AnimInstance)
+	{
+		AnimInstance->StopAllMontages(0.0f);
+	}
+
 	if (DeadMontage)
 	{
 		AnimInstance->Montage_Play(DeadMontage, 1.0f);
@@ -105,6 +109,7 @@ void APPCharacterBase::PerformMeleeWeaponSweep(EAttackType AttackType, const FVe
 
 	FVector PrevBase = PrevBaseMap[AttackType], PrevTip = PrevTipMap[AttackType];
 	FVector StepPrevBase = PrevBase, StepPrevTip = PrevTip;
+	Steps = FMath::Max<int32>(1, Steps);
 
 	for (int i = 1; i <= Steps; i++)
 	{
