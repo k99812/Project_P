@@ -67,10 +67,12 @@ void APPCharacterBase::SetAlive()
 void APPCharacterBase::PlayDeadAnimation()
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if (AnimInstance)
+	if (!AnimInstance)
 	{
-		AnimInstance->StopAllMontages(0.0f);
+		return;
 	}
+
+	AnimInstance->StopAllMontages(0.0f);
 
 	if (DeadMontage)
 	{
